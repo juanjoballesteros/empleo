@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Livewire\Auth;
 
 use Illuminate\Auth\Events\PasswordReset;
@@ -7,18 +9,19 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
+use Illuminate\Support\Stringable;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 #[Layout('components.layouts.auth')]
-class ResetPassword extends Component
+final class ResetPassword extends Component
 {
     #[Locked]
     public string $token = '';
 
-    public string $email = '';
+    public string|Stringable $email = '';
 
     public string $password = '';
 
@@ -41,7 +44,7 @@ class ResetPassword extends Component
     {
         $this->validate([
             'token' => ['required'],
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'email'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -50,7 +53,7 @@ class ResetPassword extends Component
         // database. Otherwise we will parse the error and return the response.
         $status = Password::reset(
             $this->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) {
+            function ($user): void {
                 $user->forceFill([
                     'password' => Hash::make($this->password),
                     'remember_token' => Str::random(60),
@@ -63,7 +66,7 @@ class ResetPassword extends Component
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
-        if ($status != Password::PasswordReset) {
+        if ($status !== Password::PasswordReset) {
             $this->addError('email', __($status));
 
             return;
