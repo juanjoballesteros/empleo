@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Settings;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password as PasswordRule;
@@ -34,7 +35,10 @@ final class Password extends Component
             throw $e;
         }
 
-        Auth::user()->update([
+        /** @var User $user */
+        $user = Auth::user();
+
+        $user->update([
             'password' => Hash::make($validated['password']),
         ]);
 

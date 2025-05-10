@@ -16,7 +16,7 @@ use Illuminate\Support\Str;
  * @property int $id
  * @property string $name
  * @property string $email
- * @property string $email_verified_at
+ * @property ?string $email_verified_at
  * @property string $password
  * @property string $remember_token
  * @property Carbon $created_at
