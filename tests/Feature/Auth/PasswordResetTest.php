@@ -71,3 +71,25 @@ test('password can be reset with valid token', function () {
         return true;
     });
 });
+
+test('password can not be reset with invalid token', function () {
+    Notification::fake();
+
+    $user = User::factory()->create();
+
+    Livewire::test(ForgotPassword::class)
+        ->set('email', $user->email)
+        ->call('sendPasswordResetLink');
+
+    Notification::assertSentTo($user, ResetPasswordNotification::class, function ($notification) use ($user) {
+        $response = Livewire::test(ResetPassword::class, ['token' => 'invalid-token'])
+            ->set('email', $user->email)
+            ->set('password', 'password')
+            ->set('password_confirmation', 'password')
+            ->call('resetPassword');
+
+        $response->assertHasErrors('email');
+
+        return true;
+    });
+});

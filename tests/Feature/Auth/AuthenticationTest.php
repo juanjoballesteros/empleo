@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 use App\Livewire\Auth\Login;
 use App\Models\User;
+use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
 
 uses(RefreshDatabase::class);
@@ -40,6 +42,32 @@ test('users can not authenticate with invalid password', function () {
 
     $response->assertHasErrors('email');
 
+    $this->assertGuest();
+});
+
+it('users can not authenticate with to many attempts', function () {
+    $user = User::factory()->create();
+
+    Event::fake();
+
+    $attempts = 0;
+    while ($attempts < 6) {
+        Livewire::test(Login::class)
+            ->set('email', $user->email)
+            ->set('password', 'wrong-password')
+            ->call('login');
+
+        $attempts += 1;
+    }
+
+    $response = Livewire::test(Login::class)
+        ->set('email', $user->email)
+        ->set('password', 'password')
+        ->call('login');
+
+    Event::assertDispatched(Lockout::class);
+
+    $response->assertHasErrors('email');
     $this->assertGuest();
 });
 
