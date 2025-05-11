@@ -15,6 +15,7 @@ use Illuminate\Support\Collection;
  * @property int $department_id
  * @property-read Department $department
  * @property-read Collection<int, Company> $companies
+ * @property-read Collection<int, Candidate> $candidates
  */
 final class City extends Model
 {
@@ -32,5 +33,13 @@ final class City extends Model
     public function companies(): HasMany
     {
         return $this->hasMany(Company::class, 'city_id');
+    }
+
+    /**
+     * @return HasMany<Candidate, $this>
+     */
+    public function candidates(): HasMany
+    {
+        return $this->hasMany(Candidate::class, 'city_id');
     }
 }

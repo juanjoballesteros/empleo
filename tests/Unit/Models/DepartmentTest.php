@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Candidate;
 use App\Models\City;
 use App\Models\Company;
 use App\Models\Department;
@@ -28,4 +29,12 @@ it('has many companies', function () {
     Company::factory()->count(3)->for($department)->create();
 
     expect($department->companies)->toHaveCount(3)->each->toBeInstanceOf(Company::class);
+});
+
+it('has many candidates', function () {
+    $department = Department::query()->inRandomOrder()->first();
+    Candidate::factory()->count(3)->for($department)->create();
+
+    expect($department->candidates)->toHaveCount(3)->each->toBeInstanceOf(Candidate::class);
+
 });

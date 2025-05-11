@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property-read Collection<int, City> $cities
  * @property-read Collection<int, Company> $companies
+ * @property-read Collection<int, Candidate> $candidates
  */
 final class Department extends Model
 {
@@ -30,5 +31,13 @@ final class Department extends Model
     public function companies(): HasMany
     {
         return $this->hasMany(Company::class, 'department_id');
+    }
+
+    /**
+     * @return HasMany<Candidate, $this>
+     */
+    public function candidates(): HasMany
+    {
+        return $this->hasMany(Candidate::class, 'department_id');
     }
 }
