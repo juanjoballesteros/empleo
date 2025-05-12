@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\Candidate;
 use App\Models\City;
 use App\Models\Department;
+use App\Models\User;
 
 test('to array', function () {
     $candidate = Candidate::factory()->create()->fresh();
@@ -28,4 +29,10 @@ it('belongs to a city', function () {
     $candidate = Candidate::factory()->create();
 
     expect($candidate->city)->toBeInstanceOf(City::class);
+});
+
+it('has a user', function () {
+    $candidate = Candidate::factory()->has(User::factory())->create();
+
+    expect($candidate->user)->toBeInstanceOf(User::class);
 });

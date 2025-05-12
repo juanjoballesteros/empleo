@@ -9,6 +9,7 @@ use Database\Factories\CandidateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
  * @property int $id
@@ -18,11 +19,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon $updated_at
  * @property-read Department $department
  * @property-read City $city
+ * @property-read User $user
  */
 final class Candidate extends Model
 {
     /** @use HasFactory<CandidateFactory> */
     use HasFactory;
+
+    /**
+     * @return MorphOne<User, $this>
+     */
+    public function user(): MorphOne
+    {
+        return $this->morphOne(User::class, 'userable');
+    }
 
     /**
      * @return BelongsTo<Department, $this>

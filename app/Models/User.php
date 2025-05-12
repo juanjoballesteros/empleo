@@ -7,6 +7,8 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -21,6 +23,7 @@ use Illuminate\Support\Str;
  * @property string $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property-read Company|Candidate|null $userable
  */
 final class User extends Authenticatable
 {
@@ -36,6 +39,14 @@ final class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    /**
+     * @return MorphTo<Model, $this>
+     */
+    public function userable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 
     /**
      * Get the user's initials

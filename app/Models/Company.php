@@ -8,6 +8,7 @@ use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -20,11 +21,20 @@ use Illuminate\Support\Carbon;
  * @property Carbon $updated_at
  * @property-read Department $department
  * @property-read City $city
+ * @property-read User $user
  */
 final class Company extends Model
 {
     /** @use HasFactory<CompanyFactory> */
     use HasFactory;
+
+    /**
+     * @return MorphOne<User, $this>
+     */
+    public function user(): MorphOne
+    {
+        return $this->morphOne(User::class, 'userable');
+    }
 
     /**
      * @return BelongsTo<Department, $this>
