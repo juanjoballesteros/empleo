@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Livewire\Settings\Profile;
+use App\Models\Candidate;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -10,7 +11,7 @@ use Livewire\Livewire;
 uses(RefreshDatabase::class);
 
 test('profile page is displayed', function () {
-    $this->actingAs($user = User::factory()->create());
+    $this->actingAs($user = User::factory()->for(Candidate::factory(), 'userable')->create());
 
     $this->get('/settings/profile')->assertOk();
 });
