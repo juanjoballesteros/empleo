@@ -6,6 +6,7 @@ use App\Models\Candidate;
 use App\Models\City;
 use App\Models\Company;
 use App\Models\Department;
+use App\Models\JobOffer;
 
 test('to array', function () {
     $department = Department::query()->inRandomOrder()->first();
@@ -36,5 +37,11 @@ it('has many candidates', function () {
     Candidate::factory()->count(3)->for($department)->create();
 
     expect($department->candidates)->toHaveCount(3)->each->toBeInstanceOf(Candidate::class);
+});
 
+it('has many job offers', function () {
+    $department = Department::query()->inRandomOrder()->first();
+    JobOffer::factory()->count(3)->for($department)->create();
+
+    expect($department->jobOffers)->toHaveCount(3)->each->toBeInstanceOf(JobOffer::class);
 });

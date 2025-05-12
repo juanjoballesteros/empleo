@@ -19,6 +19,12 @@ test('to array', function () {
     ]);
 });
 
+it('has a user', function () {
+    $candidate = Candidate::factory()->has(User::factory())->create();
+
+    expect($candidate->user)->toBeInstanceOf(User::class);
+});
+
 it('belongs to a department', function () {
     $candidate = Candidate::factory()->create();
 
@@ -29,10 +35,4 @@ it('belongs to a city', function () {
     $candidate = Candidate::factory()->create();
 
     expect($candidate->city)->toBeInstanceOf(City::class);
-});
-
-it('has a user', function () {
-    $candidate = Candidate::factory()->has(User::factory())->create();
-
-    expect($candidate->user)->toBeInstanceOf(User::class);
 });

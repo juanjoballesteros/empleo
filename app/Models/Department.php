@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property-read Collection<int, City> $cities
  * @property-read Collection<int, Company> $companies
  * @property-read Collection<int, Candidate> $candidates
+ * @property-read Collection<int, JobOffer> $jobOffers
  */
 final class Department extends Model
 {
@@ -39,5 +40,13 @@ final class Department extends Model
     public function candidates(): HasMany
     {
         return $this->hasMany(Candidate::class, 'department_id');
+    }
+
+    /**
+     * @return HasMany<JobOffer, $this>
+     */
+    public function jobOffers(): HasMany
+    {
+        return $this->hasMany(JobOffer::class, 'department_id');
     }
 }
