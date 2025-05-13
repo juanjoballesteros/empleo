@@ -29,6 +29,10 @@
                     @if($jobOffer->location === 'Presencial')
                         <p>Ubicación: {{ $jobOffer->city->name  }}</p>
                     @endif
+                    
+                    <flux:button wire:click="delete({{ $jobOffer->id }})" icon="trash" variant="danger" class="ms-auto">
+                        Eliminar
+                    </flux:button>
                 </div>
             </div>
         @empty

@@ -44,7 +44,7 @@ test('index not display the offers of other companies', function () {
         });
 });
 
-test('index can search', function () {
+test('user can search', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
 
     JobOffer::factory()->for($user->userable)->create([
@@ -64,4 +64,18 @@ test('index can search', function () {
         ->assertViewHas('jobOffers', function ($offers) {
             return $offers->count() === 1;
         });
+});
+
+test('user can delete offers', function () {
+    $user = User::factory()->for(Company::factory(), 'userable')->create();
+
+    $jobOffers = JobOffer::factory(3)->for($user->userable)->create();
+
+    $response = Livewire::actingAs($user)
+        ->test(Index::class);
+
+    $response->assertSee($jobOffers[0]->title);
+
+    $response->call('delete', $jobOffers[0]->id)
+        ->assertDontSee($jobOffers[0]->title);
 });
