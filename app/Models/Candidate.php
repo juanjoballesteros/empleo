@@ -9,6 +9,7 @@ use Database\Factories\CandidateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
@@ -17,9 +18,10 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property int $city_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property-read User $user
+ * @property-read Cv $cv
  * @property-read Department $department
  * @property-read City $city
- * @property-read User $user
  */
 final class Candidate extends Model
 {
@@ -32,6 +34,14 @@ final class Candidate extends Model
     public function user(): MorphOne
     {
         return $this->morphOne(User::class, 'userable');
+    }
+
+    /**
+     * @return HasOne<Cv, $this>
+     */
+    public function cv(): HasOne
+    {
+        return $this->hasOne(Cv::class);
     }
 
     /**
