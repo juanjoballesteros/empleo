@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->json('requirements');
+            $table->text('requirements');
             $table->bigInteger('salary');
             $table->string('type');
             $table->string('location');

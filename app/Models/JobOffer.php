@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int $id
  * @property string $title
  * @property string $description
- * @property array<string, string> $requirements
+ * @property string $requirements
  * @property int $salary
  * @property string $type
  * @property string $location
@@ -54,12 +54,5 @@ final class JobOffer extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
-    }
-
-    public function casts(): array
-    {
-        return [
-            'requirements' => 'array',
-        ];
     }
 }

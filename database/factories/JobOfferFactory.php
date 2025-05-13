@@ -25,10 +25,7 @@ final class JobOfferFactory extends Factory
         return [
             'title' => fake()->jobTitle(),
             'description' => fake()->paragraph(),
-            'requirements' => [
-                'education level' => fake()->word(),
-                'work experience' => fake()->numerify('# años'),
-            ],
+            'requirements' => fake()->paragraph(),
             'salary' => fake()->numberBetween(1500000, 10000000),
             'type' => fake()->randomElement(['Indefinido', 'Temporal', 'Por Proyecto']),
             'location' => 'Remoto',
