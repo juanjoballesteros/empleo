@@ -21,11 +21,11 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'type'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
-    Route::prefix('offers')->group(function () {
+    Route::middleware('role:candidato')->prefix('offers')->group(function () {
         Route::get('/', JobOffers\Index::class)->name('offers.index');
     });
 
-    Route::prefix('company')->group(function () {
+    Route::middleware('role:empresa')->prefix('company')->group(function () {
         Route::prefix('offers')->group(function () {
             Route::get('/', Company\JobOffers\Index::class)->name('company.offers.index');
             Route::get('create', Company\JobOffers\Create::class)->name('company.offers.create');

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Livewire\Company;
 
+use App\Enums\Roles;
 use App\Models\City;
 use App\Models\Company;
 use App\Models\Department;
@@ -60,6 +61,7 @@ final class Register extends Component
         ]));
 
         $user->userable()->associate($company)->save();
+        $user->assignRole(Roles::EMPRESA);
 
         $this->redirectRoute('dashboard', navigate: true);
         LivewireAlert::title('Registrado correctamente')

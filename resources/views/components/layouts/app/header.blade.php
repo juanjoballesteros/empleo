@@ -16,14 +16,17 @@
         <flux:navbar.item icon="layout-grid" href="{{ route('dashboard') }}" wire:navigate>
             {{ __('Dashboard') }}
         </flux:navbar.item>
-
+        @role('empresa')
         <flux:navbar.item href="{{ route('company.offers.index') }}" wire:navigate>
             Ofertas De Empleo
         </flux:navbar.item>
+        @endrole
 
+        @role('candidato')
         <flux:navbar.item href="{{ route('offers.index') }}">
             Buscar Empleo
         </flux:navbar.item>
+        @endrole
     </flux:navbar>
 
     <flux:spacer/>
