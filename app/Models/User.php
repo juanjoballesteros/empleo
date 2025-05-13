@@ -13,6 +13,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * @property int $id
@@ -28,7 +29,7 @@ use Illuminate\Support\Str;
 final class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that should be hidden for serialization.
