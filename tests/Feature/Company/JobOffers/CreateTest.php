@@ -10,7 +10,7 @@ use Livewire\Livewire;
 test('create screen can be rendered', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
 
-    $response = $this->actingAs($user)->get('/offers/create');
+    $response = $this->actingAs($user)->get('/company/offers/create');
 
     $response->assertStatus(200);
 });

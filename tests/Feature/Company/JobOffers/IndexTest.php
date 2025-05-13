@@ -11,7 +11,7 @@ use Livewire\Livewire;
 test('index screen can be rendered', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
 
-    $response = $this->actingAs($user)->get('/offers');
+    $response = $this->actingAs($user)->get('/company/offers');
 
     $response->assertStatus(200);
 });

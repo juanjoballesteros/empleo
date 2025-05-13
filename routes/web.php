@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Livewire\Candidate;
 use App\Livewire\Company;
+use App\Livewire\JobOffers;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -21,8 +22,14 @@ Route::middleware(['auth', 'type'])->group(function () {
     Route::view('dashboard', 'dashboard')->name('dashboard');
 
     Route::prefix('offers')->group(function () {
-        Route::get('/', Company\JobOffers\Index::class)->name('company.offers.index');
-        Route::get('create', Company\JobOffers\Create::class)->name('company.offers.create');
+        Route::get('/', JobOffers\Index::class)->name('offers.index');
+    });
+
+    Route::prefix('company')->group(function () {
+        Route::prefix('offers')->group(function () {
+            Route::get('/', Company\JobOffers\Index::class)->name('company.offers.index');
+            Route::get('create', Company\JobOffers\Create::class)->name('company.offers.create');
+        });
     });
 
     Route::redirect('settings', 'settings/profile');

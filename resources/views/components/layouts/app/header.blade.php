@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" xmlns:flux="http://www.w3.org/1999/html">
 <head>
     @include('partials.head')
 </head>
@@ -19,6 +19,10 @@
 
         <flux:navbar.item href="{{ route('company.offers.index') }}" wire:navigate>
             Ofertas De Empleo
+        </flux:navbar.item>
+
+        <flux:navbar.item href="{{ route('offers.index') }}">
+            Buscar Empleo
         </flux:navbar.item>
     </flux:navbar>
 
