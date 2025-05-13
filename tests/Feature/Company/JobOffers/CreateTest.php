@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\Roles;
 use App\Livewire\Company\JobOffers\Create;
 use App\Models\Company;
 use App\Models\User;
@@ -9,6 +10,7 @@ use Livewire\Livewire;
 
 test('create screen can be rendered', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
+    $user->assignRole(Roles::EMPRESA);
 
     $response = $this->actingAs($user)->get('/company/offers/create');
 

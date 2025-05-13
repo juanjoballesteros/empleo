@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\Roles;
 use App\Livewire\Company\JobOffers\Index;
 use App\Models\Company;
 use App\Models\JobOffer;
@@ -10,6 +11,7 @@ use Livewire\Livewire;
 
 test('index screen can be rendered', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
+    $user->assignRole(Roles::EMPRESA);
 
     $response = $this->actingAs($user)->get('/company/offers');
 

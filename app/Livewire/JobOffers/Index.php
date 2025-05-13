@@ -18,9 +18,7 @@ final class Index extends Component
     public function render(): View
     {
         $jobOffers = JobOffer::query()
-            ->when($this->search, function (Builder $q, $search) {
-                return $q->whereLike('title', '%'.$search.'%');
-            })->get();
+            ->when($this->search, fn (Builder $q, $search) => $q->whereLike('title', '%'.$search.'%'))->get();
 
         return view('livewire.job-offers.index', [
             'jobOffers' => $jobOffers,
