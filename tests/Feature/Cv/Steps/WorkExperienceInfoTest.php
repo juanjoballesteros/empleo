@@ -1,0 +1,169 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Enums\Roles;
+use App\Livewire\Cv\Steps\WorkExperience\Edit;
+use App\Livewire\Cv\Steps\WorkExperienceInfo;
+use App\Models\Candidate;
+use App\Models\Cv;
+use App\Models\Department;
+use App\Models\User;
+use App\Models\WorkExperience;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Livewire\Livewire;
+
+test('work experience screen can be rendered', function () {
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory())
+        ->create();
+    $user->assignRole(Roles::CANDIDATO);
+
+    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/work-experience-info");
+
+    $response->assertOk();
+});
+
+it('can be created', function () {
+    Storage::fake();
+
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory())
+        ->create();
+    $department = Department::all()->random()->first();
+
+    $response = Livewire::test(WorkExperienceInfo::class, ['cv' => $user->cv])
+        ->set('name', 'Empresa Test')
+        ->set('type', 'Privada')
+        ->set('email', 'empresa@test.com')
+        ->set('phone_number', '3001234567')
+        ->set('date_start', '2020-01-01')
+        ->set('actual', 'No')
+        ->set('date_end', '2023-01-01')
+        ->set('cause', 'Renuncia')
+        ->set('post', 'Desarrollador')
+        ->set('dependency', 'TI')
+        ->set('address', 'Calle Principal #123')
+        ->set('department_id', $department->id)
+        ->set('city_id', $department->cities->random()->first()->id)
+        ->set('certification', UploadedFile::fake()->image('certification.jpg'))
+        ->call('store');
+
+    $response->assertHasNoErrors();
+
+    $this->assertDatabaseCount('work_experiences', 1);
+});
+
+it('show validation errors', function () {
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory())
+        ->create();
+
+    $response = Livewire::test(WorkExperienceInfo::class, ['cv' => $user->cv])
+        ->set('name', '')
+        ->set('type', '')
+        ->set('email', '')
+        ->set('phone_number', '')
+        ->set('date_start', '')
+        ->set('actual', '')
+        ->set('date_end', '')
+        ->set('cause', '')
+        ->set('post', '')
+        ->set('dependency', '')
+        ->set('address', '')
+        ->call('store');
+
+    $response->assertHasErrors([
+        'name',
+        'type',
+        'email',
+        'phone_number',
+        'date_start',
+        'actual',
+        'date_end',
+        'cause',
+        'post',
+        'dependency',
+        'address',
+        'department_id',
+        'city_id',
+        'certification',
+    ])->assertNoRedirect();
+
+    $this->assertDatabaseCount('work_experiences', 0);
+});
+
+it('can be deleted', function () {
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory()->has(WorkExperience::factory(2)))
+        ->create();
+
+    $this->assertDatabaseCount('work_experiences', 2);
+
+    $response = Livewire::test(WorkExperienceInfo::class, ['cv' => $user->cv])
+        ->call('delete', $user->cv->workExperiences()->first());
+
+    $response->assertNoRedirect();
+    $this->assertDatabaseCount('work_experiences', 1);
+});
+
+test('navigate to next step', function () {
+    $response = Livewire::test(WorkExperienceInfo::class, ['cv' => Cv::factory()->create()])
+        ->call('navigate');
+
+    $response->assertRedirect('/cv/1/language-info');
+});
+
+it('can be updated', function () {
+    Storage::fake();
+
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory()->has(WorkExperience::factory(2)))
+        ->create();
+    $workExperience = $user->cv->workExperiences->first();
+    $workExperience->addMedia(UploadedFile::fake()->image('certification_1.jpg'))
+        ->toMediaCollection();
+
+    $response = Livewire::test(Edit::class)
+        ->call('edit', $workExperience)
+        ->assertSet('name', $workExperience->name)
+        ->assertSet('type', $workExperience->type)
+        ->assertSet('email', $workExperience->email)
+        ->assertSet('phone_number', $workExperience->phone_number)
+        ->assertSet('date_start', $workExperience->date_start->format('Y-m-d'))
+        ->assertSet('actual', $workExperience->actual)
+        ->assertSet('date_end', $workExperience->date_end->format('Y-m-d'))
+        ->assertSet('cause', $workExperience->cause)
+        ->assertSet('post', $workExperience->post)
+        ->assertSet('dependency', $workExperience->dependency)
+        ->assertSet('address', $workExperience->address)
+        ->assertSet('department_id', $workExperience->department_id)
+        ->assertSet('city_id', $workExperience->city_id)
+        ->set('name', 'Nueva Empresa')
+        ->set('type', 'Privada')
+        ->set('email', 'nueva@empresa.com')
+        ->set('phone_number', '3001234567')
+        ->set('date_start', '2020-01-01')
+        ->set('actual', 'No')
+        ->set('date_end', '2023-01-01')
+        ->set('cause', 'Mejor oportunidad')
+        ->set('post', 'Desarrollador Senior')
+        ->set('dependency', 'Desarrollo')
+        ->set('address', 'Calle Nueva #456')
+        ->set('department_id', $workExperience->department_id)
+        ->set('city_id', $workExperience->city_id)
+        ->set('certification', UploadedFile::fake()->image('certification.jpg'))
+        ->call('update');
+
+    $response->assertHasNoErrors()
+        ->assertDispatched('refresh');
+
+    Storage::disk('public')->assertExists('2/certification.jpg')
+        ->assertMissing('1/certification.jpg');
+});

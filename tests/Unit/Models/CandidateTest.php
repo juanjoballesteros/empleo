@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Candidate;
 use App\Models\City;
+use App\Models\Cv;
 use App\Models\Department;
 use App\Models\User;
 
@@ -23,6 +24,12 @@ it('has a user', function () {
     $candidate = Candidate::factory()->has(User::factory())->create();
 
     expect($candidate->user)->toBeInstanceOf(User::class);
+});
+
+it('has a cv', function () {
+    $candidate = Candidate::factory()->has(Cv::factory())->create();
+
+    expect($candidate->cv)->toBeInstanceOf(Cv::class);
 });
 
 it('belongs to a department', function () {

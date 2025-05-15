@@ -8,6 +8,7 @@ namespace App\Models;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -25,6 +26,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read Company|Candidate|null $userable
+ * @property-read ?Cv $cv
  */
 final class User extends Authenticatable
 {
@@ -47,6 +49,14 @@ final class User extends Authenticatable
     public function userable(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    /**
+     * @return HasOne<Cv, $this>
+     */
+    public function cv(): HasOne
+    {
+        return $this->hasOne(Cv::class);
     }
 
     /**

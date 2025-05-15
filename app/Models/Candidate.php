@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property-read User $user
- * @property-read Cv $cv
+ * @property-read ?Cv $cv
  * @property-read Department $department
  * @property-read City $city
  */

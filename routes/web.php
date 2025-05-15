@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use App\Livewire\Candidate;
 use App\Livewire\Company;
+use App\Livewire\Cv;
+use App\Livewire\Dashboard;
 use App\Livewire\JobOffers;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
@@ -19,10 +21,27 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'type'])->group(function () {
-    Route::view('dashboard', 'dashboard')->name('dashboard');
+    Route::get('dashboard', Dashboard::class)->name('dashboard');
 
-    Route::middleware('role:candidato')->prefix('offers')->group(function () {
-        Route::get('/', JobOffers\Index::class)->name('offers.index');
+    Route::middleware('role:candidato')->group(function () {
+        Route::prefix('offers')->group(function () {
+            Route::get('/', JobOffers\Index::class)->name('offers.index');
+        });
+
+        Route::prefix('cv')->group(function () {
+            Route::prefix('{cv}')->group(function () {
+                Route::get('pdf/commercial', fn () => 'Pdf')->name('cv.pdf.commercial');
+
+                Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.create.personal-info');
+                Route::get('birth-info', Cv\Steps\BirthInfo::class)->name('cv.create.birth-info');
+                Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.create.contact-info');
+                Route::get('residence-info', Cv\Steps\ResidenceInfo::class)->name('cv.create.residence-info');
+                Route::get('basic-education-info', Cv\Steps\BasicEducationInfo::class)->name('cv.create.basic-education-info');
+                Route::get('higher-education-info', Cv\Steps\HigherEducationInfo::class)->name('cv.create.higher-education-info');
+                Route::get('work-experience-info', Cv\Steps\WorkExperienceInfo::class)->name('cv.create.work-experience-info');
+                Route::get('language-info', Cv\Steps\LanguageInfo::class)->name('cv.create.language-info');
+            });
+        });
     });
 
     Route::middleware('role:empresa')->prefix('company')->group(function () {
