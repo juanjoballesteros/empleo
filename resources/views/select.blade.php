@@ -8,15 +8,15 @@
             <p>Selecciona si eres una empresa o si eres un candidato</p>
         </div>
 
-        <div class="flex gap-4 justify-between">
-            <flux:button href="{{ route('candidate.register') }}" variant="primary" class="w-full">
-                Candidato
+        <div class="flex gap-2 justify-between">
+            <flux:button href="{{ route('candidate.register') }}" variant="primary" class="text-center w-full">
+                ¡Quiero Conseguir<br> Empleo!
             </flux:button>
 
             <flux:separator vertical/>
 
             <flux:button href="{{ route('company.register') }}" variant="primary" class="w-full">
-                Empresa
+                ¡Quiero Contratar!
             </flux:button>
         </div>
     </div>
