@@ -12,7 +12,7 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', 'login')->name('home');
+Route::view('/', 'home')->name('home');
 
 Route::middleware('auth')->group(function () {
     Route::view('select', 'select')->name('select');
