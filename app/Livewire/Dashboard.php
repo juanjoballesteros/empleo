@@ -12,17 +12,18 @@ use Livewire\Component;
 
 final class Dashboard extends Component
 {
-    public Cv $cv;
+    public ?Cv $cv = null;
 
     public function mount(): void
     {
         /** @var User $user */
         $user = request()->user();
 
-        $candidate = $user->userable;
-        assert($candidate instanceof Candidate);
+        $userable = $user->userable;
 
-        $this->cv = $user->cv()->firstOrCreate(['candidate_id' => $candidate->id]);
+        if ($userable instanceof Candidate) {
+            $this->cv = $user->cv()->firstOrCreate(['candidate_id' => $userable->id]);
+        }
     }
 
     public function render(): View
