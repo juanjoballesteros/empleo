@@ -23,6 +23,22 @@ test('personal info screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
+it('show alert', function () {
+    $this->withSession([
+        'error' => 'Error',
+    ]);
+
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory())
+        ->create();
+    $user->assignRole(Roles::CANDIDATO);
+
+    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/personal-info");
+
+    $response->assertSessionHas('error');
+});
+
 it('can create personal info', function () {
     Storage::fake('public');
 

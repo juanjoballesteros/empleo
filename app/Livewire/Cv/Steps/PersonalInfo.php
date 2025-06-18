@@ -64,6 +64,14 @@ final class PersonalInfo extends Component
 
     public function mount(Cv $cv): void
     {
+        if (session()->has('error')) {
+            LivewireAlert::title(session()->get('error'))
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+        }
+
         if ($personalInfo = $cv->personalInfo) {
             $this->document_urls = [
                 'front' => $personalInfo->getFirstMediaUrl('front'),

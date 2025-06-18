@@ -38,8 +38,8 @@
             @endrole
 
             @role('candidato')
-            <flux:navbar.item href="{{ route('offers.index') }}">
-                Buscar Empleo
+            <flux:navbar.item href="{{ route('offers.index') }}" wire:navigate>
+                Buscar Ofertas De Empleo
             </flux:navbar.item>
             @endrole
         </flux:navbar>

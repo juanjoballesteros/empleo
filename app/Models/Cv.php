@@ -47,6 +47,36 @@ final class Cv extends Model
         return $this->belongsTo(Candidate::class);
     }
 
+    public function isCompleted(): bool
+    {
+        return $this->personalInfo?->check
+            && $this->birthInfo?->check
+            && $this->contactInfo?->check
+            && $this->residenceInfo?->check
+            && $this->basicEducationInfo?->check
+            && $this->higherEducations()->exists()
+            && $this->workExperiences()->exists()
+            && $this->languageInfos()->exists();
+    }
+
+    /** @return HasMany<HigherEducation, $this> */
+    public function higherEducations(): HasMany
+    {
+        return $this->hasMany(HigherEducation::class, 'cv_id');
+    }
+
+    /** @return HasMany<WorkExperience, $this> */
+    public function workExperiences(): HasMany
+    {
+        return $this->hasMany(WorkExperience::class, 'cv_id');
+    }
+
+    /** @return HasMany<LanguageInfo, $this> */
+    public function languageInfos(): HasMany
+    {
+        return $this->hasMany(LanguageInfo::class, 'cv_id');
+    }
+
     /** @return HasOne<PersonalInfo, $this> */
     public function personalInfo(): HasOne
     {
@@ -75,23 +105,5 @@ final class Cv extends Model
     public function basicEducationInfo(): HasOne
     {
         return $this->hasOne(BasicEducationInfo::class, 'cv_id');
-    }
-
-    /** @return HasMany<HigherEducation, $this> */
-    public function higherEducations(): HasMany
-    {
-        return $this->hasMany(HigherEducation::class, 'cv_id');
-    }
-
-    /** @return HasMany<WorkExperience, $this> */
-    public function workExperiences(): HasMany
-    {
-        return $this->hasMany(WorkExperience::class, 'cv_id');
-    }
-
-    /** @return HasMany<LanguageInfo, $this> */
-    public function languageInfos(): HasMany
-    {
-        return $this->hasMany(LanguageInfo::class, 'cv_id');
     }
 }
