@@ -56,6 +56,18 @@ it('can show job offers', function () {
         });
 });
 
+it('show 1 job offer', function () {
+    $user = User::factory()->for(Candidate::factory(), 'userable')->create();
+    $jobOffer = JobOffer::factory()->create();
+
+    $response = Livewire::actingAs($user)
+        ->test(Index::class)
+        ->call('openJobOffer', $jobOffer->id);
+
+    $response->assertSet('open', true)
+        ->assertDispatched('job-offer.change');
+});
+
 it('can search job offers', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
     JobOffer::factory(10)->create();

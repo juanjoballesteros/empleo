@@ -14,6 +14,14 @@ final class Index extends Component
     #[Url]
     public string $search = '';
 
+    public bool $open = false;
+
+    public function openJobOffer(JobOffer $jobOffer): void
+    {
+        $this->open = true;
+        $this->dispatch('job-offer.change', $jobOffer);
+    }
+
     public function render(): View
     {
         $jobOffers = JobOffer::query()

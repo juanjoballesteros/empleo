@@ -3,45 +3,42 @@
                 class="mb-4"/>
 
     <div class="flex gap-4">
-        <div class="w-1/4">
-            <h3 class="text-xl font-bold text-center">Filtrar</h3>
-        </div>
-
-        <flux:separator vertical/>
-
-        <div class="flex-1">
+        <div @class(['flex-1', 'hidden md:block overflow-y-auto max-h-screen' => $open])>
             @if(strlen($search) <= 3)
                 <flux:callout variant="warning" icon="exclamation-circle"
                               heading="Realiza una búsqueda"/>
             @else
-                @forelse($jobOffers as $jobOffer)
-                    <div class="border border-gray-300 rounded-md p-2 mb-4">
-                        <div class="flex justify-between gap-4">
-                            <h3 class="text-xl font-bold">{{ $jobOffer->title }}</h3>
+                @forelse($jobOffers as $job)
+                    <div wire:click="openJobOffer({{ $job->id }})"
+                         class="border border-gray-300 hover:bg-gray-50 cursor-pointer rounded-md p-2 mb-4">
 
-                            <p>Publicado: {{ $jobOffer->created_at->translatedFormat('j \d\e F \d\e\l Y') }}
-                                <b>({{ $jobOffer->created_at->diffForHumans() }})</b></p>
-                        </div>
+                        <h3 class="text-xl font-bold">{{ $job->title }}</h3>
 
                         <div class="flex gap-4">
-                            <p>$ {{ Number::format($jobOffer->salary) }}</p>
+                            <p>$ {{ Number::format($job->salary) }}</p>
 
-                            <p>Modalidad: {{ $jobOffer->location }}</p>
+                            <p><b>Modalidad:</b> {{ $job->location }}</p>
 
-                            @if($jobOffer->location === 'Presencial')
-                                <p>Ubicación: {{ $jobOffer->city->name  }}</p>
+                            @if($job->location === 'Presencial')
+                                <p>Ubicación: {{ $job->city->name  }}</p>
                             @endif
+                        </div>
 
-                            <p class="ms-auto">Publicado por: <b>{{ $jobOffer->company->name }}</b></p>
+                        <div class="flex gap-2 justify-between text-sm">
+                            <p>Publicado por: <b>{{ $job->company->name }}</b></p>
+
+                            <p>{{ $job->created_at->diffForHumans() }}</p>
                         </div>
                     </div>
                 @empty
-                    @if(strlen($search) > 3)
-                        <flux:callout variant="warning" icon="exclamation-circle"
-                                      heading="No hay ofertas de trabajo disponibles"/>
-                    @endif
+                    <flux:callout variant="warning" icon="exclamation-circle"
+                                  heading="No hay ofertas de trabajo disponibles para tu búsqueda"/>
                 @endforelse
             @endif
+        </div>
+
+        <div @class(['md:w-3/5', 'hidden' => !$open])>
+            <livewire:job-offers.show/>
         </div>
     </div>
 </div>
