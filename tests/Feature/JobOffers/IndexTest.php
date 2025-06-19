@@ -47,11 +47,12 @@ it('can show job offers', function () {
     ]);
 
     $response = Livewire::actingAs($user)
+        ->withUrlParams(['search' => 'oferta'])
         ->test(Index::class);
 
     $response->assertSee(['Oferta de prueba con palabra'])
         ->assertViewHas('jobOffers', function ($offers) {
-            return $offers->count() === 11;
+            return $offers->count() === 1;
         });
 });
 
