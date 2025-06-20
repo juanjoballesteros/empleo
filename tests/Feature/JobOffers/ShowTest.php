@@ -10,6 +10,7 @@ use App\Models\Candidate;
 use App\Models\ContactInfo;
 use App\Models\Cv;
 use App\Models\HigherEducation;
+use App\Models\JobApplication;
 use App\Models\JobOffer;
 use App\Models\LanguageInfo;
 use App\Models\PersonalInfo;
@@ -42,12 +43,47 @@ test('show screen can be rendered', function () {
 });
 
 it('change the job offer', function () {
+    $user = User::factory()->for(Candidate::factory(), 'userable')->create();
     $jobOffer = JobOffer::factory()->create([
         'title' => 'Oferta de trabajo',
     ]);
 
-    $response = Livewire::test(Show::class)
+    $response = Livewire::actingAs($user)
+        ->test(Show::class)
         ->dispatch('job-offer.change', $jobOffer->id);
 
     $response->assertSee('Oferta de trabajo');
+});
+
+it('can apply to a job application', function () {
+    $user = User::factory()->for(Candidate::factory(), 'userable')->create();
+    $jobOffer = JobOffer::factory()->create();
+
+    $response = Livewire::actingAs($user)
+        ->test(Show::class)
+        ->dispatch('job-offer.change', $jobOffer->id)
+        ->call('applyForJob');
+
+    $response->assertOk()
+        ->assertSet('hasApplied', true)
+        ->assertSee('Ya te has postulado');
+    $this->assertDatabaseHas('job_applications', [
+        'job_offer_id' => $jobOffer->id,
+        'candidate_id' => $user->userable->id,
+    ]);
+});
+
+it('cant apply if is already applied', function () {
+    $user = User::factory()->for(Candidate::factory(), 'userable')->create();
+    $jobOffer = JobOffer::factory()->create();
+    $jobApplication = JobApplication::factory()->for($user->userable)->for($jobOffer)->create();
+
+    $response = Livewire::actingAs($user)
+        ->test(Show::class)
+        ->dispatch('job-offer.change', $jobOffer->id)
+        ->call('applyForJob');
+
+    $response->assertSet('hasApplied', true)
+        ->assertSee('Ya te has postulado');
+    $this->assertDatabaseCount('job_applications', 1);
 });

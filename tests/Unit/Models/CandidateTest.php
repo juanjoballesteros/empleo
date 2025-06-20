@@ -6,6 +6,7 @@ use App\Models\Candidate;
 use App\Models\City;
 use App\Models\Cv;
 use App\Models\Department;
+use App\Models\JobApplication;
 use App\Models\User;
 
 test('to array', function () {
@@ -42,4 +43,10 @@ it('belongs to a city', function () {
     $candidate = Candidate::factory()->create();
 
     expect($candidate->city)->toBeInstanceOf(City::class);
+});
+
+it('has many job applications', function () {
+    $candidate = Candidate::factory()->has(JobApplication::factory()->count(3))->create();
+
+    expect($candidate->jobApplications)->toHaveCount(3)->each->toBeInstanceOf(JobApplication::class);
 });

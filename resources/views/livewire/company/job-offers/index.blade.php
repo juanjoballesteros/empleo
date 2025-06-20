@@ -29,10 +29,17 @@
                     @if($jobOffer->location === 'Presencial')
                         <p>Ubicación: {{ $jobOffer->city->name  }}</p>
                     @endif
-                    
-                    <flux:button wire:click="delete({{ $jobOffer->id }})" icon="trash" variant="danger" class="ms-auto">
-                        Eliminar
-                    </flux:button>
+
+                    <div class="ms-auto flex gap-2">
+                        <flux:button href="{{ route('company.offers.applications', $jobOffer->id) }}" icon="users"
+                                     variant="primary" wire:navigate>
+                            Ver Candidatos
+                        </flux:button>
+
+                        <flux:button wire:click="delete({{ $jobOffer->id }})" icon="trash" variant="danger">
+                            Eliminar
+                        </flux:button>
+                    </div>
                 </div>
             </div>
         @empty

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\City;
 use App\Models\Company;
 use App\Models\Department;
+use App\Models\JobApplication;
 use App\Models\JobOffer;
 
 test('to array', function () {
@@ -42,4 +43,10 @@ it('belongs to a city', function () {
     $jobOffer = JobOffer::factory()->presencial()->create();
 
     expect($jobOffer->city)->toBeInstanceOf(City::class);
+});
+
+it('has many job applications', function () {
+    $jobOffer = JobOffer::factory()->has(JobApplication::factory()->count(3))->create();
+
+    expect($jobOffer->jobApplications)->toHaveCount(3)->each->toBeInstanceOf(JobApplication::class);
 });

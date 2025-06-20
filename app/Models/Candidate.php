@@ -9,6 +9,7 @@ use Database\Factories\CandidateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property-read ?Cv $cv
  * @property-read Department $department
  * @property-read City $city
+ * @property-read \Illuminate\Support\Collection<int, JobApplication> $jobApplications
  */
 final class Candidate extends Model
 {
@@ -58,5 +60,13 @@ final class Candidate extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
+    }
+
+    /**
+     * @return HasMany<JobApplication>
+     */
+    public function jobApplications(): HasMany
+    {
+        return $this->hasMany(JobApplication::class);
     }
 }

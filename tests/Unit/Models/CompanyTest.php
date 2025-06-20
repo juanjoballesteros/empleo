@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Models\City;
 use App\Models\Company;
 use App\Models\Department;
+use App\Models\JobApplication;
 use App\Models\JobOffer;
 use App\Models\User;
 
@@ -44,4 +45,10 @@ it('belong to a city', function () {
     $company = Company::factory()->create();
 
     expect($company->city)->toBeInstanceOf(City::class);
+});
+
+it('has many job applications', function () {
+    $company = Company::factory()->has(JobApplication::factory(3))->create();
+
+    expect($company->jobApplications)->toHaveCount(3)->each->toBeInstanceOf(JobApplication::class);
 });

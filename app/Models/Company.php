@@ -23,6 +23,7 @@ use Illuminate\Support\Collection;
  * @property Carbon $updated_at
  * @property-read User $user
  * @property-read Collection<int, JobOffer> $jobOffers
+ * @property-read Collection<int, JobApplication> $jobApplications
  * @property-read Department $department
  * @property-read City $city
  */
@@ -61,5 +62,13 @@ final class Company extends Model
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class);
+    }
+
+    /**
+     * @return HasMany<JobApplication, $this>
+     */
+    public function jobApplications(): HasMany
+    {
+        return $this->hasMany(JobApplication::class);
     }
 }

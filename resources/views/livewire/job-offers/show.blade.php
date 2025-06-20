@@ -22,6 +22,13 @@
 
             <p>{{ $jobOffer->description }}</p>
             <p>{{ $jobOffer->requirements }}</p>
+
+            <div class="mt-4">
+                <flux:button type="button" wire:click="applyForJob" variant="primary" color="blue"
+                    @class(['w-full', 'opacity-50 cursor-not-allowed' => $hasApplied])>
+                    {{ $hasApplied ? 'Ya te has postulado' : 'Postularme a esta oferta' }}
+                </flux:button>
+            </div>
         </div>
     @endisset
 </div>
