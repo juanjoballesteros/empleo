@@ -36,7 +36,9 @@
                             Ver Candidatos
                         </flux:button>
 
-                        <flux:button wire:click="delete({{ $jobOffer->id }})" icon="trash" variant="danger">
+                        <flux:button wire:click="delete({{ $jobOffer->id }})"
+                                     wire:confirm="¿Estas seguro de que quieres eliminar esta oferta de empleo?"
+                                     icon="trash" variant="danger">
                             Eliminar
                         </flux:button>
                     </div>
