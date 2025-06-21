@@ -60,7 +60,7 @@ final class JobOffer extends Model
     }
 
     /**
-     * @return HasMany<JobApplication>
+     * @return HasMany<JobApplication, $this>
      */
     public function jobApplications(): HasMany
     {

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -23,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property-read ?Cv $cv
  * @property-read Department $department
  * @property-read City $city
- * @property-read \Illuminate\Support\Collection<int, JobApplication> $jobApplications
+ * @property-read Collection<int, JobApplication> $jobApplications
  */
 final class Candidate extends Model
 {
@@ -63,7 +64,7 @@ final class Candidate extends Model
     }
 
     /**
-     * @return HasMany<JobApplication>
+     * @return HasMany<JobApplication, $this>
      */
     public function jobApplications(): HasMany
     {

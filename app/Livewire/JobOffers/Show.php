@@ -14,7 +14,7 @@ use Livewire\Component;
 
 final class Show extends Component
 {
-    public ?JobOffer $jobOffer = null;
+    public JobOffer $jobOffer;
 
     public bool $hasApplied = false;
 
@@ -23,7 +23,10 @@ final class Show extends Component
     {
         $this->jobOffer = $jobOffer;
 
-        $candidate = request()->user()->userable;
+        /** @var User $user */
+        $user = request()->user();
+
+        $candidate = $user->userable;
         assert($candidate instanceof Candidate);
 
         $this->hasApplied = $candidate->jobApplications()->where('job_offer_id', $jobOffer->id)->exists();
