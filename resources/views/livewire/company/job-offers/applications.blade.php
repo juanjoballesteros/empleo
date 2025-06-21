@@ -1,4 +1,4 @@
-<div>
+<div x-data="{ actualJobId: '', actualJob: '' }">
     <div class="bg-white shadow-md rounded-lg p-6">
         <div class="mb-6">
             <h2 class="text-2xl font-bold text-gray-800">Candidatos postulados</h2>
@@ -13,6 +13,7 @@
                         <th class="py-3 px-6 text-left">Candidato</th>
                         <th class="py-3 px-6 text-left">Fecha de postulación</th>
                         <th class="py-3 px-6 text-left">Estado</th>
+                        <th class="py-3 px-6 text-left">Ver Notas</th>
                         <th class="py-3 px-6 text-center">Acciones</th>
                     </tr>
                     </thead>
@@ -57,6 +58,18 @@
                                     @endswitch
                                 </flux:badge>
                             </td>
+                            <td>
+                                @if($jobApplication->notes)
+                                    <flux:button
+                                        x-on:click="$flux.modal('showNotes').show(); actualJob = {{ $jobApplication }}">
+                                        Ver Notas
+                                    </flux:button>
+                                @else
+                                    <flux:badge>
+                                        No hay notas
+                                    </flux:badge>
+                                @endif
+                            </td>
                             <td class="py-4 px-6 text-center">
                                 <div class="flex justify-center gap-2">
                                     <flux:button
@@ -72,7 +85,7 @@
                                     </flux:button>
 
                                     <flux:button
-                                        wire:click="updateApplicationStatus({{ $jobApplication->id }}, 'rejected')"
+                                        x-on:click="$flux.modal('notes').show(); actualJobId = {{ $jobApplication->id }};"
                                         variant="primary" color="red" title="Rechazar candidato">
                                         Rechazar
                                     </flux:button>
@@ -93,4 +106,19 @@
             </div>
         @endif
     </div>
+
+    <flux:modal name="notes" class="w-lg flex flex-col gap-6">
+        <flux:textarea wire:model="notes" label="Notas:" description="Por favor describa porque rechaza al candidato"/>
+
+        <flux:button type="button" variant="danger"
+                     x-on:click="$wire.updateApplicationStatus(actualJobId, 'rejected')">
+            Rechazar Candidato
+        </flux:button>
+    </flux:modal>
+
+    <flux:modal name="showNotes" class="w-lg">
+        Notas:
+
+        <p x-text="actualJob.notes"></p>
+    </flux:modal>
 </div>
