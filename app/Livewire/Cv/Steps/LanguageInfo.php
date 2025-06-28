@@ -78,7 +78,7 @@ final class LanguageInfo extends Component
 
     public function navigate(): void
     {
-        $this->redirectRoute('cv.pdf.commercial', $this->cv->id);
+        $this->redirectRoute('cv.pdf', $this->cv->id);
     }
 
     #[On('refresh')]

@@ -89,7 +89,7 @@ test('navigate to next step', function () {
     $response = Livewire::test(LanguageInfo::class, ['cv' => Cv::factory()->create()])
         ->call('navigate');
 
-    $response->assertRedirect('/cv/1/pdf/commercial');
+    $response->assertRedirect('/cv/1/pdf');
 });
 
 it('can be updated', function () {

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Actions\CvPdf;
 use App\Livewire\Candidate;
 use App\Livewire\Company;
 use App\Livewire\Cv;
@@ -30,7 +31,7 @@ Route::middleware(['auth', 'type'])->group(function () {
 
         Route::prefix('cv')->group(function () {
             Route::prefix('{cv}')->group(function () {
-                Route::get('pdf/commercial', fn () => 'Pdf')->name('cv.pdf.commercial');
+                Route::get('pdf', CvPdf::class)->name('cv.pdf');
 
                 Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.create.personal-info');
                 Route::get('birth-info', Cv\Steps\BirthInfo::class)->name('cv.create.birth-info');
