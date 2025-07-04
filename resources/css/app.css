@@ -55,9 +55,9 @@
     @apply !mb-0 !leading-tight;
 }
 
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
+input:focus[data-flux-control]:not([data-flux-input-group] input),
+textarea:focus[data-flux-control]:not([data-flux-input-group] textarea),
+select:focus[data-flux-control]:not([data-flux-input-group] select) {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
