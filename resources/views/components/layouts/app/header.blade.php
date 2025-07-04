@@ -31,6 +31,7 @@
             <flux:navbar.item icon="layout-grid" href="{{ route('dashboard') }}" wire:navigate>
                 {{ __('Dashboard') }}
             </flux:navbar.item>
+
             @role('empresa')
             <flux:navbar.item href="{{ route('company.offers.index') }}" wire:navigate>
                 Ofertas De Empleo
@@ -108,6 +109,18 @@
                                wire:navigate>
                 {{ __('Dashboard') }}
             </flux:navlist.item>
+
+            @role('empresa')
+            <flux:navlist.item href="{{ route('company.offers.index') }}" wire:navigate>
+                Ofertas De Empleo
+            </flux:navlist.item>
+            @endrole
+
+            @role('candidato')
+            <flux:navlist.item href="{{ route('offers.index') }}" wire:navigate>
+                Buscar Ofertas De Empleo
+            </flux:navlist.item>
+            @endrole
         </flux:navlist.group>
     </flux:navlist>
 </flux:sidebar>
