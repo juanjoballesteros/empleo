@@ -36,6 +36,11 @@
                             Ver Candidatos
                         </flux:button>
 
+                        <flux:button href="{{ route('company.offers.edit', $jobOffer->id) }}" icon="pencil"
+                                     variant="primary" color="yellow" wire:navigate>
+                            Editar
+                        </flux:button>
+
                         <flux:button wire:click="delete({{ $jobOffer->id }})"
                                      wire:confirm="¿Estas seguro de que quieres eliminar esta oferta de empleo?"
                                      icon="trash" variant="danger">
