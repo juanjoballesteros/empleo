@@ -80,12 +80,6 @@
                             <td class="py-4 px-6 text-center">
                                 <div class="flex justify-center gap-2">
                                     <flux:button
-                                        wire:click="updateApplicationStatus({{ $jobApplication->id }}, 'reviewed')"
-                                        variant="primary" color="blue" title="Marcar como revisado">
-                                        Revisar
-                                    </flux:button>
-
-                                    <flux:button
                                         wire:click="updateApplicationStatus({{ $jobApplication->id }}, 'accepted')"
                                         variant="primary" color="green" title="Aceptar candidato">
                                         Aceptar
