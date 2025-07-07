@@ -14,6 +14,7 @@
                         <th class="py-3 px-6 text-left">Fecha de postulación</th>
                         <th class="py-3 px-6 text-left">Estado</th>
                         <th class="py-3 px-6 text-left">Ver Notas</th>
+                        <th class="py-3 px-6 text-center">Ver Hoja De Vida</th>
                         <th class="py-3 px-6 text-center">Acciones</th>
                     </tr>
                     </thead>
@@ -69,6 +70,12 @@
                                         No hay notas
                                     </flux:badge>
                                 @endif
+                            </td>
+                            <td class="py-4 px-6 text-center">
+                                <flux:button href="{{ route('company.cv.pdf', $jobApplication->candidate->cv->id) }}"
+                                             target="_blank">
+                                    Abrir HV
+                                </flux:button>
                             </td>
                             <td class="py-4 px-6 text-center">
                                 <div class="flex justify-center gap-2">
