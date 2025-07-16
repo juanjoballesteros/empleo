@@ -13,6 +13,12 @@ use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Prism;
+use Prism\Prism\Schema\NumberSchema;
+use Prism\Prism\Schema\ObjectSchema;
+use Prism\Prism\Schema\StringSchema;
+use Prism\Prism\ValueObjects\Media\Image;
 
 final class PersonalInfo extends Component
 {
@@ -52,6 +58,9 @@ final class PersonalInfo extends Component
     /** @var array<string, string>|null[] */
     public array $document_urls = ['front' => null, 'back' => null, 'profile'];
 
+    /** @var array<string, string> */
+    public ?array $data = [];
+
     /** @return array<string, list<string|RequiredIf>> */
     public function rules(): array
     {
@@ -82,6 +91,73 @@ final class PersonalInfo extends Component
             $this->fill($personalInfo);
         }
     }
+
+    // @codeCoverageIgnoreStart
+    public function analyzeImage(): void
+    {
+        $this->validate([
+            'document_front' => ['required', 'image'],
+            'document_back' => ['required', 'image'],
+        ]);
+
+        $frontSchema = new ObjectSchema(
+            'front_review_document_card',
+            'Front Image Review Of A Document Card',
+            [
+                new StringSchema('document_type', 'Document Type: CC, TI, PAS, CE'),
+                new NumberSchema('document_number', 'Document Number'),
+                new StringSchema('first_name', 'First Name Of Document (the first word in the name)'),
+                new StringSchema('second_name', 'Second Name Of Document (the second word in the name)', true),
+                new StringSchema('first_surname', 'First Surname Of Document (the first word in the last name)'),
+                new StringSchema('second_surname', 'Second Surname Of Document (the second word in the last name)', true),
+            ]
+        );
+
+        $backSchema = new ObjectSchema(
+            'back_review_document_card',
+            'Back Image Review Of A Document Card',
+            [
+                new StringSchema('sex', 'The sex of the document: M, F'),
+                /*new StringSchema('birthdate', 'Birthdate in the document in format (00-00-0000, d-m-Y), it can't be after today'),
+                new StringSchema('department_id', 'Department id taken of the DANE id departments'),
+                new StringSchema('city_id', 'City id taken of the DANE id city'),*/
+            ],
+        );
+
+        $cardSchema = new ObjectSchema(
+            'document_card_review',
+            'Complete Review Of A Document Card',
+            [$frontSchema, $backSchema]
+        );
+
+        $response = Prism::structured()
+            ->using(Provider::Gemini, 'gemini-2.5-flash-lite-preview-06-17')
+            ->withSchema($cardSchema)
+            ->withPrompt(
+                'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
+                [
+                    Image::fromUrl($this->document_front?->temporaryUrl()),
+                    Image::fromUrl($this->document_back?->temporaryUrl()),
+                ])
+            ->asStructured();
+
+        $this->data = $response->structured;
+
+        if (! isset($this->data['front_review_document_card']) || empty($this->data['front_review_document_card'])) {
+            LivewireAlert::title('No hemos detectado un documento valido, por favor vuelva a intentarlo')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+
+            $this->data = [];
+            $this->document_front = null;
+            $this->document_back = null;
+        }
+
+        $this->fill($this->data['front_review_document_card']);
+    }
+    // @codeCoverageIgnoreEnd
 
     public function store(): void
     {
