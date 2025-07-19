@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('candidates', function (Blueprint $table): void {
             $table->id();
+            $table->string('identification');
             $table->foreignId('department_id');
             $table->foreignId('city_id');
             $table->timestamps();

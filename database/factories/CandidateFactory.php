@@ -22,6 +22,7 @@ final class CandidateFactory extends Factory
     public function definition(): array
     {
         return [
+            'identification' => fake()->randomNumber(9),
             'department_id' => Department::query()->inRandomOrder()->first(),
             'city_id' => fn (array $attributes) => City::query()
                 ->where('department_id', $attributes['department_id'])

@@ -34,3 +34,11 @@ it('belongs to a candidate', function () {
 
     expect($user->userable)->toBeInstanceOf(Candidate::class);
 });
+
+it('retrieve initials', function () {
+    $user = User::factory()->create([
+        'name' => 'JUAN JOSE',
+    ]);
+
+    expect($user->initials())->toBe('JJ');
+});

@@ -14,6 +14,7 @@ test('to array', function () {
 
     expect(array_keys($candidate->toArray()))->toEqual([
         'id',
+        'identification',
         'department_id',
         'city_id',
         'created_at',

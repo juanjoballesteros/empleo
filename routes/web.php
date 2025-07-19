@@ -15,10 +15,13 @@ use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('guest')->group(function () {
     Route::view('select', 'select')->name('select');
-    Route::get('company/register', Company\Register::class)->name('company.register');
     Route::get('candidate/register', Candidate\Register::class)->name('candidate.register');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('company/register', Company\Register::class)->name('company.register');
 });
 
 Route::middleware(['auth', 'type'])->group(function () {

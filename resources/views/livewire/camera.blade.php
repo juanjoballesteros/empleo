@@ -5,12 +5,14 @@
         <div class="p-2">
             <video id="video" autoplay class="rounded-md m-auto"></video>
 
-            <div class="flex gap-2">
+            <div class="flex flex-col gap-2">
                 <flux:select id="camera" label="Seleccione una camara">
                     <flux:select.option value="">Seleccionar...</flux:select.option>
                 </flux:select>
 
-                <flux:button type="button" id="snap" icon="camera" class="mt-6"/>
+                <flux:button type="button" id="snap" variant="primary" icon="camera">
+                    Tomar Foto
+                </flux:button>
             </div>
 
             <canvas id="canvas" hidden></canvas>
@@ -41,10 +43,14 @@
             canvas.width = video.videoWidth
             canvas.height = video.videoHeight
             canvas.getContext('2d').drawImage(video, 0, 0)
+
             let img = dataURLToFile(canvas.toDataURL('image/png'), $wire.file + '.png')
             video.pause()
             video.srcObject.getTracks().forEach(track => track.stop())
-            Livewire.find($wire.idComponent).upload($wire.file, img)
+
+            Livewire.find($wire.idComponent).upload($wire.file, img, () => {
+                $wire.dispatch('photoTaken')
+            })
             Flux.modal('camera').close()
         })
 

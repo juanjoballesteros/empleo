@@ -13,9 +13,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Collection;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * @property int $id
+ * @property string $identification
  * @property int $department_id
  * @property int $city_id
  * @property Carbon $created_at
@@ -26,10 +29,10 @@ use Illuminate\Support\Collection;
  * @property-read City $city
  * @property-read Collection<int, JobApplication> $jobApplications
  */
-final class Candidate extends Model
+final class Candidate extends Model implements HasMedia
 {
     /** @use HasFactory<CandidateFactory> */
-    use HasFactory;
+    use HasFactory, InteractsWithMedia;
 
     /**
      * @return MorphOne<User, $this>
