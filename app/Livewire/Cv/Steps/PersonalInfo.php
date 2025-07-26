@@ -166,7 +166,7 @@ final class PersonalInfo extends Component
         $this->redirectRoute('cv.create.birth-info', $this->cv->id, navigate: true);
 
         /** @var \App\Models\PersonalInfo $personalInfo */
-        $personalInfo = $this->cv->personalInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->pull([
+        $personalInfo = $this->cv->personalInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([
             'first_name',
             'second_name',
             'first_surname',
