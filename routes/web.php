@@ -33,6 +33,8 @@ Route::middleware(['auth', 'type'])->group(function () {
         });
 
         Route::prefix('cv')->group(function () {
+            Route::get('documents', Cv\Documents::class)->name('cv.documents');
+
             Route::prefix('{cv}')->group(function () {
                 Route::get('pdf', CvPdf::class)->name('cv.pdf');
 
