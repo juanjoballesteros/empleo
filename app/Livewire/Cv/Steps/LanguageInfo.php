@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Cv\Steps;
 
 use App\Models\Cv;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -38,6 +39,13 @@ final class LanguageInfo extends Component
 
     /** @var Collection<int, \App\Models\LanguageInfo> */
     public Collection $languagesInfos;
+
+    public function mount(): void
+    {
+        $user = request()->user();
+        assert($user instanceof User);
+        $this->cv = $user->cv;
+    }
 
     public function store(): void
     {
@@ -78,7 +86,7 @@ final class LanguageInfo extends Component
 
     public function navigate(): void
     {
-        $this->redirectRoute('cv.pdf', $this->cv->id);
+        $this->redirectRoute('cv.pdf');
     }
 
     #[On('refresh')]

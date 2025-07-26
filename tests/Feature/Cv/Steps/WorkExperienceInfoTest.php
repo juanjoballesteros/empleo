@@ -21,7 +21,7 @@ test('work experience screen can be rendered', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/work-experience-info");
+    $response = $this->actingAs($user)->get('/cv/work-experience-info');
 
     $response->assertOk();
 });
@@ -35,7 +35,7 @@ it('can be created', function () {
         ->create();
     $department = Department::all()->random()->first();
 
-    $response = Livewire::test(WorkExperienceInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(WorkExperienceInfo::class)
         ->set('name', 'Empresa Test')
         ->set('type', 'Privada')
         ->set('email', 'empresa@test.com')
@@ -63,7 +63,7 @@ it('show validation errors', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(WorkExperienceInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(WorkExperienceInfo::class)
         ->set('name', '')
         ->set('type', '')
         ->set('email', '')
@@ -105,7 +105,7 @@ it('can be deleted', function () {
 
     $this->assertDatabaseCount('work_experiences', 2);
 
-    $response = Livewire::test(WorkExperienceInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(WorkExperienceInfo::class)
         ->call('delete', $user->cv->workExperiences()->first());
 
     $response->assertNoRedirect();
@@ -113,10 +113,16 @@ it('can be deleted', function () {
 });
 
 test('navigate to next step', function () {
-    $response = Livewire::test(WorkExperienceInfo::class, ['cv' => Cv::factory()->create()])
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory()->has(WorkExperience::factory(2)))
+        ->create();
+
+    $response = Livewire::actingAs($user)
+        ->test(WorkExperienceInfo::class)
         ->call('navigate');
 
-    $response->assertRedirect('/cv/1/language-info');
+    $response->assertRedirect('/cv/language-info');
 });
 
 it('can be updated', function () {
@@ -130,7 +136,7 @@ it('can be updated', function () {
     $workExperience->addMedia(UploadedFile::fake()->image('certification_1.jpg'))
         ->toMediaCollection();
 
-    $response = Livewire::test(Edit::class)
+    $response = Livewire::actingAs($user)->test(Edit::class)
         ->call('edit', $workExperience)
         ->assertSet('name', $workExperience->name)
         ->assertSet('type', $workExperience->type)

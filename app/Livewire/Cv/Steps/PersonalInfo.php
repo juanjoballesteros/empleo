@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Cv\Steps;
 
 use App\Models\Cv;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\RequiredIf;
 use Illuminate\View\View;
@@ -71,7 +72,7 @@ final class PersonalInfo extends Component
         ];
     }
 
-    public function mount(Cv $cv): void
+    public function mount(): void
     {
         if (session()->has('error')) {
             LivewireAlert::title(session()->get('error'))
@@ -80,6 +81,11 @@ final class PersonalInfo extends Component
                 ->position('top-end')
                 ->show();
         }
+
+        $user = request()->user();
+        assert($user instanceof User);
+        $this->cv = $user->cv;
+        $cv = $user->cv;
 
         if ($personalInfo = $cv->personalInfo) {
             $this->document_urls = [
@@ -163,7 +169,7 @@ final class PersonalInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.birth-info', $this->cv->id, navigate: true);
+        $this->redirectRoute('cv.create.birth-info', navigate: true);
 
         /** @var \App\Models\PersonalInfo $personalInfo */
         $personalInfo = $this->cv->personalInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([

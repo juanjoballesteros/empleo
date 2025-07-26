@@ -18,7 +18,7 @@ test('personal info screen can be rendered', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/personal-info");
+    $response = $this->actingAs($user)->get('/cv/personal-info');
 
     $response->assertStatus(200);
 });
@@ -34,7 +34,7 @@ it('show alert', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/personal-info");
+    $response = $this->actingAs($user)->get('/cv/personal-info');
 
     $response->assertSessionHas('error');
 });
@@ -47,7 +47,7 @@ it('can create personal info', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(PersonalInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(PersonalInfo::class)
         ->set('first_name', 'Test')
         ->set('second_name', 'Middle')
         ->set('first_surname', 'Doe')
@@ -62,7 +62,7 @@ it('can create personal info', function () {
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/birth-info");
+        ->assertRedirect('/cv/birth-info');
 
     Storage::disk('public')->assertExists('1/front.jpg')
         ->assertExists('2/back.jpg')
@@ -75,7 +75,7 @@ it('shows validation errors', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(PersonalInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(PersonalInfo::class)
         ->set('first_name', '')
         ->set('first_surname', '')
         ->set('second_surname', '')
@@ -110,7 +110,7 @@ it('can update personal info', function () {
     $personalInfo->addMedia(UploadedFile::fake()->image('profile.jpg'))
         ->toMediaCollection('profile');
 
-    $response = Livewire::test(PersonalInfo::class, ['cv' => $user->cv]);
+    $response = Livewire::actingAs($user)->test(PersonalInfo::class);
 
     $response->assertSet('first_name', 'Test')
         ->assertSet('second_name', $personalInfo->second_name)
@@ -132,7 +132,7 @@ it('can update personal info', function () {
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/birth-info");
+        ->assertRedirect('/cv/birth-info');
 
     Storage::disk('public')
         ->assertExists('4/front_other.jpg')

@@ -17,7 +17,7 @@ test('birth info screen can be rendered', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/birth-info");
+    $response = $this->actingAs($user)->get('/cv/birth-info');
 
     $response->assertStatus(200);
 });
@@ -30,14 +30,14 @@ it('can be created', function () {
 
     $department = Department::all()->random()->first();
 
-    $response = Livewire::test(BirthInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(BirthInfo::class)
         ->set('birthdate', '1990-01-01')
         ->set('department_id', $department->id)
         ->set('city_id', $department->cities->random()->first()->id)
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/contact-info");
+        ->assertRedirect('/cv/contact-info');
 
     $this->assertDatabaseCount('birth_infos', 1);
 });
@@ -48,7 +48,7 @@ it('shows validation errors', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(BirthInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(BirthInfo::class)
         ->set('birthdate', '')
         ->call('store');
 
@@ -66,7 +66,7 @@ it('can be updated', function () {
         ->create();
     $birthInfo = $user->cv->birthInfo;
 
-    $response = Livewire::test(BirthInfo::class, ['cv' => $user->cv]);
+    $response = Livewire::actingAs($user)->test(BirthInfo::class);
 
     $response->assertSet('birthdate', $birthInfo->birthdate->format('Y-m-d'))
         ->assertSet('department_id', $birthInfo->department_id)
@@ -78,7 +78,7 @@ it('can be updated', function () {
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/contact-info");
+        ->assertRedirect('/cv/contact-info');
 
     $this->assertDatabaseCount('birth_infos', 1);
 });

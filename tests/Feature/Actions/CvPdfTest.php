@@ -35,7 +35,7 @@ it('response with a pdf', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->userable->cv->id}/pdf");
+    $response = $this->actingAs($user)->get('/cv/pdf');
 
     $response->assertOk();
     Pdf::assertRespondedWithPdf(function (PdfBuilder $pdf) {

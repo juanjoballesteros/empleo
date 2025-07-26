@@ -18,7 +18,7 @@ test('basic education screen can be rendered', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/basic-education-info");
+    $response = $this->actingAs($user)->get('/cv/basic-education-info');
 
     $response->assertOk();
 });
@@ -31,7 +31,7 @@ it('can be created', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(BasicEducationInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(BasicEducationInfo::class)
         ->set('program', 'BACHILLER')
         ->set('level', 11)
         ->set('end_date', '2020-01-01')
@@ -39,7 +39,7 @@ it('can be created', function () {
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/higher-education-info");
+        ->assertRedirect('/cv/higher-education-info');
 
     $this->assertDatabaseCount('basic_education_infos', 1);
 
@@ -52,7 +52,7 @@ it('show validation errors', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(BasicEducationInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(BasicEducationInfo::class)
         ->set('program')
         ->set('level')
         ->set('end_date')
@@ -77,7 +77,7 @@ it('can be updated', function () {
     $basicEducation->addMedia(UploadedFile::fake()->image('certification_1.jpg'))
         ->toMediaCollection();
 
-    $response = Livewire::test(BasicEducationInfo::class, ['cv' => $user->cv]);
+    $response = Livewire::actingAs($user)->test(BasicEducationInfo::class);
 
     $response->assertSet('program', 'BACHILLER')
         ->assertSet('level', $basicEducation->level)
@@ -91,7 +91,7 @@ it('can be updated', function () {
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/higher-education-info");
+        ->assertRedirect('/cv/higher-education-info');
 
     $this->assertDatabaseCount('basic_education_infos', 1);
 

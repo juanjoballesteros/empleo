@@ -16,7 +16,7 @@ test('contact info screen can be rendered', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/contact-info");
+    $response = $this->actingAs($user)->get('/cv/contact-info');
 
     $response->assertStatus(200);
 });
@@ -27,13 +27,13 @@ it('can be created', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(ContactInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(ContactInfo::class)
         ->set('phone_number', '3124567890')
         ->set('email', 'email@email.com')
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/residence-info");
+        ->assertRedirect('/cv/residence-info');
 
     $this->assertDatabaseCount('contact_infos', 1);
 });
@@ -44,7 +44,7 @@ it('show validation errors', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(ContactInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(ContactInfo::class)
         ->set('phone_number', '')
         ->set('email', '')
         ->call('store');
@@ -63,7 +63,7 @@ it('assert can be updated', function () {
 
     $contactInfo = $user->cv->contactInfo;
 
-    $response = Livewire::test(ContactInfo::class, ['cv' => $user->cv]);
+    $response = Livewire::actingAs($user)->test(ContactInfo::class);
 
     $response->assertSet('phone_number', $contactInfo->phone_number)
         ->assertSet('email', $contactInfo->email);
@@ -73,7 +73,7 @@ it('assert can be updated', function () {
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/residence-info");
+        ->assertRedirect('/cv/residence-info');
 
     $this->assertDatabaseCount('contact_infos', 1);
 });

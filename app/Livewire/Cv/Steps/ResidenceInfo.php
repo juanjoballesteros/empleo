@@ -7,6 +7,7 @@ namespace App\Livewire\Cv\Steps;
 use App\Models\City;
 use App\Models\Cv;
 use App\Models\Department;
+use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -32,9 +33,14 @@ final class ResidenceInfo extends Component
     /** @var Collection<int, City>|list<null> */
     public Collection|array $cities = [];
 
-    public function mount(Cv $cv): void
+    public function mount(): void
     {
         $this->departments = Department::all();
+
+        $user = request()->user();
+        assert($user instanceof User);
+        $this->cv = $user->cv;
+        $cv = $user->cv;
 
         if ($residenceInfo = $cv->residenceInfo) {
             $this->cities = $residenceInfo->department->cities;
@@ -46,7 +52,7 @@ final class ResidenceInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.basic-education-info', $this->cv->id, navigate: true);
+        $this->redirectRoute('cv.create.basic-education-info', navigate: true);
 
         $this->cv->residenceInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([
             'address',

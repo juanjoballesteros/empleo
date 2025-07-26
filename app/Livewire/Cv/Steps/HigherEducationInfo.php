@@ -8,6 +8,7 @@ use App\Models\City;
 use App\Models\Cv;
 use App\Models\Department;
 use App\Models\HigherEducation;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -57,6 +58,13 @@ final class HigherEducationInfo extends Component
     /** @var Collection<int, City>|list<null> */
     public Collection|array $cities = [];
 
+    public function mount(): void
+    {
+        $user = request()->user();
+        assert($user instanceof User);
+        $this->cv = $user->cv;
+    }
+
     public function store(): void
     {
         $this->validate();
@@ -94,7 +102,7 @@ final class HigherEducationInfo extends Component
     #[On('navigate')]
     public function navigate(): void
     {
-        $this->redirectRoute('cv.create.work-experience-info', $this->cv->id, navigate: true);
+        $this->redirectRoute('cv.create.work-experience-info', navigate: true);
 
         LivewireAlert::title('Información De Educación Superior Guardada')
             ->success()

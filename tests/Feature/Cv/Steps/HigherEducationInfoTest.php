@@ -21,7 +21,7 @@ test('higher education screen can be rendered', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/higher-education-info");
+    $response = $this->actingAs($user)->get('/cv/higher-education-info');
 
     $response->assertOk();
 });
@@ -35,7 +35,7 @@ it('can be created', function () {
         ->create();
     $department = Department::all()->random()->first();
 
-    $response = Livewire::test(HigherEducationInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(HigherEducationInfo::class)
         ->set('type', 'UN')
         ->set('semester', 7)
         ->set('licensed', 'Si')
@@ -57,7 +57,7 @@ it('show validation errors', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(HigherEducationInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(HigherEducationInfo::class)
         ->set('type', '')
         ->set('semester', '')
         ->set('licensed', '')
@@ -86,7 +86,7 @@ it('can be deleted', function () {
 
     $this->assertDatabaseCount('higher_education', 2);
 
-    $response = Livewire::test(HigherEducationInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(HigherEducationInfo::class)
         ->call('delete', $user->cv->higherEducations()->first());
 
     $response->assertNoRedirect();
@@ -94,10 +94,16 @@ it('can be deleted', function () {
 });
 
 test('send to work experience', function () {
-    $response = Livewire::test(HigherEducationInfo::class, ['cv' => Cv::factory()->create()])
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory()->has(HigherEducation::factory(2)))
+        ->create();
+
+    $response = Livewire::actingAs($user)
+        ->test(HigherEducationInfo::class)
         ->call('navigate');
 
-    $response->assertRedirect('/cv/1/work-experience-info');
+    $response->assertRedirect('/cv/work-experience-info');
 });
 
 it('can be updated', function () {
@@ -111,7 +117,7 @@ it('can be updated', function () {
     $higherEducation->addMedia(UploadedFile::fake()->image('certification_1.jpg'))
         ->toMediaCollection();
 
-    $response = Livewire::test(Edit::class)
+    $response = Livewire::actingAs($user)->test(Edit::class)
         ->call('edit', $higherEducation)
         ->assertSet('type', $higherEducation->type)
         ->assertSet('semester', $higherEducation->semester)

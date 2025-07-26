@@ -17,7 +17,7 @@ test('residence info screen can be rendered', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/residence-info");
+    $response = $this->actingAs($user)->get('/cv/residence-info');
 
     $response->assertOk();
 });
@@ -30,14 +30,14 @@ it('can be created', function () {
 
     $department = Department::all()->random()->first();
 
-    $response = Livewire::test(ResidenceInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(ResidenceInfo::class)
         ->set('department_id', $department->id)
         ->set('city_id', $department->cities->random()->first()->id)
         ->set('address', fake()->address())
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/basic-education-info");
+        ->assertRedirect('/cv/basic-education-info');
 
     $this->assertDatabaseCount('residence_infos', 1);
 });
@@ -48,7 +48,7 @@ it('show validation errors', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(ResidenceInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(ResidenceInfo::class)
         ->set('department_id', '')
         ->set('city_id', '')
         ->set('address', '')
@@ -68,7 +68,7 @@ it('can be updated', function () {
         ->create();
     $residenceInfo = $user->cv->residenceInfo;
 
-    $response = Livewire::test(ResidenceInfo::class, ['cv' => $user->cv]);
+    $response = Livewire::actingAs($user)->test(ResidenceInfo::class);
 
     $response->assertSet('department_id', $residenceInfo->department_id)
         ->assertSet('city_id', $residenceInfo->city_id)
@@ -80,7 +80,7 @@ it('can be updated', function () {
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirect("/cv/{$user->cv->id}/basic-education-info");
+        ->assertRedirect('/cv/basic-education-info');
 
     $this->assertDatabaseCount('residence_infos', 1);
 });

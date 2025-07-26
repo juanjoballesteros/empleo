@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Cv\Steps;
 
 use App\Models\Cv;
+use App\Models\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\RequiredIf;
 use Illuminate\View\View;
@@ -41,8 +42,13 @@ final class BasicEducationInfo extends Component
         ];
     }
 
-    public function mount(Cv $cv): void
+    public function mount(): void
     {
+        $user = request()->user();
+        assert($user instanceof User);
+        $this->cv = $user->cv;
+        $cv = $user->cv;
+
         if ($basicEducationInfo = $cv->basicEducationInfo) {
             $this->fill($basicEducationInfo);
             $this->end_date = $basicEducationInfo->end_date->format('Y-m-d');
@@ -54,7 +60,7 @@ final class BasicEducationInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.higher-education-info', $this->cv->id, navigate: true);
+        $this->redirectRoute('cv.create.higher-education-info', navigate: true);
 
         /** @var \App\Models\BasicEducationInfo $basicEducationInfo */
         $basicEducationInfo = $this->cv->basicEducationInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([

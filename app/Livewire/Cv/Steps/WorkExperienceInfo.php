@@ -7,6 +7,7 @@ namespace App\Livewire\Cv\Steps;
 use App\Models\City;
 use App\Models\Cv;
 use App\Models\Department;
+use App\Models\User;
 use App\Models\WorkExperience;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
@@ -78,6 +79,10 @@ final class WorkExperienceInfo extends Component
     public function mount(): void
     {
         $this->departments = Department::all();
+
+        $user = request()->user();
+        assert($user instanceof User);
+        $this->cv = $user->cv;
     }
 
     public function store(): void
@@ -143,7 +148,7 @@ final class WorkExperienceInfo extends Component
     #[On('navigate')]
     public function navigate(): void
     {
-        $this->redirectRoute('cv.create.language-info', $this->cv->id, navigate: true);
+        $this->redirectRoute('cv.create.language-info', navigate: true);
 
         LivewireAlert::title('Progreso Guardado')
             ->success()

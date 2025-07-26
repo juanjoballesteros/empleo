@@ -34,19 +34,16 @@ Route::middleware(['auth', 'type'])->group(function () {
 
         Route::prefix('cv')->group(function () {
             Route::get('documents', Cv\Documents::class)->name('cv.documents');
+            Route::get('pdf', CvPdf::class)->name('cv.pdf');
 
-            Route::prefix('{cv}')->group(function () {
-                Route::get('pdf', CvPdf::class)->name('cv.pdf');
-
-                Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.create.personal-info');
-                Route::get('birth-info', Cv\Steps\BirthInfo::class)->name('cv.create.birth-info');
-                Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.create.contact-info');
-                Route::get('residence-info', Cv\Steps\ResidenceInfo::class)->name('cv.create.residence-info');
-                Route::get('basic-education-info', Cv\Steps\BasicEducationInfo::class)->name('cv.create.basic-education-info');
-                Route::get('higher-education-info', Cv\Steps\HigherEducationInfo::class)->name('cv.create.higher-education-info');
-                Route::get('work-experience-info', Cv\Steps\WorkExperienceInfo::class)->name('cv.create.work-experience-info');
-                Route::get('language-info', Cv\Steps\LanguageInfo::class)->name('cv.create.language-info');
-            });
+            Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.create.personal-info');
+            Route::get('birth-info', Cv\Steps\BirthInfo::class)->name('cv.create.birth-info');
+            Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.create.contact-info');
+            Route::get('residence-info', Cv\Steps\ResidenceInfo::class)->name('cv.create.residence-info');
+            Route::get('basic-education-info', Cv\Steps\BasicEducationInfo::class)->name('cv.create.basic-education-info');
+            Route::get('higher-education-info', Cv\Steps\HigherEducationInfo::class)->name('cv.create.higher-education-info');
+            Route::get('work-experience-info', Cv\Steps\WorkExperienceInfo::class)->name('cv.create.work-experience-info');
+            Route::get('language-info', Cv\Steps\LanguageInfo::class)->name('cv.create.language-info');
         });
     });
 

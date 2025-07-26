@@ -20,7 +20,7 @@ test('language info screen can be rendered', function () {
         ->create();
     $user->assignRole(Roles::CANDIDATO);
 
-    $response = $this->actingAs($user)->get("/cv/{$user->cv->id}/language-info");
+    $response = $this->actingAs($user)->get('/cv/language-info');
 
     $response->assertOk();
 });
@@ -33,7 +33,7 @@ it('can be created', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(LanguageInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(LanguageInfo::class)
         ->set('name', 'Inglés')
         ->set('write', 'Avanzado')
         ->set('speak', 'Intermedio')
@@ -52,7 +52,7 @@ it('show validation errors', function () {
         ->has(Cv::factory())
         ->create();
 
-    $response = Livewire::test(LanguageInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(LanguageInfo::class)
         ->set('name', '')
         ->set('write', '')
         ->set('speak', '')
@@ -78,7 +78,7 @@ it('can be deleted', function () {
 
     $this->assertDatabaseCount('language_infos', 2);
 
-    $response = Livewire::test(LanguageInfo::class, ['cv' => $user->cv])
+    $response = Livewire::actingAs($user)->test(LanguageInfo::class)
         ->call('delete', $user->cv->languageInfos()->first());
 
     $response->assertNoRedirect();
@@ -86,10 +86,16 @@ it('can be deleted', function () {
 });
 
 test('navigate to next step', function () {
-    $response = Livewire::test(LanguageInfo::class, ['cv' => Cv::factory()->create()])
+    $user = User::factory()
+        ->for(Candidate::factory(), 'userable')
+        ->has(Cv::factory()->has(LanguageInfoModel::factory(2)))
+        ->create();
+
+    $response = Livewire::actingAs($user)
+        ->test(LanguageInfo::class)
         ->call('navigate');
 
-    $response->assertRedirect('/cv/1/pdf');
+    $response->assertRedirect('/cv/pdf');
 });
 
 it('can be updated', function () {
@@ -103,7 +109,7 @@ it('can be updated', function () {
     $languageInfo->addMedia(UploadedFile::fake()->image('certificate_1.jpg'))
         ->toMediaCollection();
 
-    $response = Livewire::test(Edit::class)
+    $response = Livewire::actingAs($user)->test(Edit::class)
         ->call('edit', $languageInfo)
         ->assertSet('name', $languageInfo->name)
         ->assertSet('write', $languageInfo->write)

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Cv\Steps;
 
 use App\Models\Cv;
+use App\Models\User;
 use Illuminate\View\View;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Validate;
@@ -20,8 +21,13 @@ final class ContactInfo extends Component
     #[Validate(['required', 'email', 'max:255'])]
     public string $email;
 
-    public function mount(Cv $cv): void
+    public function mount(): void
     {
+        $user = request()->user();
+        assert($user instanceof User);
+        $this->cv = $user->cv;
+        $cv = $user->cv;
+
         if ($contactInfo = $cv->contactInfo) {
             $this->fill($contactInfo);
         }
@@ -31,7 +37,7 @@ final class ContactInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.residence-info', $this->cv->id, navigate: true);
+        $this->redirectRoute('cv.create.residence-info', navigate: true);
 
         $this->cv->contactInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([
             'phone_number',
