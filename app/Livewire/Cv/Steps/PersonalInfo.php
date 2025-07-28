@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Cv\Steps;
 
+use App\Models\City;
 use App\Models\Cv;
+use App\Models\Department;
 use App\Models\User;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\RequiredIf;
 use Illuminate\View\View;
@@ -47,6 +50,21 @@ final class PersonalInfo extends Component
 
     #[Validate(['required', 'numeric'])]
     public string $document_number;
+
+    #[Validate(['required', 'date'])]
+    public string $birthdate;
+
+    #[Validate(['required', 'numeric'])]
+    public string $department_id;
+
+    #[Validate(['required', 'numeric'])]
+    public string $city_id;
+
+    /** @var Collection<int, Department> */
+    public Collection $departments;
+
+    /** @var Collection<int,City>|list<null> */
+    public Collection|array $cities = [];
 
     public string $description;
 
@@ -124,8 +142,8 @@ final class PersonalInfo extends Component
             'Back Image Review Of A Document Card',
             [
                 new StringSchema('sex', 'The sex of the document: M, F'),
-                /*new StringSchema('birthdate', 'Birthdate in the document in format (00-00-0000, d-m-Y), it can't be after today'),
-                new StringSchema('department_id', 'Department id taken of the DANE id departments'),
+                new StringSchema('birthdate', 'Birthdate in the document in format (00-00-0000, d-m-Y), it can\'t be after today'),
+                /*new StringSchema('department_id', 'Department id taken of the DANE id departments'),
                 new StringSchema('city_id', 'City id taken of the DANE id city'),*/
             ],
         );
@@ -159,6 +177,8 @@ final class PersonalInfo extends Component
             $this->data = [];
             $this->document_front = null;
             $this->document_back = null;
+
+            return;
         }
 
         $this->fill($this->data['front_review_document_card']);
