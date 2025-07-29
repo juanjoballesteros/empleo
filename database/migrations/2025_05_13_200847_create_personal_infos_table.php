@@ -19,8 +19,11 @@ return new class extends Migration
             $table->string('sex');
             $table->string('document_type');
             $table->string('document_number');
+            $table->date('birthdate');
             $table->text('description');
             $table->boolean('check')->default(true);
+            $table->foreignId('department_id');
+            $table->foreignId('city_id');
             $table->foreignId('cv_id');
             $table->timestamps();
         });

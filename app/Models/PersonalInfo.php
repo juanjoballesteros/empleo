@@ -21,11 +21,16 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string $sex
  * @property string $document_type
  * @property string $document_number
+ * @property Carbon $birthdate
  * @property string $description
  * @property bool $check
+ * @property int $department_id
+ * @property int $city_id
  * @property int $cv_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property-read Department $department
+ * @property-read City $city
  * @property-read Cv $cv
  */
 final class PersonalInfo extends Model implements HasMedia
@@ -33,9 +38,28 @@ final class PersonalInfo extends Model implements HasMedia
     /** @use HasFactory<PersonalInfoFactory> */
     use HasFactory, InteractsWithMedia;
 
+    /** @return BelongsTo<Department, $this> */
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    /** @return BelongsTo<City, $this> */
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
+    }
+
     /** @return BelongsTo<Cv, $this> */
     public function cv(): BelongsTo
     {
         return $this->belongsTo(Cv::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'birthdate' => 'date',
+        ];
     }
 }

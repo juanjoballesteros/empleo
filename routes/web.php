@@ -37,7 +37,6 @@ Route::middleware(['auth', 'type'])->group(function () {
             Route::get('pdf', CvPdf::class)->name('cv.pdf');
 
             Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.create.personal-info');
-            Route::get('birth-info', Cv\Steps\BirthInfo::class)->name('cv.create.birth-info');
             Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.create.contact-info');
             Route::get('residence-info', Cv\Steps\ResidenceInfo::class)->name('cv.create.residence-info');
             Route::get('basic-education-info', Cv\Steps\BasicEducationInfo::class)->name('cv.create.basic-education-info');

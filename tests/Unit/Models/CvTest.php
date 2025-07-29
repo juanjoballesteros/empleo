@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\BasicEducationInfo;
-use App\Models\BirthInfo;
 use App\Models\Candidate;
 use App\Models\ContactInfo;
 use App\Models\Cv;
@@ -42,12 +41,6 @@ it('has one personal info', function () {
     $cv = Cv::factory()->has(PersonalInfo::factory())->create();
 
     expect($cv->personalInfo)->toBeInstanceOf(PersonalInfo::class);
-});
-
-it('has one birth info', function () {
-    $cv = Cv::factory()->has(BirthInfo::factory())->create();
-
-    expect($cv->birthInfo)->toBeInstanceOf(BirthInfo::class);
 });
 
 it('has one contact info', function () {

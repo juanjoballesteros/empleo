@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Livewire\Cv\Steps;
 
-use App\Models\City;
 use App\Models\Cv;
 use App\Models\Department;
 use App\Models\User;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\RequiredIf;
@@ -30,17 +31,19 @@ final class PersonalInfo extends Component
 
     public Cv $cv;
 
+    public bool $show = false;
+
     #[Validate(['required', 'string', 'max:255'])]
     public string $first_name;
 
     #[Validate(['required', 'nullable', 'max:255'])]
-    public string $second_name;
+    public ?string $second_name = null;
 
     #[Validate(['required', 'string', 'max:255'])]
     public string $first_surname;
 
     #[Validate(['required', 'string', 'max:255'])]
-    public string $second_surname;
+    public ?string $second_surname = null;
 
     #[Validate(['required', 'string', 'max:255'])]
     public string $sex;
@@ -54,17 +57,14 @@ final class PersonalInfo extends Component
     #[Validate(['required', 'date'])]
     public string $birthdate;
 
-    #[Validate(['required', 'numeric'])]
+    #[Validate(['required', 'numeric', 'exists:departments,id'])]
     public string $department_id;
 
-    #[Validate(['required', 'numeric'])]
+    #[Validate(['required', 'numeric', 'exists:cities,id'])]
     public string $city_id;
 
     /** @var Collection<int, Department> */
     public Collection $departments;
-
-    /** @var Collection<int,City>|list<null> */
-    public Collection|array $cities = [];
 
     public string $description;
 
@@ -75,10 +75,7 @@ final class PersonalInfo extends Component
     public ?TemporaryUploadedFile $profile = null;
 
     /** @var array<string, string>|null[] */
-    public array $document_urls = ['front' => null, 'back' => null, 'profile'];
-
-    /** @var array<string, string> */
-    public ?array $data = [];
+    public array $document_urls = ['front' => null, 'back' => null, 'profile' => null];
 
     /** @return array<string, list<string|RequiredIf>> */
     public function rules(): array
@@ -93,19 +90,19 @@ final class PersonalInfo extends Component
     public function mount(): void
     {
         if (session()->has('error')) {
-            LivewireAlert::title(session()->get('error'))
-                ->error()
+            LivewireAlert::title(session()->get('error'))->error()
                 ->toast()
                 ->position('top-end')
                 ->show();
         }
 
+        $this->departments = Department::all();
+
         $user = request()->user();
         assert($user instanceof User);
         $this->cv = $user->cv;
-        $cv = $user->cv;
 
-        if ($personalInfo = $cv->personalInfo) {
+        if ($personalInfo = $this->cv->personalInfo) {
             $this->document_urls = [
                 'front' => $personalInfo->getFirstMediaUrl('front'),
                 'back' => $personalInfo->getFirstMediaUrl('back'),
@@ -113,6 +110,8 @@ final class PersonalInfo extends Component
             ];
 
             $this->fill($personalInfo);
+            $this->show = true;
+            $this->birthdate = $personalInfo->birthdate->toDateString();
         }
     }
 
@@ -124,9 +123,9 @@ final class PersonalInfo extends Component
             'document_back' => ['required', 'image'],
         ]);
 
-        $frontSchema = new ObjectSchema(
-            'front_review_document_card',
-            'Front Image Review Of A Document Card',
+        $cardSchema = new ObjectSchema(
+            'document_card_review',
+            'Complete Review Of A Document Card',
             [
                 new StringSchema('document_type', 'Document Type: CC, TI, PAS, CE'),
                 new NumberSchema('document_number', 'Document Number'),
@@ -134,54 +133,58 @@ final class PersonalInfo extends Component
                 new StringSchema('second_name', 'Second Name Of Document (the second word in the name)', true),
                 new StringSchema('first_surname', 'First Surname Of Document (the first word in the last name)'),
                 new StringSchema('second_surname', 'Second Surname Of Document (the second word in the last name)', true),
+                new StringSchema('sex', 'The sex of the document: M, F'),
+                new StringSchema('birthdate', 'Birthdate in the document in format (00-00-0000, d-m-Y)'),
+                new StringSchema('department_id', 'Department id taken of the DANE id departments'),
+                new StringSchema('city_id', 'City id taken of the DANE id city'),
             ]
         );
 
-        $backSchema = new ObjectSchema(
-            'back_review_document_card',
-            'Back Image Review Of A Document Card',
-            [
-                new StringSchema('sex', 'The sex of the document: M, F'),
-                new StringSchema('birthdate', 'Birthdate in the document in format (00-00-0000, d-m-Y), it can\'t be after today'),
-                /*new StringSchema('department_id', 'Department id taken of the DANE id departments'),
-                new StringSchema('city_id', 'City id taken of the DANE id city'),*/
-            ],
-        );
+        try {
+            $response = Prism::structured()
+                ->using(Provider::Gemini, 'gemini-2.5-flash-lite-preview-06-17')
+                ->withSchema($cardSchema)
+                ->withPrompt(
+                    'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
+                    [Image::fromUrl($this->document_front?->temporaryUrl()), Image::fromUrl($this->document_back?->temporaryUrl())])
+                ->asStructured();
 
-        $cardSchema = new ObjectSchema(
-            'document_card_review',
-            'Complete Review Of A Document Card',
-            [$frontSchema, $backSchema]
-        );
+            $data = $response->structured;
+        } catch (Exception) {
+            LivewireAlert::title('Tenemos un error con nuestro sistema de imágenes por favor ingrese los datos manualmente')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
 
-        $response = Prism::structured()
-            ->using(Provider::Gemini, 'gemini-2.5-flash-lite-preview-06-17')
-            ->withSchema($cardSchema)
-            ->withPrompt(
-                'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
-                [
-                    Image::fromUrl($this->document_front?->temporaryUrl()),
-                    Image::fromUrl($this->document_back?->temporaryUrl()),
-                ])
-            ->asStructured();
+            $this->show = true;
+        }
 
-        $this->data = $response->structured;
-
-        if (! isset($this->data['front_review_document_card']) || empty($this->data['front_review_document_card'])) {
+        if (! isset($data['first_name']) || ! isset($data['document_number'])) {
             LivewireAlert::title('No hemos detectado un documento valido, por favor vuelva a intentarlo')
                 ->error()
                 ->toast()
                 ->position('top-end')
                 ->show();
 
-            $this->data = [];
-            $this->document_front = null;
-            $this->document_back = null;
+            $this->show = true;
+            $this->reset(['document_front', 'document_back']);
 
             return;
         }
 
-        $this->fill($this->data['front_review_document_card']);
+        if (isset($data['birthdate']) && Carbon::canBeCreatedFromFormat('d-m-Y', $data['birthdate'])) {
+            $this->birthdate = Carbon::createFromFormat('d-m-Y', $data['birthdate'])->toDateString();
+        }
+
+        $data['sex'] = match ($data['sex']) {
+            'M' => 'Masculino',
+            'F' => 'Femenino',
+            default => null,
+        };
+
+        $this->show = true;
+        $this->fill($data);
     }
     // @codeCoverageIgnoreEnd
 
@@ -189,7 +192,7 @@ final class PersonalInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.birth-info', navigate: true);
+        $this->redirectRoute('cv.create.contact-info', navigate: true);
 
         /** @var \App\Models\PersonalInfo $personalInfo */
         $personalInfo = $this->cv->personalInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([
@@ -200,7 +203,10 @@ final class PersonalInfo extends Component
             'sex',
             'document_type',
             'document_number',
+            'birthdate',
             'description',
+            'department_id',
+            'city_id',
         ]));
 
         if ($this->document_front instanceof TemporaryUploadedFile) {
@@ -233,7 +239,7 @@ final class PersonalInfo extends Component
                 ->toMediaCollection('profile');
         }
 
-        LivewireAlert::title('Información Personal Guardado')
+        LivewireAlert::title('Información Personal Guardada')
             ->success()
             ->toast()
             ->position('top-end')

@@ -22,7 +22,6 @@ use Illuminate\Support\Collection;
  * @property-read User $user
  * @property-read Candidate $candidate
  * @property-read ?PersonalInfo $personalInfo
- * @property-read ?BirthInfo $birthInfo
  * @property-read ?ContactInfo $contactInfo
  * @property-read ?ResidenceInfo $residenceInfo
  * @property-read ?BasicEducationInfo $basicEducationInfo
@@ -50,7 +49,6 @@ final class Cv extends Model
     public function isCompleted(): bool
     {
         return $this->personalInfo?->check
-            && $this->birthInfo?->check
             && $this->contactInfo?->check
             && $this->residenceInfo?->check
             && $this->basicEducationInfo?->check
@@ -81,12 +79,6 @@ final class Cv extends Model
     public function personalInfo(): HasOne
     {
         return $this->hasOne(PersonalInfo::class, 'cv_id');
-    }
-
-    /** @return HasOne<BirthInfo, $this> */
-    public function birthInfo(): HasOne
-    {
-        return $this->hasOne(BirthInfo::class, 'cv_id');
     }
 
     /** @return HasOne<ContactInfo, $this> */

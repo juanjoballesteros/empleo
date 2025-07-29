@@ -7,7 +7,6 @@
 
             <div class="flex flex-col gap-2">
                 <flux:select id="camera" label="Seleccione una camara">
-                    <flux:select.option value="">Seleccionar...</flux:select.option>
                 </flux:select>
 
                 <flux:button type="button" id="snap" variant="primary" icon="camera">
@@ -27,8 +26,9 @@
         const camera = document.getElementById('camera')
 
         $js('startCamera', () => {
-            getCameraSelection();
-            play()
+            getCameraSelection().then(() => {
+                play()
+            })
         })
 
         $js('stopCamera', () => {
@@ -56,7 +56,7 @@
 
         const getCameraSelection = async () => {
             const devices = await navigator.mediaDevices.enumerateDevices()
-            const videoDevices = devices.filter(device => device.kind === 'videoinput')
+            const videoDevices = devices.filter(device => device.kind === 'videoinput').reverse()
             let i = 1
             const options = videoDevices.map(videoDevice => {
                 return `<flux:select.option value="${videoDevice.deviceId}">

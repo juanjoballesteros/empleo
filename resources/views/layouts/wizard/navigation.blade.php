@@ -7,13 +7,6 @@
             @endif
         </flux:navbar.item>
 
-        <flux:navbar.item href="{{ route('cv.create.birth-info') }}" wire:navigate>
-            Información De Nacimiento
-            @if ($cv->birthInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navbar.item>
-
         <flux:navbar.item href="{{ route('cv.create.contact-info') }}" wire:navigate>
             Información De Contacto
             @if ($cv->contactInfo?->check)
@@ -65,13 +58,6 @@
         <flux:navlist.item href="{{ route('cv.create.personal-info') }}" wire:navigate>
             Información Personal
             @if ($cv->personalInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navlist.item>
-
-        <flux:navlist.item href="{{ route('cv.create.birth-info') }}" wire:navigate>
-            Información De Nacimiento
-            @if ($cv->birthInfo?->check)
                 <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
             @endif
         </flux:navlist.item>
