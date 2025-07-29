@@ -113,6 +113,10 @@
             @endrole
 
             @role('candidato')
+            <flux:navlist.item href="{{ route('cv.documents') }}" wire:navigate>
+                Carpeta Digital
+            </flux:navlist.item>
+
             <flux:navlist.item href="{{ route('offers.index') }}" wire:navigate>
                 Buscar Ofertas De Empleo
             </flux:navlist.item>
