@@ -31,7 +31,7 @@
 
             <flux:input type="email" wire:model="email" label="Correo Electrónico" required/>
 
-            <flux:select wire:change="updateCities" wire:model="department_id" label="Departamento" required>
+            <flux:select wire:model.live="department_id" label="Departamento" required>
                 <flux:select.option value="">Seleccionar...</flux:select.option>
                 @foreach($departments as $department)
                     <flux:select.option value="{{ $department->id }}">
@@ -40,9 +40,9 @@
                 @endforeach
             </flux:select>
 
-            <flux:select wire:model="city_id" label="Ciudad" required>
+            <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Ciudad*" required>
                 <flux:select.option value="">Seleccionar...</flux:select.option>
-                @foreach($cities as $city)
+                @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
                     <flux:select.option value="{{ $city->id }}">
                         {{ $city->name }}
                     </flux:select.option>

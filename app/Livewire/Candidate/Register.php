@@ -66,13 +66,6 @@ final class Register extends Component
         $this->departments = Department::all();
     }
 
-    // @codeCoverageIgnoreStart
-    public function updateCities(): void
-    {
-        $this->cities = City::query()->where('department_id', $this->department_id)->get();
-    }
-    // @codeCoverageIgnoreEnd
-
     #[On('photoTaken')]
     public function analyzeImage(): void
     {
