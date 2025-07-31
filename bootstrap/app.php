@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Middleware\EnsureCvIsCompleted;
+use App\Http\Middleware\EnsureCvIsCreated;
 use App\Http\Middleware\EnsureTypeIsRegistered;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -21,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'type' => EnsureTypeIsRegistered::class,
             'cv' => EnsureCvIsCompleted::class,
+            'cv_created' => EnsureCvIsCreated::class,
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,

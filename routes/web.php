@@ -32,7 +32,7 @@ Route::middleware(['auth', 'type'])->group(function () {
             Route::get('/', JobOffers\Index::class)->name('offers.index');
         });
 
-        Route::prefix('cv')->group(function () {
+        Route::middleware('cv_created')->prefix('cv')->group(function () {
             Route::get('documents', Cv\Documents::class)->name('cv.documents');
             Route::get('pdf', CvPdf::class)->name('cv.pdf');
 

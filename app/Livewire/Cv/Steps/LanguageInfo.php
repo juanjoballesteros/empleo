@@ -44,6 +44,8 @@ final class LanguageInfo extends Component
     {
         $user = request()->user();
         assert($user instanceof User);
+
+        assert($user->cv instanceof Cv);
         $this->cv = $user->cv;
     }
 

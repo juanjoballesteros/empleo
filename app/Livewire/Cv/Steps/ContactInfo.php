@@ -25,10 +25,11 @@ final class ContactInfo extends Component
     {
         $user = request()->user();
         assert($user instanceof User);
-        $this->cv = $user->cv;
-        $cv = $user->cv;
 
-        if ($contactInfo = $cv->contactInfo) {
+        assert($user->cv instanceof Cv);
+        $this->cv = $user->cv;
+
+        if ($contactInfo = $this->cv->contactInfo) {
             $this->fill($contactInfo);
         }
     }

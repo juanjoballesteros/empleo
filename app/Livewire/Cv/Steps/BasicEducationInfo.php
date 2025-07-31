@@ -46,10 +46,11 @@ final class BasicEducationInfo extends Component
     {
         $user = request()->user();
         assert($user instanceof User);
-        $this->cv = $user->cv;
-        $cv = $user->cv;
 
-        if ($basicEducationInfo = $cv->basicEducationInfo) {
+        assert($user->cv instanceof Cv);
+        $this->cv = $user->cv;
+
+        if ($basicEducationInfo = $this->cv->basicEducationInfo) {
             $this->fill($basicEducationInfo);
             $this->end_date = $basicEducationInfo->end_date->format('Y-m-d');
             $this->certification_url = $basicEducationInfo->getFirstMediaUrl();
@@ -62,7 +63,6 @@ final class BasicEducationInfo extends Component
 
         $this->redirectRoute('cv.create.higher-education-info', navigate: true);
 
-        /** @var \App\Models\BasicEducationInfo $basicEducationInfo */
         $basicEducationInfo = $this->cv->basicEducationInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([
             'program',
             'level',

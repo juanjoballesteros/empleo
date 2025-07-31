@@ -100,6 +100,8 @@ final class PersonalInfo extends Component
 
         $user = request()->user();
         assert($user instanceof User);
+
+        assert($user->cv instanceof Cv);
         $this->cv = $user->cv;
 
         if ($personalInfo = $this->cv->personalInfo) {
@@ -173,8 +175,8 @@ final class PersonalInfo extends Component
             return;
         }
 
-        if (isset($data['birthdate']) && Carbon::canBeCreatedFromFormat('d-m-Y', $data['birthdate'])) {
-            $this->birthdate = Carbon::createFromFormat('d-m-Y', $data['birthdate'])->toDateString();
+        if (isset($data['birthdate']) && $birthdate = Carbon::createFromFormat('d-m-Y', $data['birthdate'])) {
+            $this->birthdate = $birthdate->toDateString();
         }
 
         $data['sex'] = match ($data['sex']) {

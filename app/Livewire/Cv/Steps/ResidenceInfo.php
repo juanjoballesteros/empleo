@@ -39,10 +39,11 @@ final class ResidenceInfo extends Component
 
         $user = request()->user();
         assert($user instanceof User);
-        $this->cv = $user->cv;
-        $cv = $user->cv;
 
-        if ($residenceInfo = $cv->residenceInfo) {
+        assert($user->cv instanceof Cv);
+        $this->cv = $user->cv;
+
+        if ($residenceInfo = $this->cv->residenceInfo) {
             $this->cities = $residenceInfo->department->cities;
             $this->fill($residenceInfo);
         }
