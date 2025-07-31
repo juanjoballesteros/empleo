@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Enums\Roles;
 use App\Livewire\Cv\Documents;
 use App\Models\BasicEducationInfo;
-use App\Models\BirthInfo;
 use App\Models\Candidate;
 use App\Models\ContactInfo;
 use App\Models\Cv;
@@ -24,7 +23,6 @@ beforeEach(function () {
         ->for(Candidate::factory()
             ->has(Cv::factory(['user_id' => 1])
                 ->has(PersonalInfo::factory())
-                ->has(BirthInfo::factory())
                 ->has(ContactInfo::factory())
                 ->has(ResidenceInfo::factory())
                 ->has(BasicEducationInfo::factory())

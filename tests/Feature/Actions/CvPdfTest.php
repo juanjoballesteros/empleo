@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Enums\Roles;
 use App\Models\BasicEducationInfo;
-use App\Models\BirthInfo;
 use App\Models\Candidate;
 use App\Models\ContactInfo;
 use App\Models\Cv;
@@ -24,7 +23,6 @@ it('response with a pdf', function () {
         ->for(Candidate::factory()
             ->has(Cv::factory()
                 ->has(PersonalInfo::factory())
-                ->has(BirthInfo::factory())
                 ->has(ContactInfo::factory())
                 ->has(ResidenceInfo::factory())
                 ->has(BasicEducationInfo::factory())
