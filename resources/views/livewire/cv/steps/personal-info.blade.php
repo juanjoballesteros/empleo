@@ -9,7 +9,7 @@
          x-on:livewire-upload-progress="progress = $event.detail.progress"
     >
         @if(!$document_urls['front'] && !$document_urls['back'])
-            <form wire:submit="analyzeImage" class="grid grid-cols-2 gap-4">
+            <form wire:submit="analyzeImage" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @if(!$document_front)
                     <div class="flex flex-col gap-4">
                         <h3 class="text-xl text-center">Toma una foto frontal de tu documento</h3>
@@ -63,7 +63,7 @@
                 @endif
 
                 @if(!$show)
-                    <flux:button type="submit" variant="primary" color="blue" class="w-full col-span-2">
+                    <flux:button type="submit" variant="primary" color="blue" class="w-full md:col-span-2">
                         Subir
                     </flux:button>
                 @endif
