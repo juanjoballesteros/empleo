@@ -37,15 +37,12 @@ it('can be created', function () {
 
     $response = Livewire::actingAs($user)->test(WorkExperienceInfo::class)
         ->set('name', 'Empresa Test')
-        ->set('type', 'Privada')
         ->set('email', 'empresa@test.com')
-        ->set('phone_number', '3001234567')
+        ->set('phone', '3001234567')
         ->set('date_start', '2020-01-01')
         ->set('actual', 'No')
         ->set('date_end', '2023-01-01')
-        ->set('cause', 'Renuncia')
         ->set('post', 'Desarrollador')
-        ->set('dependency', 'TI')
         ->set('address', 'Calle Principal #123')
         ->set('department_id', $department->id)
         ->set('city_id', $department->cities->random()->first()->id)
@@ -53,8 +50,10 @@ it('can be created', function () {
         ->call('store');
 
     $response->assertHasNoErrors();
-
-    $this->assertDatabaseCount('work_experiences', 1);
+    $this->assertDatabaseHas('work_experiences', [
+        'name' => 'Empresa Test',
+        'email' => 'empresa@test.com',
+    ]);
 });
 
 it('show validation errors', function () {
@@ -65,29 +64,20 @@ it('show validation errors', function () {
 
     $response = Livewire::actingAs($user)->test(WorkExperienceInfo::class)
         ->set('name', '')
-        ->set('type', '')
         ->set('email', '')
-        ->set('phone_number', '')
-        ->set('date_start', '')
-        ->set('actual', '')
-        ->set('date_end', '')
-        ->set('cause', '')
+        ->set('phone', '')
+        ->set('date_start')
+        ->set('date_end')
         ->set('post', '')
-        ->set('dependency', '')
         ->set('address', '')
         ->call('store');
 
     $response->assertHasErrors([
         'name',
-        'type',
         'email',
-        'phone_number',
+        'phone',
         'date_start',
-        'actual',
-        'date_end',
-        'cause',
         'post',
-        'dependency',
         'address',
         'department_id',
         'city_id',
@@ -139,28 +129,22 @@ it('can be updated', function () {
     $response = Livewire::actingAs($user)->test(Edit::class)
         ->call('edit', $workExperience)
         ->assertSet('name', $workExperience->name)
-        ->assertSet('type', $workExperience->type)
         ->assertSet('email', $workExperience->email)
-        ->assertSet('phone_number', $workExperience->phone_number)
+        ->assertSet('phone', $workExperience->phone)
         ->assertSet('date_start', $workExperience->date_start->format('Y-m-d'))
         ->assertSet('actual', $workExperience->actual)
         ->assertSet('date_end', $workExperience->date_end->format('Y-m-d'))
-        ->assertSet('cause', $workExperience->cause)
         ->assertSet('post', $workExperience->post)
-        ->assertSet('dependency', $workExperience->dependency)
         ->assertSet('address', $workExperience->address)
         ->assertSet('department_id', $workExperience->department_id)
         ->assertSet('city_id', $workExperience->city_id)
         ->set('name', 'Nueva Empresa')
-        ->set('type', 'Privada')
         ->set('email', 'nueva@empresa.com')
-        ->set('phone_number', '3001234567')
+        ->set('phone', '3001234567')
         ->set('date_start', '2020-01-01')
         ->set('actual', 'No')
         ->set('date_end', '2023-01-01')
-        ->set('cause', 'Mejor oportunidad')
         ->set('post', 'Desarrollador Senior')
-        ->set('dependency', 'Desarrollo')
         ->set('address', 'Calle Nueva #456')
         ->set('department_id', $workExperience->department_id)
         ->set('city_id', $workExperience->city_id)

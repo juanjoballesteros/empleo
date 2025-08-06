@@ -13,25 +13,17 @@ return new class extends Migration
         Schema::create('work_experiences', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
-            $table->string('type');
-            $table->string('email');
-            $table->string('phone_number');
             $table->date('date_start');
-            $table->string('actual');
-            $table->date('date_end');
-            $table->string('cause');
+            $table->boolean('actual');
+            $table->date('date_end')->nullable();
             $table->string('post');
-            $table->string('dependency');
+            $table->string('email');
+            $table->bigInteger('phone');
             $table->string('address');
             $table->foreignId('department_id');
             $table->foreignId('city_id');
             $table->foreignId('cv_id');
             $table->timestamps();
         });
-    }
-
-    public function down(): void
-    {
-        Schema::dropIfExists('work_experiences');
     }
 };

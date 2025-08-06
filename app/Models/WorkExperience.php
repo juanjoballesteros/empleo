@@ -15,15 +15,12 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 /**
  * @property int $id
  * @property string $name
- * @property string $type
- * @property string $email
- * @property string $phone_number
  * @property Carbon $date_start
- * @property string $actual
- * @property Carbon $date_end
- * @property string $cause
+ * @property bool $actual
+ * @property ?Carbon $date_end
  * @property string $post
- * @property string $dependency
+ * @property string $email
+ * @property int $phone
  * @property string $address
  * @property int $department_id
  * @property int $city_id
@@ -62,6 +59,7 @@ final class WorkExperience extends Model implements HasMedia
         return [
             'date_start' => 'date',
             'date_end' => 'date',
+            'actual' => 'boolean',
         ];
     }
 }

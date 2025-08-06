@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Cv\Steps;
 
-use App\Models\City;
 use App\Models\Cv;
 use App\Models\Department;
 use App\Models\User;
@@ -28,32 +27,23 @@ final class WorkExperienceInfo extends Component
     #[Validate(['required', 'string', 'max:255'])]
     public string $name;
 
+    #[Validate(['required', 'date'])]
+    public string $date_start;
+
+    #[Validate(['required', 'bool'])]
+    public bool $actual;
+
+    #[Validate(['nullable', 'date', 'required_if:actual,false'])]
+    public ?string $date_end = null;
+
     #[Validate(['required', 'string', 'max:255'])]
-    public string $type;
+    public string $post;
 
     #[Validate(['required', 'email', 'max:255'])]
     public string $email;
 
     #[Validate(['required', 'numeric', 'digits:10', 'starts_with:3'])]
-    public string $phone_number;
-
-    #[Validate(['required', 'date'])]
-    public string $date_start;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $actual;
-
-    #[Validate(['required', 'date'])]
-    public string $date_end;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $cause;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $post;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $dependency;
+    public string $phone;
 
     #[Validate(['required', 'string', 'max:255'])]
     public string $address;
@@ -73,9 +63,6 @@ final class WorkExperienceInfo extends Component
     /** @var Collection<int, Department> */
     public Collection $departments;
 
-    /** @var Collection<int, City>|list<null> */
-    public Collection|array $cities = [];
-
     public function mount(): void
     {
         $this->departments = Department::all();
@@ -91,18 +78,14 @@ final class WorkExperienceInfo extends Component
     {
         $this->validate();
 
-        /** @var WorkExperience $workExperience */
-        $workExperience = $this->cv->workExperiences()->create($this->only([
+        $workExperience = $this->cv->workExperiences()->create($this->pull([
             'name',
-            'type',
-            'email',
-            'phone_number',
             'date_start',
             'actual',
             'date_end',
-            'cause',
             'post',
-            'dependency',
+            'email',
+            'phone',
             'address',
             'department_id',
             'city_id',
@@ -113,21 +96,7 @@ final class WorkExperienceInfo extends Component
             ->preservingOriginal()
             ->toMediaCollection();
 
-        $this->reset([
-            'name',
-            'type',
-            'email',
-            'phone_number',
-            'date_start',
-            'actual',
-            'date_end',
-            'cause',
-            'post',
-            'dependency',
-            'address',
-            'department_id',
-            'city_id',
-            'certification']);
+        $this->reset(['certification']);
 
         LivewireAlert::title('Información añadida')
             ->success()
@@ -159,18 +128,10 @@ final class WorkExperienceInfo extends Component
             ->show();
     }
 
-    // @codeCoverageIgnoreStart
-    public function updateCities(): void
-    {
-        $department = Department::query()->findOrFail($this->department_id);
-        $this->cities = $department->cities()->get();
-    }
-
-    // @codeCoverageIgnoreEnd
     #[On('refresh')]
     public function render(): View
     {
-        $this->workExperiences = $this->cv->workExperiences ?: collect();
+        $this->workExperiences = $this->cv->workExperiences()->orderByDesc('date_start')->get();
 
         return view('livewire.cv.steps.work-experience-info');
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Cv\Steps\WorkExperience;
 
-use App\Models\City;
 use App\Models\Department;
 use App\Models\WorkExperience;
 use Flux\Flux;
@@ -27,31 +26,22 @@ final class Edit extends Component
     public string $name;
 
     #[Validate(['required', 'string', 'max:255'])]
-    public string $type;
+    public string $post;
+
+    #[Validate(['required', 'date'])]
+    public string $date_start;
+
+    #[Validate(['required', 'bool'])]
+    public bool $actual;
+
+    #[Validate(['nullable', 'date', 'required_if:actual,false'])]
+    public ?string $date_end = null;
 
     #[Validate(['required', 'email', 'max:255'])]
     public string $email;
 
     #[Validate(['required', 'numeric', 'digits:10', 'starts_with:3'])]
-    public string $phone_number;
-
-    #[Validate(['required', 'date'])]
-    public string $date_start;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $actual;
-
-    #[Validate(['required', 'date'])]
-    public string $date_end;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $cause;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $post;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $dependency;
+    public string $phone;
 
     #[Validate(['required', 'string', 'max:255'])]
     public string $address;
@@ -68,17 +58,17 @@ final class Edit extends Component
     /** @var Collection<int, Department> */
     public Collection $departments;
 
-    /** @var Collection<int, City>|list<City> */
-    public Collection|array $cities = [];
+    public ?string $certification_url = null;
 
     #[On('edit')]
     public function edit(WorkExperience $workExperience): void
     {
         $this->workExperience = $workExperience;
-        $this->cities = $workExperience->department->cities;
         $this->fill($workExperience);
-        $this->date_start = $workExperience->date_start->format('Y-m-d');
-        $this->date_end = $workExperience->date_end->format('Y-m-d');
+        $this->date_start = $workExperience->date_start->toDateString();
+        $this->date_end = $workExperience->date_end?->toDateString() ?? null;
+        $this->certification_url = $this->workExperience->getFirstMediaUrl();
+        $this->js('changeActual', $workExperience->actual);
         Flux::modal('edit')->show();
     }
 
@@ -95,17 +85,18 @@ final class Edit extends Component
                 ->toMediaCollection();
         }
 
+        if ($this->actual) {
+            $this->date_end = null;
+        }
+
         $this->workExperience->update($this->pull([
             'name',
-            'type',
-            'email',
-            'phone_number',
+            'post',
             'date_start',
             'actual',
             'date_end',
-            'cause',
-            'post',
-            'dependency',
+            'email',
+            'phone',
             'address',
             'department_id',
             'city_id',
