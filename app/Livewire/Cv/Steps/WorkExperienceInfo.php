@@ -119,7 +119,7 @@ final class WorkExperienceInfo extends Component
     #[On('navigate')]
     public function navigate(): void
     {
-        $this->redirectRoute('cv.create.language-info', navigate: true);
+        $this->redirectRoute('cv.language-info', navigate: true);
 
         LivewireAlert::title('Progreso Guardado')
             ->success()

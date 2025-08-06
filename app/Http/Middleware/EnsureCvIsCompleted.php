@@ -29,7 +29,7 @@ final class EnsureCvIsCompleted
 
             session()->flash('error', 'Complete su hoja de vida para continuar.');
 
-            return redirect()->route('cv.create.personal-info', $cv->id);
+            return redirect()->route('cv.personal-info', $cv->id);
         }
 
         return $next($request);

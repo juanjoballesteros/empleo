@@ -104,7 +104,7 @@ final class HigherEducationInfo extends Component
     #[On('navigate')]
     public function navigate(): void
     {
-        $this->redirectRoute('cv.create.work-experience-info', navigate: true);
+        $this->redirectRoute('cv.work-experience-info', navigate: true);
 
         LivewireAlert::title('Información De Educación Superior Guardada')
             ->success()

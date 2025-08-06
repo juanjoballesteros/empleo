@@ -6,7 +6,7 @@
             <div class="flex flex-col items-center gap-2 p-4">
                 <p class="text-center"><b>Paso 1:</b> Complete el formulario de hoja de vida</p>
 
-                <flux:button href="{{ route('cv.create.personal-info') }}"
+                <flux:button href="{{ route('cv.personal-info') }}"
                              variant="primary" wire:navigate>
                     Complete su hoja de vida
                 </flux:button>

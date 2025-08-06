@@ -194,7 +194,7 @@ final class PersonalInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.contact-info', navigate: true);
+        $this->redirectRoute('cv.contact-info', navigate: true);
 
         /** @var \App\Models\PersonalInfo $personalInfo */
         $personalInfo = $this->cv->personalInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([

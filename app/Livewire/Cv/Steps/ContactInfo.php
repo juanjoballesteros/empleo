@@ -38,7 +38,7 @@ final class ContactInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.residence-info', navigate: true);
+        $this->redirectRoute('cv.residence-info', navigate: true);
 
         $this->cv->contactInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([
             'phone_number',

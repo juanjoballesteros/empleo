@@ -3,7 +3,7 @@
         <flux:callout variant="warning" icon="exclamation-circle" inline
                       heading="No has completado tu hoja de vida, completala antes de ver tu carpeta digital">
             <x-slot name="actions">
-                <flux:button href="{{ route('cv.create.personal-info', $cv->id) }}" icon-trailing="arrow-right"
+                <flux:button href="{{ route('cv.personal-info', $cv->id) }}" icon-trailing="arrow-right"
                              wire:navigate>
                     Completar Hoja De Vida
                 </flux:button>

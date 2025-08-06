@@ -61,7 +61,7 @@ final class BasicEducationInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.higher-education-info', navigate: true);
+        $this->redirectRoute('cv.higher-education-info', navigate: true);
 
         $basicEducationInfo = $this->cv->basicEducationInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([
             'program',

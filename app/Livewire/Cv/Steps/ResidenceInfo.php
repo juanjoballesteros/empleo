@@ -53,7 +53,7 @@ final class ResidenceInfo extends Component
     {
         $this->validate();
 
-        $this->redirectRoute('cv.create.basic-education-info', navigate: true);
+        $this->redirectRoute('cv.basic-education-info', navigate: true);
 
         $this->cv->residenceInfo()->updateOrCreate(['cv_id' => $this->cv->id], $this->only([
             'address',
