@@ -22,14 +22,13 @@ final class EnsureCvIsCompleted
         /** @var User $user */
         $user = $request->user();
         $candidate = $user->userable;
-        assert($candidate instanceof Candidate);
 
-        if ($candidate->cv && ! $candidate->cv->isCompleted()) {
-            $cv = $user->cv()->firstOrCreate(['candidate_id' => $candidate->id]);
+        if ($candidate instanceof Candidate && $candidate->cv && ! $candidate->cv->isCompleted()) {
+            $user->cv()->firstOrCreate(['candidate_id' => $candidate->id]);
 
             session()->flash('error', 'Complete su hoja de vida para continuar.');
 
-            return redirect()->route('cv.personal-info', $cv->id);
+            return redirect()->route('cv.personal-info');
         }
 
         return $next($request);

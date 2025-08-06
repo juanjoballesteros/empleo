@@ -25,10 +25,10 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'type'])->group(function () {
-    Route::get('dashboard', Dashboard::class)->name('dashboard');
+    Route::middleware('cv')->group(function () {
+        Route::get('dashboard', Dashboard::class)->name('dashboard');
 
-    Route::middleware('cv')->prefix('offers')->group(function () {
-        Route::get('/', JobOffers\Index::class)->name('offers.index');
+        Route::get('/offers', JobOffers\Index::class)->name('offers.index');
     });
 
     Route::middleware('cv_created')->prefix('cv')->group(function () {
