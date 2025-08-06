@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Livewire\Company\JobOffers\Edit;
 use App\Models\Company;
 use App\Models\JobOffer;
@@ -14,7 +13,6 @@ beforeEach(function () {
         ->for(Company::factory(), 'userable')
         ->create();
     $this->jobOffer = JobOffer::factory()->for($this->user->userable)->create();
-    $this->user->assignRole(Roles::EMPRESA);
 });
 
 test('edit screen can be rendered', function () {

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Livewire\Cv\Steps\HigherEducation\Edit;
 use App\Livewire\Cv\Steps\HigherEducationInfo;
 use App\Models\Candidate;
@@ -19,7 +18,6 @@ test('higher education screen can be rendered', function () {
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
-    $user->assignRole(Roles::CANDIDATO);
 
     $response = $this->actingAs($user)->get('/cv/higher-education-info');
 

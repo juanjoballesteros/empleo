@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Models\BasicEducationInfo;
 use App\Models\Candidate;
 use App\Models\ContactInfo;
@@ -31,7 +30,6 @@ it('response with a pdf', function () {
                 ->has(LanguageInfo::factory(2))
             ), 'userable')
         ->create();
-    $user->assignRole(Roles::CANDIDATO);
 
     $response = $this->actingAs($user)->get('/cv/pdf');
 

@@ -27,26 +27,24 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'type'])->group(function () {
     Route::get('dashboard', Dashboard::class)->name('dashboard');
 
-    Route::middleware('role:candidato')->group(function () {
-        Route::middleware('cv')->prefix('offers')->group(function () {
-            Route::get('/', JobOffers\Index::class)->name('offers.index');
-        });
-
-        Route::middleware('cv_created')->prefix('cv')->group(function () {
-            Route::get('documents', Cv\Documents::class)->name('cv.documents');
-            Route::get('pdf', CvPdf::class)->name('cv.pdf');
-
-            Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.create.personal-info');
-            Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.create.contact-info');
-            Route::get('residence-info', Cv\Steps\ResidenceInfo::class)->name('cv.create.residence-info');
-            Route::get('basic-education-info', Cv\Steps\BasicEducationInfo::class)->name('cv.create.basic-education-info');
-            Route::get('higher-education-info', Cv\Steps\HigherEducationInfo::class)->name('cv.create.higher-education-info');
-            Route::get('work-experience-info', Cv\Steps\WorkExperienceInfo::class)->name('cv.create.work-experience-info');
-            Route::get('language-info', Cv\Steps\LanguageInfo::class)->name('cv.create.language-info');
-        });
+    Route::middleware('cv')->prefix('offers')->group(function () {
+        Route::get('/', JobOffers\Index::class)->name('offers.index');
     });
 
-    Route::middleware('role:empresa')->prefix('company')->group(function () {
+    Route::middleware('cv_created')->prefix('cv')->group(function () {
+        Route::get('documents', Cv\Documents::class)->name('cv.documents');
+        Route::get('pdf', CvPdf::class)->name('cv.pdf');
+
+        Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.create.personal-info');
+        Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.create.contact-info');
+        Route::get('residence-info', Cv\Steps\ResidenceInfo::class)->name('cv.create.residence-info');
+        Route::get('basic-education-info', Cv\Steps\BasicEducationInfo::class)->name('cv.create.basic-education-info');
+        Route::get('higher-education-info', Cv\Steps\HigherEducationInfo::class)->name('cv.create.higher-education-info');
+        Route::get('work-experience-info', Cv\Steps\WorkExperienceInfo::class)->name('cv.create.work-experience-info');
+        Route::get('language-info', Cv\Steps\LanguageInfo::class)->name('cv.create.language-info');
+    });
+
+    Route::prefix('company')->group(function () {
         Route::get('{cv}/pdf', CvPdf::class)->name('company.cv.pdf');
 
         Route::prefix('offers')->group(function () {

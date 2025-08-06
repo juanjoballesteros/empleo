@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Livewire\Company\JobOffers\Applications;
 use App\Models\Candidate;
 use App\Models\Company;
@@ -15,7 +14,6 @@ use Livewire\Livewire;
 test('applications screen can be rendered', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
     $jobOffer = JobOffer::factory()->for($user->userable)->create();
-    $user->assignRole(Roles::EMPRESA);
 
     $response = $this->actingAs($user)->get("/company/offers/$jobOffer->id/applications");
 
@@ -28,7 +26,6 @@ it('can update job application', function () {
     $candidate = User::factory()->for(Candidate::factory(), 'userable')->create();
     $jobApplication = JobApplication::factory()->for($jobOffer)->for($user->userable)->for($candidate->userable)->create();
     Cv::factory()->for($candidate->userable)->create();
-    $user->assignRole(Roles::EMPRESA);
 
     $response = Livewire::actingAs($user)
         ->test(Applications::class, ['jobOffer' => $jobOffer])
@@ -47,7 +44,6 @@ it('can set notes when reject job application', function () {
     $candidate = User::factory()->for(Candidate::factory(), 'userable')->create();
     $jobApplication = JobApplication::factory()->for($jobOffer)->for($user->userable)->for($candidate->userable)->create();
     Cv::factory()->for($candidate->userable)->create();
-    $user->assignRole(Roles::EMPRESA);
 
     $response = Livewire::actingAs($user)
         ->test(Applications::class, ['jobOffer' => $jobOffer])

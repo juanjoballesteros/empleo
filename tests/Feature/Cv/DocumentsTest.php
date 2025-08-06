@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Livewire\Cv\Documents;
 use App\Models\BasicEducationInfo;
 use App\Models\Candidate;
@@ -31,7 +30,7 @@ beforeEach(function () {
                 ->has(LanguageInfo::factory(2))
             ), 'userable')
         ->create();
-    $this->user->assignRole(Roles::CANDIDATO);
+
 });
 
 test('screen is rendered', function () {

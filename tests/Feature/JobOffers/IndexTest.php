@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Livewire\JobOffers\Index;
 use App\Models\BasicEducationInfo;
 use App\Models\Candidate;
@@ -30,7 +29,6 @@ test('index page can be rendered', function () {
                 ->has(LanguageInfo::factory(2))
             ), 'userable')
         ->create();
-    $user->assignRole(Roles::CANDIDATO);
 
     $response = $this->actingAs($user)->get('/offers');
 

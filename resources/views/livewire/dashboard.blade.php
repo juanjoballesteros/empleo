@@ -1,5 +1,4 @@
 <div>
-    @role('candidato')
     <div class="flex flex-col gap-4">
         <h2 class="text-2xl text-center"><b>Bienvenido:</b> {{ request()->user()->name }}</h2>
 
@@ -33,5 +32,4 @@
             </flux:input.group>
         </form>
     </div>
-    @endrole
 </div>

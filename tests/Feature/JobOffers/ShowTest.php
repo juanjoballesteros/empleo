@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Livewire\JobOffers\Show;
 use App\Models\BasicEducationInfo;
 use App\Models\Candidate;
@@ -31,7 +30,7 @@ test('show screen can be rendered', function () {
                 ->has(LanguageInfo::factory(2))
             ), 'userable')
         ->create();
-    $user->assignRole(Roles::CANDIDATO);
+
     JobOffer::factory(10)->create();
 
     $response = $this->actingAs($user)->get('offers');

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Livewire\Cv\Steps\WorkExperience\Edit;
 use App\Livewire\Cv\Steps\WorkExperienceInfo;
 use App\Models\Candidate;
@@ -19,7 +18,6 @@ test('work experience screen can be rendered', function () {
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
-    $user->assignRole(Roles::CANDIDATO);
 
     $response = $this->actingAs($user)->get('/cv/work-experience-info');
 

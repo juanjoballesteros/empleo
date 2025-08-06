@@ -32,13 +32,10 @@
                 {{ __('Dashboard') }}
             </flux:navbar.item>
 
-            @role('empresa')
             <flux:navbar.item href="{{ route('company.offers.index') }}" wire:navigate>
                 Ofertas De Empleo
             </flux:navbar.item>
-            @endrole
 
-            @role('candidato')
             <flux:navbar.item href="{{ route('cv.documents') }}" wire:navigate>
                 Carpeta Digital
             </flux:navbar.item>
@@ -46,7 +43,6 @@
             <flux:navbar.item href="{{ route('offers.index') }}" wire:navigate>
                 Buscar Ofertas De Empleo
             </flux:navbar.item>
-            @endrole
         </flux:navbar>
 
         <flux:spacer/>
@@ -106,13 +102,10 @@
                 {{ __('Dashboard') }}
             </flux:navlist.item>
 
-            @role('empresa')
             <flux:navlist.item href="{{ route('company.offers.index') }}" wire:navigate>
                 Ofertas De Empleo
             </flux:navlist.item>
-            @endrole
 
-            @role('candidato')
             <flux:navlist.item href="{{ route('cv.documents') }}" wire:navigate>
                 Carpeta Digital
             </flux:navlist.item>
@@ -120,7 +113,6 @@
             <flux:navlist.item href="{{ route('offers.index') }}" wire:navigate>
                 Buscar Ofertas De Empleo
             </flux:navlist.item>
-            @endrole
         </flux:navlist.group>
     </flux:navlist>
 </flux:sidebar>

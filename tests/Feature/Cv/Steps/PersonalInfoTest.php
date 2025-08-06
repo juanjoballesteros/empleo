@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Enums\Roles;
 use App\Livewire\Cv\Steps\PersonalInfo;
 use App\Models\Candidate;
 use App\Models\Cv;
@@ -16,7 +15,6 @@ test('personal info screen can be rendered', function () {
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
-    $user->assignRole(Roles::CANDIDATO);
 
     $response = $this->actingAs($user)->get('/cv/personal-info');
 
@@ -32,7 +30,6 @@ it('show alert', function () {
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
-    $user->assignRole(Roles::CANDIDATO);
 
     $response = $this->actingAs($user)->get('/cv/personal-info');
 

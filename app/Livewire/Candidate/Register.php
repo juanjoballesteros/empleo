@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Candidate;
 
-use App\Enums\Roles;
 use App\Models\Candidate;
 use App\Models\City;
 use App\Models\Department;
@@ -129,7 +128,6 @@ final class Register extends Component
         }
 
         $user->userable()->associate($candidate)->save();
-        $user->assignRole(Roles::CANDIDATO);
 
         Auth::login($user);
         $this->redirectRoute('dashboard', navigate: true);

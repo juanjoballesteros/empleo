@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\Roles;
 use App\Models\BasicEducationInfo;
-use App\Models\BirthInfo;
 use App\Models\Candidate;
 use App\Models\Company;
 use App\Models\ContactInfo;
@@ -27,14 +25,13 @@ final class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $user = User::factory()
+        User::factory()
             ->for(Company::factory(), 'userable')
             ->create([
                 'name' => 'Test User',
                 'email' => 'admin@admin.com',
                 'password' => '1234sangel',
             ]);
-        $user->assignRole(Roles::EMPRESA);
 
         $candidate = User::factory()
             ->for(Candidate::factory(), 'userable')
@@ -43,13 +40,11 @@ final class DatabaseSeeder extends Seeder
                 'email' => 'juan@juan.com',
                 'password' => '1234sangel',
             ]);
-        $candidate->assignRole(Roles::CANDIDATO);
 
         Cv::factory()
             ->for($candidate)
             ->for($candidate->userable)
             ->has(PersonalInfo::factory())
-            ->has(BirthInfo::factory())
             ->has(ContactInfo::factory())
             ->has(ResidenceInfo::factory())
             ->has(BasicEducationInfo::factory())
