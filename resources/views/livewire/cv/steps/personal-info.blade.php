@@ -26,14 +26,16 @@
                         <div wire:loading wire:target="document_front">Cargando...</div>
                     </div>
                 @else
-                    <div class="bg-gray-200 rounded-lg flex justify-center">
-                        <img src="{{ $document_front->temporaryUrl() }}" alt="Image" class="h-60 object-contain">
-                    </div>
+                    <div class="flex flex-col gap-4">
+                        <div class="bg-gray-200 rounded-lg flex justify-center">
+                            <img src="{{ $document_front->temporaryUrl() }}" alt="Image" class="h-60 object-contain">
+                        </div>
 
-                    <flux:button @click="$dispatch('openCamera', { id: $wire.id, file: 'document_front' })"
-                                 variant="primary" color="blue" icon="camera" class="w-full m-auto">
-                        Tomar Otra Foto
-                    </flux:button>
+                        <flux:button @click="$dispatch('openCamera', { id: $wire.id, file: 'document_front' })"
+                                     variant="primary" icon="camera" class="w-full m-auto">
+                            Tomar Otra Foto
+                        </flux:button>
+                    </div>
                 @endif
 
                 @if(!$document_back)
@@ -52,14 +54,16 @@
                         <div wire:loading wire:target="document_back">Cargando...</div>
                     </div>
                 @else
-                    <div class="bg-gray-200 rounded-lg flex justify-center">
-                        <img src="{{ $document_back->temporaryUrl() }}" alt="Image" class="h-60 object-contain">
-                    </div>
+                    <div class="flex flex-col gap-4">
+                        <div class="bg-gray-200 rounded-lg flex justify-center">
+                            <img src="{{ $document_back->temporaryUrl() }}" alt="Image" class="h-60 object-contain">
+                        </div>
 
-                    <flux:button @click="$dispatch('openCamera', { id: $wire.id, file: 'document_back' })"
-                                 variant="primary" color="blue" icon="camera" class="w-full m-auto">
-                        Tomar Otra Foto
-                    </flux:button>
+                        <flux:button @click="$dispatch('openCamera', { id: $wire.id, file: 'document_back' })"
+                                     variant="primary" icon="camera" class="w-full m-auto">
+                            Tomar Otra Foto
+                        </flux:button>
+                    </div>
                 @endif
 
                 @if(!$show)
@@ -69,7 +73,7 @@
                 @endif
             </form>
         @else
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-1  md:grid-cols-2 gap-4">
                 <div>
                     <div class="bg-gray-200 rounded-lg flex justify-center">
                         <img src="{{ $document_urls['front'] }}" alt="Image" class="h-60 object-contain">

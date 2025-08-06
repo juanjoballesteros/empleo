@@ -163,14 +163,13 @@ final class PersonalInfo extends Component
         }
 
         if (! isset($data['first_name']) || ! isset($data['document_number'])) {
-            LivewireAlert::title('No hemos detectado un documento valido, por favor vuelva a intentarlo')
+            LivewireAlert::title('No hemos detectado un documento valido, por favor ingrese los datos manualmente')
                 ->error()
                 ->toast()
                 ->position('top-end')
                 ->show();
 
             $this->show = true;
-            $this->reset(['document_front', 'document_back']);
 
             return;
         }
