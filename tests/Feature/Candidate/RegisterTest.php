@@ -33,7 +33,7 @@ test('user can register as candidate', function () {
         ->call('store');
 
     $response->assertHasNoErrors()
-        ->assertRedirectToRoute('dashboard');
+        ->assertRedirectToRoute('cv.personal-info');
 
     Storage::assertExists('1/card.jpg');
 });

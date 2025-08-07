@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Cv\Steps\HigherEducation;
 
-use App\Models\City;
 use App\Models\Department;
 use App\Models\HigherEducation;
 use Flux\Flux;
@@ -47,19 +46,18 @@ final class Edit extends Component
     #[Validate(['nullable', 'image'])]
     public ?TemporaryUploadedFile $certification = null;
 
+    public ?string $certification_url = null;
+
     /** @var Collection<int, Department> */
     public Collection $departments;
-
-    /** @var Collection<int, City>|list<City> */
-    public Collection|array $cities = [];
 
     #[On('edit')]
     public function edit(HigherEducation $higherEducation): void
     {
         $this->higherEducation = $higherEducation;
-        $this->cities = $higherEducation->department->cities;
         $this->fill($higherEducation);
         $this->date_semester = $higherEducation->date_semester->format('Y-m-d');
+        $this->certification_url = $higherEducation->getFirstMediaUrl();
         Flux::modal('edit')->show();
     }
 

@@ -15,7 +15,7 @@
             @endforeach
         </flux:select>
 
-        <flux:select wire:model="city_id" label="Ciudad" required>
+        <flux:select wire:model="city_id" label="Municipio" required>
             <flux:select.option>Seleccionar...</flux:select.option>
             @foreach($cities as $city)
                 <flux:select.option value="{{ $city->id }}">

@@ -40,7 +40,7 @@
                 @endforeach
             </flux:select>
 
-            <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Ciudad*" required>
+            <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio*" required>
                 <flux:select.option value="">Seleccionar...</flux:select.option>
                 @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
                     <flux:select.option value="{{ $city->id }}">

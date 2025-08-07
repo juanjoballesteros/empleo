@@ -1,107 +1,58 @@
-<div class="max-md:hidden" xmlns:flux="http://www.w3.org/1999/html">
+<div class="max-md:hidden">
     <flux:navbar class="flex justify-center">
         <flux:navbar.item href="{{ route('cv.personal-info') }}" wire:navigate>
-            Información Personal
+            1. Información Personal
             @if ($cv->personalInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
+                <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
 
         <flux:navbar.item href="{{ route('cv.contact-info') }}" wire:navigate>
-            Información De Contacto
+            2. Información De Contacto
             @if ($cv->contactInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
+                <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
 
         <flux:navbar.item href="{{ route('cv.residence-info') }}" wire:navigate>
-            Información De Residencia
+            3. Información De Residencia
             @if ($cv->residenceInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
+                <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
     </flux:navbar>
 
     <flux:navbar class="flex justify-center mb-2">
         <flux:navbar.item href="{{ route('cv.basic-education-info') }}" wire:navigate>
-            Educación Básica
+            4. Educación Básica
             @if ($cv->basicEducationInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
+                <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
 
         <flux:navbar.item href="{{ route('cv.higher-education-info') }}" wire:navigate>
-            Educación Superior
+            5. Educación Superior
             @if ($cv->higherEducations->count())
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
+                <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
 
         <flux:navbar.item href="{{ route('cv.work-experience-info') }}" wire:navigate>
-            Experiencia Laboral
+            6. Experiencia Laboral
             @if ($cv->workExperiences->count())
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
+                <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
 
         <flux:navbar.item href="{{ route('cv.language-info') }}" wire:navigate>
-            Idiomas
+            7. Idiomas
             @if ($cv->languageInfos->count())
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
+                <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
     </flux:navbar>
 </div>
 
-<div class="mb-4 md:hidden">
-    <flux:navlist>
-        <flux:navlist.item href="{{ route('cv.personal-info') }}" wire:navigate>
-            Información Personal
-            @if ($cv->personalInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navlist.item>
-
-        <flux:navlist.item href="{{ route('cv.contact-info') }}" wire:navigate>
-            Información De Contacto
-            @if ($cv->contactInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navlist.item>
-
-        <flux:navlist.item href="{{ route('cv.residence-info') }}" wire:navigate>
-            Información De Residencia
-            @if ($cv->residenceInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navlist.item>
-
-        <flux:navlist.item href="{{ route('cv.basic-education-info') }}" wire:navigate>
-            Educación Básica
-            @if ($cv->basicEducationInfo?->check)
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navlist.item>
-
-        <flux:navlist.item href="{{ route('cv.higher-education-info') }}" wire:navigate>
-            Educación Superior
-            @if ($cv->higherEducations->count())
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navlist.item>
-
-        <flux:navlist.item href="{{ route('cv.work-experience-info') }}" wire:navigate>
-            Experiencia Laboral
-            @if ($cv->workExperiences->count())
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navlist.item>
-
-        <flux:navlist.item href="{{ route('cv.language-info') }}" wire:navigate>
-            Idiomas
-            @if ($cv->languageInfos->count())
-                <flux:badge icon="check" color="green" class="pr-0 pl-1"/>
-            @endif
-        </flux:navlist.item>
-    </flux:navlist>
+<div class="mb-2 md:hidden">
+    <h2 class="text-2xl font-bold text-center">Cree su hoja de vida</h2>
 </div>

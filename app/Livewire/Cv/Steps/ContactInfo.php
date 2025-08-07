@@ -31,6 +31,8 @@ final class ContactInfo extends Component
 
         if ($contactInfo = $this->cv->contactInfo) {
             $this->fill($contactInfo);
+        } else {
+            $this->email = $user->email;
         }
     }
 
@@ -54,6 +56,9 @@ final class ContactInfo extends Component
 
     public function render(): View
     {
-        return view('livewire.cv.steps.contact-info');
+        return view('livewire.cv.steps.contact-info')
+            ->layout('components.layouts.cv', [
+                'cv' => $this->cv,
+            ]);
     }
 }

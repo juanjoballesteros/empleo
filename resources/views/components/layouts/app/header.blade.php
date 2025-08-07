@@ -96,9 +96,18 @@
     </a>
 
     <flux:navlist variant="outline">
-        <flux:navlist.group :heading="__('Platform')">
-            <flux:navlist.item icon="layout-grid" :href="route('dashboard')" :current="request()->routeIs('dashboard')"
-                               wire:navigate>
+        @guest
+            <flux:navlist.item href="{{ route('login') }}" wire:navigate>
+                {{ __('Log In') }}
+            </flux:navlist.item>
+
+            <flux:navlist.item href="{{ route('select') }}" wire:navigate>
+                {{ __('Register') }}
+            </flux:navlist.item>
+        @endguest
+
+        @auth
+            <flux:navlist.item icon="layout-grid" :href="route('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </flux:navlist.item>
 
@@ -113,7 +122,7 @@
             <flux:navlist.item href="{{ route('offers.index') }}" wire:navigate>
                 Buscar Ofertas De Empleo
             </flux:navlist.item>
-        </flux:navlist.group>
+        @endauth
     </flux:navlist>
 </flux:sidebar>
 

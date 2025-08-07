@@ -68,16 +68,11 @@ final class ResidenceInfo extends Component
             ->show();
     }
 
-    // @codeCoverageIgnoreStart
-    public function updateCities(): void
-    {
-        $department = Department::query()->findOrFail($this->department_id);
-        $this->cities = $department->cities()->get();
-    }
-
-    // @codeCoverageIgnoreEnd
     public function render(): View
     {
-        return view('livewire.cv.steps.residence-info');
+        return view('livewire.cv.steps.residence-info')
+            ->layout('components.layouts.cv', [
+                'cv' => $this->cv,
+            ]);
     }
 }

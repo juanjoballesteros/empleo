@@ -13,9 +13,9 @@ return new class extends Migration
         Schema::create('personal_infos', function (Blueprint $table): void {
             $table->id();
             $table->string('first_name');
-            $table->string('second_name');
+            $table->string('second_name')->nullable();
             $table->string('first_surname');
-            $table->string('second_surname');
+            $table->string('second_surname')->nullable();
             $table->string('sex');
             $table->string('document_type');
             $table->string('document_number');

@@ -25,7 +25,7 @@ final class BasicEducationInfo extends Component
     public string $level;
 
     #[Validate(['required', 'string', 'max:255'])]
-    public string $program;
+    public string $program = 'Bachiller';
 
     #[Validate(['required', 'date'])]
     public string $end_date;
@@ -88,6 +88,9 @@ final class BasicEducationInfo extends Component
 
     public function render(): View
     {
-        return view('livewire.cv.steps.basic-education-info');
+        return view('livewire.cv.steps.basic-education-info')
+            ->layout('components.layouts.cv', [
+                'cv' => $this->cv,
+            ]);
     }
 }

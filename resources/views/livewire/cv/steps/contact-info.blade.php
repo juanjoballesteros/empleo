@@ -1,15 +1,13 @@
 <div>
-    <form wire:submit="store" class="bg-white shadow-sm rounded-lg p-4 m-4">
+    <form wire:submit="store">
         @include('layouts.wizard.navigation')
 
-        <div class="sm:flex gap-2 mb-2">
-            <div class="flex-1">
-                <flux:input wire:model="phone_number" label="Teléfono*" required autofocus/>
-            </div>
+        <h4 class="text-lg text-center mb-2">2. Información De Contacto</h4>
 
-            <div class="flex-1">
-                <flux:input wire:model="email" label="Correo*" required/>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <flux:input wire:model="phone_number" label="Teléfono*" required autofocus/>
+
+            <flux:input wire:model="email" label="Correo*" required/>
         </div>
 
         @include('layouts.wizard.footer')

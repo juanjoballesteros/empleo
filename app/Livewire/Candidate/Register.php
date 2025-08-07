@@ -40,7 +40,7 @@ final class Register extends Component
     #[Validate(['required', 'numeric'])]
     public string|int $identification = '';
 
-    #[Validate(['required', 'email', 'max:255'])]
+    #[Validate(['required', 'email', 'max:255', 'unique:users,email'])]
     public string $email;
 
     #[Validate(['required', 'integer', 'exists:departments,id'])]
@@ -130,7 +130,7 @@ final class Register extends Component
         $user->userable()->associate($candidate)->save();
 
         Auth::login($user);
-        $this->redirectRoute('dashboard', navigate: true);
+        $this->redirectRoute('cv.personal-info', navigate: true);
     }
 
     public function render(): View

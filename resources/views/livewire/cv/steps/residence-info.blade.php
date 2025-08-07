@@ -1,38 +1,31 @@
 <div>
-    <form wire:submit="store" class="bg-white shadow-sm rounded-lg p-4 m-4">
+    <form wire:submit="store">
         @include('layouts.wizard.navigation')
 
-        <div class="sm:flex gap-2 mb-2">
-            <div class="flex-1">
-                <flux:select wire:model="department_id" wire:change="updateCities" label="Departamento*"
-                             required autofocus>
-                    <flux:select.option value="">Seleccionar...</flux:select.option>
-                    @foreach($departments as $department)
-                        <flux:select.option value="{{ $department->id }}" :selected="$department_id">
-                            {{ $department->name }}
-                        </flux:select.option>
-                    @endforeach
-                </flux:select>
-            </div>
+        <h4 class="text-lg text-center mb-2">3. Información De Residencia</h4>
 
-            <div class="flex-1">
-                <flux:select wire:model="city_id" label="Ciudad*" required>
-                    <flux:select.option value="">Seleccionar...</flux:select.option>
-                    @foreach($cities as $city)
-                        <flux:select.option value="{{ $city->id }}" :selected="$city_id">
-                            {{ $city->name }}
-                        </flux:select.option>
-                    @endforeach
-                </flux:select>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <flux:select wire:model.live="department_id" label="Departamento de residencia*" required autofocus>
+                <flux:select.option value="">Seleccionar...</flux:select.option>
+                @foreach($departments as $department)
+                    <flux:select.option value="{{ $department->id }}">
+                        {{ $department->name }}
+                    </flux:select.option>
+                @endforeach
+            </flux:select>
+
+            <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio de residencia*" required>
+                <flux:select.option value="">Seleccionar...</flux:select.option>
+                @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
+                    <flux:select.option value="{{ $city->id }}">
+                        {{ $city->name }}
+                    </flux:select.option>
+                @endforeach
+            </flux:select>
+
+            <flux:input wire:model="address" label="Dirección de residencia*" required/>
         </div>
 
-        <div class="sm:flex gap-2 mb-2">
-            <div class="flex-1">
-                <flux:input wire:model="address" label="Dirección*" required/>
-            </div>
-        </div>
-        
         @include('layouts.wizard.footer')
     </form>
 </div>

@@ -15,9 +15,9 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 /**
  * @property int $id
  * @property string $first_name
- * @property string $second_name
+ * @property ?string $second_name
  * @property string $first_surname
- * @property string $second_surname
+ * @property ?string $second_surname
  * @property string $sex
  * @property string $document_type
  * @property string $document_number

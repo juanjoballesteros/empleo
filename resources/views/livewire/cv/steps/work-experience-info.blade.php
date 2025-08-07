@@ -1,58 +1,62 @@
 <div>
-    <div class="flex flex-col gap-2 shadow-sm rounded-lg p-4">
-        @include('layouts.wizard.navigation')
+    @include('layouts.wizard.navigation')
 
-        <h2 class="text-xl text-center">Experiencia Laboral</h2>
+    <h4 class="text-lg text-center mb-2">6. Experiencia Laboral</h4>
 
-        <form wire:submit="store" class="flex flex-col gap-4 border border-gray-300 rounded-lg p-2">
-            <div x-data="{ actual: null }" class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <flux:input wire:model="name" label="Nombre de la empresa o entidad*" required/>
-                <flux:input wire:model="post" label="Cargo o rol a ejercer*" required/>
+    <form wire:submit="store" x-data="{ actual: null }"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4 border border-gray-200/50 rounded-sm p-2 mb-2">
+        <h3 class="text-xl text-center md:col-span-2">Añadir</h3>
 
-                <flux:input type="date" wire:model="date_start" label="Fecha ingreso*" required/>
+        <flux:input wire:model="name" label="Nombre de la empresa o entidad*" required/>
+        <flux:input wire:model="post" label="Cargo o rol a ejercer*" required/>
 
-                <flux:select wire:model="actual" x-model="actual" label="Es trabajo actual*" required>
-                    <flux:select.option value="">Seleccionar...</flux:select.option>
-                    <flux:select.option value="true">Si</flux:select.option>
-                    <flux:select.option value="false">No</flux:select.option>
-                </flux:select>
+        <flux:input type="date" wire:model="date_start" label="Fecha ingreso*" required
+                    max="{{ today()->toDateString() }}"/>
 
-                <div x-show="actual == 'false'" x-cloak>
-                    <flux:input type="date" wire:model="date_end" label="Fecha de retiro*"/>
-                </div>
+        <flux:select wire:model="actual" x-model="actual" label="Es trabajo actual*" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            <flux:select.option value="true">Si</flux:select.option>
+            <flux:select.option value="false">No</flux:select.option>
+        </flux:select>
 
-                <flux:input type="email" wire:model="email" label="Correo de la empresa*" required/>
-                <flux:input type="tel" wire:model="phone" label="Teléfono de la empresa*" required/>
-                <flux:input wire:model="address" label="Dirección de la empresa*" required/>
+        <div x-show="actual == 'false'" x-cloak>
+            <flux:input type="date" wire:model="date_end" label="Fecha de retiro*" max="{{ today()->toDateString() }}"/>
+        </div>
 
-                <flux:select wire:model.live="department_id" label="Departamento" required>
-                    <flux:select.option value="">Seleccionar...</flux:select.option>
-                    @foreach($departments as $department)
-                        <flux:select.option value="{{ $department->id }}">
-                            {{ $department->name }}
-                        </flux:select.option>
-                    @endforeach
-                </flux:select>
+        <flux:input type="email" wire:model="email" label="Correo de la empresa*" required/>
+        <flux:input type="tel" wire:model="phone" label="Teléfono de la empresa*" required/>
+        <flux:input wire:model="address" label="Dirección de la empresa*" required/>
 
-                <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Ciudad*" required>
-                    <flux:select.option value="">Seleccionar...</flux:select.option>
-                    @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
-                        <flux:select.option value="{{ $city->id }}">
-                            {{ $city->name }}
-                        </flux:select.option>
-                    @endforeach
-                </flux:select>
-            </div>
+        <flux:select wire:model.live="department_id" label="Departamento*" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            @foreach($departments as $department)
+                <flux:select.option value="{{ $department->id }}">
+                    {{ $department->name }}
+                </flux:select.option>
+            @endforeach
+        </flux:select>
 
+        <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio*" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
+                <flux:select.option value="{{ $city->id }}">
+                    {{ $city->name }}
+                </flux:select.option>
+            @endforeach
+        </flux:select>
+
+        <div class="md:col-span-2">
             @if($certification)
-                <div class="h-32 bg-gray-100 w-full rounded-lg">
-                    <img src="{{ $certification->temporaryUrl() }}" alt="Certificación"
-                         class="h-32 object-contain m-auto">
-                </div>
+                <div class="flex flex-col gap-4">
+                    <div class="h-32 bg-gray-100 w-full rounded-lg">
+                        <img src="{{ $certification->temporaryUrl() }}" alt="Certificación"
+                             class="h-32 object-contain m-auto">
+                    </div>
 
-                <flux:button wire:click="$set('certification', null)">
-                    Cambiar Certificado
-                </flux:button>
+                    <flux:button wire:click="$set('certification', null)">
+                        Cambiar Certificado
+                    </flux:button>
+                </div>
             @else
                 <div x-data="{ uploading: false, progress: 0 }"
                      x-on:livewire-upload-start="uploading = true"
@@ -87,63 +91,63 @@
                     </div>
                 </div>
             @endif
+        </div>
 
-            <flux:button type="submit" variant="primary" class="w-full">Añadir</flux:button>
+        <flux:button type="submit" variant="primary" class="w-full md:col-span-2">Añadir</flux:button>
 
-            <livewire:camera/>
-        </form>
+        <livewire:camera/>
+    </form>
 
-        @if($workExperiences->count())
-            <div class="border border-gray-300 rounded-md overflow-x-auto my-2">
-                <table class="table-auto min-w-full text-left">
-                    <thead class="bg-gray-50 border-b border-gray-300">
+    @if($workExperiences->count())
+        <div class="border border-gray-300 rounded-md overflow-x-auto my-2">
+            <table class="table-auto min-w-full text-left">
+                <thead class="bg-gray-50 border-b border-gray-300">
+                <tr>
+                    <th class="p-2">Nombre de la empresa</th>
+                    <th class="p-2">Cargo</th>
+                    <th class="p-2">Fecha de inicio</th>
+                    <th class="p-2">Fecha de retiro</th>
+                    <th class="p-2">Certificado</th>
+                    <th class="p-2">Acciones</th>
+                </thead>
+
+                <tbody>
+                @foreach($workExperiences as $workExperience)
                     <tr>
-                        <th class="p-2">Nombre de la empresa</th>
-                        <th class="p-2">Cargo</th>
-                        <th class="p-2">Fecha de inicio</th>
-                        <th class="p-2">Fecha de retiro</th>
-                        <th class="p-2">Certificado</th>
-                        <th class="p-2">Acciones</th>
-                    </thead>
-
-                    <tbody>
-                    @foreach($workExperiences as $workExperience)
-                        <tr>
-                            <td class="p-2">{{ $workExperience->name }}</td>
-                            <td class="p-2">{{ $workExperience->post }}</td>
-                            <td class="p-2">{{ $workExperience->date_start->format('d-m-Y') }}</td>
-                            <td class="p-2">{{ $workExperience->date_end?->format('d-m-Y') ?? 'N\A' }}</td>
-                            <td class="p-2">
-                                <flux:button href="{{ $workExperience->getFirstMediaUrl() }}"
-                                             target="_blank" icon="photo" size="sm">
-                                    Ver certificado
-                                </flux:button>
-                            </td>
-                            <td>
-                                <flux:button.group>
-                                    <flux:button icon="pencil" wire:click="$dispatch('edit', {
+                        <td class="p-2">{{ $workExperience->name }}</td>
+                        <td class="p-2">{{ $workExperience->post }}</td>
+                        <td class="p-2">{{ $workExperience->date_start->format('d-m-Y') }}</td>
+                        <td class="p-2">{{ $workExperience->date_end?->format('d-m-Y') ?? 'N\A' }}</td>
+                        <td class="p-2">
+                            <flux:button href="{{ $workExperience->getFirstMediaUrl() }}"
+                                         target="_blank" icon="photo" size="sm">
+                                Ver certificado
+                            </flux:button>
+                        </td>
+                        <td class="p-2">
+                            <flux:button.group>
+                                <flux:button icon="pencil" wire:click="$dispatch('edit', {
                                         workExperience: {{ $workExperience->id }}
                                     })" size="sm">
-                                        Editar
-                                    </flux:button>
+                                    Editar
+                                </flux:button>
 
-                                    <flux:button wire:click="delete({{ $workExperience->id }})" variant="danger"
-                                                 icon="trash" size="sm">
-                                        Eliminar
-                                    </flux:button>
-                                </flux:button.group>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        @else
-            <flux:callout variant="warning" icon="exclamation-circle" heading="No ha agregado experiencia laboral"
-                          class="mb-2"/>
-        @endif
+                                <flux:button wire:click="delete({{ $workExperience->id }})" variant="danger"
+                                             icon="trash" size="sm">
+                                    Eliminar
+                                </flux:button>
+                            </flux:button.group>
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <flux:callout variant="warning" icon="exclamation-circle" heading="No ha agregado experiencia laboral"
+                      class="mb-2"/>
+    @endif
 
-        <livewire:cv.steps.work-experience.edit/>
-        @include('layouts.wizard.footer')
-    </div>
+    <livewire:cv.steps.work-experience.edit/>
+    @include('layouts.wizard.footer')
 </div>

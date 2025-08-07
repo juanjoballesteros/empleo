@@ -36,13 +36,13 @@ final class PersonalInfo extends Component
     #[Validate(['required', 'string', 'max:255'])]
     public string $first_name;
 
-    #[Validate(['required', 'nullable', 'max:255'])]
+    #[Validate(['nullable', 'nullable', 'max:255'])]
     public ?string $second_name = null;
 
     #[Validate(['required', 'string', 'max:255'])]
     public string $first_surname;
 
-    #[Validate(['required', 'string', 'max:255'])]
+    #[Validate(['nullable', 'string', 'max:255'])]
     public ?string $second_surname = null;
 
     #[Validate(['required', 'string', 'max:255'])]
@@ -249,6 +249,9 @@ final class PersonalInfo extends Component
 
     public function render(): View
     {
-        return view('livewire.cv.steps.personal-info');
+        return view('livewire.cv.steps.personal-info')
+            ->layout('components.layouts.cv', [
+                'cv' => $this->cv,
+            ]);
     }
 }

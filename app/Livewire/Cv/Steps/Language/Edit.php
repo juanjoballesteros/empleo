@@ -35,11 +35,14 @@ final class Edit extends Component
     #[Validate(['nullable', 'image'])]
     public ?TemporaryUploadedFile $certificate = null;
 
+    public ?string $certificate_url = null;
+
     #[On('edit')]
     public function edit(LanguageInfo $languageInfo): void
     {
         $this->languageInfo = $languageInfo;
         $this->fill($languageInfo);
+        $this->certificate_url = $languageInfo->getFirstMediaUrl();
         Flux::modal('edit')->show();
     }
 

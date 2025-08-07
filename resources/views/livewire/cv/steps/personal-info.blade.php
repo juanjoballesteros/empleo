@@ -1,5 +1,7 @@
-<div class="shadow rounded-lg p-4">
+<div>
     @include('layouts.wizard.navigation')
+
+    <h4 class="text-lg text-center mb-2">1. Información Personal</h4>
 
     <div x-data="{ uploading: false, progress: 0 }"
          x-on:livewire-upload-start="uploading = true"
@@ -110,7 +112,7 @@
             <flux:input wire:model="second_name" label="Segundo nombre"/>
 
             <flux:input wire:model="first_surname" label="Primer apellido*" required/>
-            <flux:input wire:model="second_surname" label="Segundo apellido*" required/>
+            <flux:input wire:model="second_surname" label="Segundo apellido"/>
 
             <flux:select wire:model="document_type" label="Tipo de documento*" required>
                 <flux:select.option value="">Seleccionar...</flux:select.option>
@@ -139,7 +141,7 @@
                 @endforeach
             </flux:select>
 
-            <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Ciudad*" required>
+            <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio*" required>
                 <flux:select.option value="">Seleccionar...</flux:select.option>
                 @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
                     <flux:select.option value="{{ $city->id }}">

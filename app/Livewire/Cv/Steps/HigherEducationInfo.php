@@ -88,6 +88,12 @@ final class HigherEducationInfo extends Component
             ->toMediaCollection();
 
         $this->reset(['type', 'semester', 'date_semester', 'licensed', 'department_id', 'city_id', 'certification']);
+
+        LivewireAlert::title('Información Añadida')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
     }
 
     public function delete(HigherEducation $higherEducation): void
@@ -113,20 +119,15 @@ final class HigherEducationInfo extends Component
             ->show();
     }
 
-    // @codeCoverageIgnoreStart
-    public function updateCities(): void
-    {
-        $department = Department::query()->findOrFail($this->department_id);
-        $this->cities = $department->cities()->get();
-    }
-
-    // @codeCoverageIgnoreEnd
     #[On('refresh')]
     public function render(): View
     {
         $this->departments = Department::all();
         $this->higherEducations = $this->cv->higherEducations ?: collect();
 
-        return view('livewire.cv.steps.higher-education-info');
+        return view('livewire.cv.steps.higher-education-info')
+            ->layout('components.layouts.cv', [
+                'cv' => $this->cv,
+            ]);
     }
 }

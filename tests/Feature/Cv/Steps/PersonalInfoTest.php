@@ -78,14 +78,12 @@ it('shows validation errors', function () {
     $response = Livewire::actingAs($user)->test(PersonalInfo::class)
         ->set('first_name', '')
         ->set('first_surname', '')
-        ->set('second_surname', '')
         ->set('document_number', 'not-a-number')
         ->call('store');
 
     $response->assertHasErrors([
         'first_name',
         'first_surname',
-        'second_surname',
         'sex',
         'document_type',
         'document_number',

@@ -96,6 +96,9 @@ final class LanguageInfo extends Component
     {
         $this->languagesInfos = $this->cv->languageInfos ?: collect();
 
-        return view('livewire.cv.steps.language-info');
+        return view('livewire.cv.steps.language-info')
+            ->layout('components.layouts.cv', [
+                'cv' => $this->cv,
+            ]);
     }
 }

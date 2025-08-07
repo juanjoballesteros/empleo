@@ -133,6 +133,9 @@ final class WorkExperienceInfo extends Component
     {
         $this->workExperiences = $this->cv->workExperiences()->orderByDesc('date_start')->get();
 
-        return view('livewire.cv.steps.work-experience-info');
+        return view('livewire.cv.steps.work-experience-info')
+            ->layout('components.layouts.cv', [
+                'cv' => $this->cv,
+            ]);
     }
 }

@@ -51,13 +51,11 @@ it('show validation errors', function () {
         ->create();
 
     $response = Livewire::actingAs($user)->test(BasicEducationInfo::class)
-        ->set('program')
         ->set('level')
         ->set('end_date')
         ->call('store');
 
     $response->assertHasErrors([
-        'program',
         'level',
         'end_date',
         'certification',
