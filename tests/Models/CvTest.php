@@ -18,6 +18,10 @@ test('to array', function () {
 
     expect(array_keys($cv->toArray()))->toEqual([
         'id',
+        'basic',
+        'high',
+        'work',
+        'lang',
         'user_id',
         'candidate_id',
         'created_at',

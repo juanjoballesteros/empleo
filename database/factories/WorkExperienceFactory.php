@@ -25,7 +25,7 @@ final class WorkExperienceFactory extends Factory
         return [
             'name' => fake()->name(),
             'date_start' => fake()->dateTimeBetween(),
-            'actual' => fake()->randomElement(['Si', 'No']),
+            'actual' => fake()->boolean(),
             'date_end' => fake()->dateTimeBetween(),
             'post' => fake()->word(),
             'email' => fake()->email(),

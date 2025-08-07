@@ -21,6 +21,7 @@ beforeEach(function () {
     $this->user = User::factory()
         ->for(Candidate::factory()
             ->has(Cv::factory(['user_id' => 1])
+                ->completed()
                 ->has(PersonalInfo::factory())
                 ->has(ContactInfo::factory())
                 ->has(ResidenceInfo::factory())
@@ -30,7 +31,6 @@ beforeEach(function () {
                 ->has(LanguageInfo::factory(2))
             ), 'userable')
         ->create();
-
 });
 
 test('screen is rendered', function () {

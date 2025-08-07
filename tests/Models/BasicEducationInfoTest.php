@@ -15,7 +15,6 @@ test('to array', function () {
         'level',
         'program',
         'end_date',
-        'check',
         'cv_id',
         'created_at',
         'updated_at',

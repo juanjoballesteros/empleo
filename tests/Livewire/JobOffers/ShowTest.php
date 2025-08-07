@@ -21,6 +21,7 @@ test('show screen can be rendered', function () {
     $user = User::factory()
         ->for(Candidate::factory()
             ->has(Cv::factory()
+                ->completed()
                 ->has(PersonalInfo::factory())
                 ->has(ContactInfo::factory())
                 ->has(ResidenceInfo::factory())

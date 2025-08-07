@@ -69,6 +69,9 @@ final class BasicEducationInfo extends Component
             'end_date',
         ]));
 
+        $this->cv->basic = true;
+        $this->cv->save();
+
         if ($this->certification instanceof TemporaryUploadedFile) {
             if ($certification = $basicEducationInfo->getFirstMedia()) {
                 $certification->delete();

@@ -12,6 +12,10 @@ return new class extends Migration
     {
         Schema::create('cvs', function (Blueprint $table): void {
             $table->id();
+            $table->boolean('basic')->default(false);
+            $table->boolean('high')->default(false);
+            $table->boolean('work')->default(false);
+            $table->boolean('lang')->default(false);
             $table->foreignId('user_id');
             $table->foreignId('candidate_id');
             $table->timestamps();

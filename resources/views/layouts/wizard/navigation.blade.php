@@ -25,28 +25,28 @@
     <flux:navbar class="flex justify-center mb-2">
         <flux:navbar.item href="{{ route('cv.basic-education-info') }}" wire:navigate>
             4. Educación Básica
-            @if ($cv->basicEducationInfo?->check)
+            @if ($cv->basic)
                 <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
 
         <flux:navbar.item href="{{ route('cv.higher-education-info') }}" wire:navigate>
             5. Educación Superior
-            @if ($cv->higherEducations->count())
+            @if ($cv->high)
                 <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
 
         <flux:navbar.item href="{{ route('cv.work-experience-info') }}" wire:navigate>
             6. Experiencia Laboral
-            @if ($cv->workExperiences->count())
+            @if ($cv->work)
                 <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>
 
         <flux:navbar.item href="{{ route('cv.language-info') }}" wire:navigate>
             7. Idiomas
-            @if ($cv->languageInfos->count())
+            @if ($cv->lang)
                 <flux:badge icon="check" color="green" size="sm" class="pr-0 pl-1"/>
             @endif
         </flux:navbar.item>

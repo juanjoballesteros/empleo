@@ -54,7 +54,7 @@
             @endforeach
         </flux:select>
 
-        <div class="col-span-2">
+        <div class="md:col-span-2">
             @if($certification)
                 <div class="flex flex-col gap-4">
                     <div class="h-32 bg-gray-100 w-full rounded-lg">

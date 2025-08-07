@@ -66,6 +66,9 @@ final class LanguageInfo extends Component
             ->preservingOriginal()
             ->toMediaCollection();
 
+        $this->cv->lang = true;
+        $this->cv->save();
+
         $this->reset(['name', 'write', 'speak', 'read', 'certificate']);
 
         LivewireAlert::title('Información añadida')

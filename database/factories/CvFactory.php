@@ -26,4 +26,14 @@ final class CvFactory extends Factory
             'candidate_id' => Candidate::factory(),
         ];
     }
+
+    public function completed(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'basic' => true,
+            'high' => true,
+            'work' => true,
+            'lang' => true,
+        ]);
+    }
 }

@@ -87,6 +87,9 @@ final class HigherEducationInfo extends Component
             ->preservingOriginal()
             ->toMediaCollection();
 
+        $this->cv->high = true;
+        $this->cv->save();
+
         $this->reset(['type', 'semester', 'date_semester', 'licensed', 'department_id', 'city_id', 'certification']);
 
         LivewireAlert::title('Información Añadida')

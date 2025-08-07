@@ -15,7 +15,6 @@ return new class extends Migration
             $table->string('level');
             $table->string('program');
             $table->date('end_date');
-            $table->boolean('check')->default(true);
             $table->foreignId('cv_id');
             $table->timestamps();
         });

@@ -96,6 +96,9 @@ final class WorkExperienceInfo extends Component
             ->preservingOriginal()
             ->toMediaCollection();
 
+        $this->cv->work = true;
+        $this->cv->save();
+
         $this->reset(['certification']);
 
         LivewireAlert::title('Información añadida')

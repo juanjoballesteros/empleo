@@ -15,6 +15,10 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int $id
+ * @property bool $basic
+ * @property bool $high
+ * @property bool $work
+ * @property bool $lang
  * @property int $user_id
  * @property int $candidate_id
  * @property Carbon $created_at
@@ -51,10 +55,10 @@ final class Cv extends Model
         return $this->personalInfo?->check
             && $this->contactInfo?->check
             && $this->residenceInfo?->check
-            && $this->basicEducationInfo?->check
-            && $this->higherEducations()->exists()
-            && $this->workExperiences()->exists()
-            && $this->languageInfos()->exists();
+            && $this->basic
+            && $this->high
+            && $this->work
+            && $this->lang;
     }
 
     /** @return HasMany<HigherEducation, $this> */
@@ -97,5 +101,15 @@ final class Cv extends Model
     public function basicEducationInfo(): HasOne
     {
         return $this->hasOne(BasicEducationInfo::class, 'cv_id');
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'basic' => 'bool',
+            'high' => 'bool',
+            'work' => 'bool',
+            'lang' => 'bool',
+        ];
     }
 }

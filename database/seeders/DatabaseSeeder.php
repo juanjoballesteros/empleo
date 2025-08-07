@@ -77,19 +77,19 @@ final class DatabaseSeeder extends Seeder
             ->preservingOriginal()
             ->toMediaCollection();
 
-        $cv->higherEducations()->each(function (HigherEducation $higherEducation) use ($image) {
+        $cv->higherEducations()->each(function (HigherEducation $higherEducation) use ($image): void {
             $higherEducation->addMedia($image)
                 ->preservingOriginal()
                 ->toMediaCollection();
         });
 
-        $cv->workExperiences()->each(function (WorkExperience $workExperience) use ($image) {
+        $cv->workExperiences()->each(function (WorkExperience $workExperience) use ($image): void {
             $workExperience->addMedia($image)
                 ->preservingOriginal()
                 ->toMediaCollection();
         });
 
-        $cv->languageInfos()->each(function (LanguageInfo $languageInfo) use ($image) {
+        $cv->languageInfos()->each(function (LanguageInfo $languageInfo) use ($image): void {
             $languageInfo->addMedia($image)
                 ->preservingOriginal()
                 ->toMediaCollection();

@@ -17,7 +17,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property string $level
  * @property string $program
  * @property Carbon $end_date
- * @property bool $check
  * @property int $cv_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
