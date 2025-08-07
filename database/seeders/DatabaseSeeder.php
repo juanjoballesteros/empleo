@@ -16,7 +16,9 @@ use App\Models\ResidenceInfo;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\WorkExperience;
+use Faker\Factory;
 use Illuminate\Database\Seeder;
+use Smknstd\FakerPicsumImages\FakerPicsumImagesProvider;
 
 final class DatabaseSeeder extends Seeder
 {
@@ -41,7 +43,8 @@ final class DatabaseSeeder extends Seeder
                 'password' => '1234sangel',
             ]);
 
-        Cv::factory()
+        $cv = Cv::factory()
+            ->completed()
             ->for($candidate)
             ->for($candidate->userable)
             ->has(PersonalInfo::factory())
@@ -52,5 +55,44 @@ final class DatabaseSeeder extends Seeder
             ->has(WorkExperience::factory(2))
             ->has(LanguageInfo::factory(2))
             ->create();
+
+        // Generate Example Images for Cv Steps
+        $faker = Factory::create();
+        $faker->addProvider(new FakerPicsumImagesProvider($faker));
+        $image = $faker->image();
+
+        $cv->personalInfo->addMedia($image)
+            ->preservingOriginal()
+            ->toMediaCollection('back');
+
+        $cv->personalInfo->addMedia($image)
+            ->preservingOriginal()
+            ->toMediaCollection('front');
+
+        $cv->personalInfo->addMedia($image)
+            ->preservingOriginal()
+            ->toMediaCollection('profile');
+
+        $cv->basicEducationInfo->addMedia($image)
+            ->preservingOriginal()
+            ->toMediaCollection();
+
+        $cv->higherEducations()->each(function (HigherEducation $higherEducation) use ($image) {
+            $higherEducation->addMedia($image)
+                ->preservingOriginal()
+                ->toMediaCollection();
+        });
+
+        $cv->workExperiences()->each(function (WorkExperience $workExperience) use ($image) {
+            $workExperience->addMedia($image)
+                ->preservingOriginal()
+                ->toMediaCollection();
+        });
+
+        $cv->languageInfos()->each(function (LanguageInfo $languageInfo) use ($image) {
+            $languageInfo->addMedia($image)
+                ->preservingOriginal()
+                ->toMediaCollection();
+        });
     }
 }
