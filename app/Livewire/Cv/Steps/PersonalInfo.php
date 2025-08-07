@@ -8,7 +8,6 @@ use App\Models\Cv;
 use App\Models\Department;
 use App\Models\User;
 use Carbon\Carbon;
-use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\RequiredIf;
@@ -117,7 +116,6 @@ final class PersonalInfo extends Component
         }
     }
 
-    // @codeCoverageIgnoreStart
     public function analyzeImage(): void
     {
         $this->validate([
@@ -142,27 +140,17 @@ final class PersonalInfo extends Component
             ]
         );
 
-        try {
-            $response = Prism::structured()
-                ->using(Provider::Gemini, 'gemini-2.5-flash-lite-preview-06-17')
-                ->withSchema($cardSchema)
-                ->withPrompt(
-                    'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
-                    [Image::fromUrl($this->document_front?->temporaryUrl()), Image::fromUrl($this->document_back?->temporaryUrl())])
-                ->asStructured();
+        $response = Prism::structured()
+            ->using(Provider::Gemini, 'gemini-2.5-flash-lite-preview-06-17')
+            ->withSchema($cardSchema)
+            ->withPrompt(
+                'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
+                [Image::fromUrl($this->document_front?->temporaryUrl()), Image::fromUrl($this->document_back?->temporaryUrl())])
+            ->asStructured();
 
-            $data = $response->structured;
-        } catch (Exception) {
-            LivewireAlert::title('Tenemos un error con nuestro sistema de imágenes por favor ingrese los datos manualmente')
-                ->error()
-                ->toast()
-                ->position('top-end')
-                ->show();
+        $data = $response->structured;
 
-            $this->show = true;
-        }
-
-        if (! isset($data['first_name']) || ! isset($data['document_number'])) {
+        if (! isset($data['first_name'], $data['document_number'])) {
             LivewireAlert::title('No hemos detectado un documento valido, por favor ingrese los datos manualmente')
                 ->error()
                 ->toast()
@@ -178,16 +166,17 @@ final class PersonalInfo extends Component
             $this->birthdate = $birthdate->toDateString();
         }
 
-        $data['sex'] = match ($data['sex']) {
-            'M' => 'Masculino',
-            'F' => 'Femenino',
-            default => null,
-        };
+        if (isset($data['sex'])) {
+            $data['sex'] = match ($data['sex']) {
+                'M' => 'Masculino',
+                'F' => 'Femenino',
+                default => '',
+            };
+        }
 
         $this->show = true;
         $this->fill($data);
     }
-    // @codeCoverageIgnoreEnd
 
     public function store(): void
     {

@@ -82,13 +82,6 @@ final class Create extends Component
             ->show();
     }
 
-    // @codeCoverageIgnoreStart
-    public function updateCities(): void
-    {
-        $this->cities = City::query()->where('department_id', $this->department_id)->get();
-    }
-    // @codeCoverageIgnoreEnd
-
     public function render(): View
     {
         return view('livewire.company.job-offers.create');

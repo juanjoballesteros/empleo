@@ -53,13 +53,6 @@ final class Edit extends Component
         $this->fill($this->jobOffer);
     }
 
-    // @codeCoverageIgnoreStart
-    public function updateCities(): void
-    {
-        $this->cities = City::query()->where('department_id', $this->department_id)->get();
-    }
-    // @codeCoverageIgnoreEnd
-
     public function update(): void
     {
         $this->validate();

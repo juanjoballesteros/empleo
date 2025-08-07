@@ -9,14 +9,19 @@ use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
+use Prism\Prism\Prism;
+use Prism\Prism\Testing\StructuredResponseFake;
 
-test('personal info screen can be rendered', function () {
-    $user = User::factory()
+beforeEach(function () {
+    $this->user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
+});
 
-    $response = $this->actingAs($user)->get('/cv/personal-info');
+test('personal info screen can be rendered', function () {
+
+    $response = $this->actingAs($this->user)->get('/cv/personal-info');
 
     $response->assertStatus(200);
 });
@@ -26,12 +31,7 @@ it('show alert', function () {
         'error' => 'Error',
     ]);
 
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
-
-    $response = $this->actingAs($user)->get('/cv/personal-info');
+    $response = $this->actingAs($this->user)->get('/cv/personal-info');
 
     $response->assertSessionHas('error');
 });
@@ -39,12 +39,7 @@ it('show alert', function () {
 it('can create personal info', function () {
     Storage::fake('public');
 
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
-
-    $response = Livewire::actingAs($user)->test(PersonalInfo::class)
+    $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
         ->set('first_name', 'Test')
         ->set('second_name', 'Middle')
         ->set('first_surname', 'Doe')
@@ -70,12 +65,8 @@ it('can create personal info', function () {
 });
 
 it('shows validation errors', function () {
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
 
-    $response = Livewire::actingAs($user)->test(PersonalInfo::class)
+    $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
         ->set('first_name', '')
         ->set('first_surname', '')
         ->set('document_number', 'not-a-number')
@@ -139,4 +130,99 @@ it('can update personal info', function () {
         ->assertMissing('1/front.jpg')
         ->assertMissing('2/back.jpg')
         ->assertMissing('3/profile.jpg');
+});
+
+test('show error if images are not valid', function () {
+    $fakeResponse = StructuredResponseFake::make()
+        ->withStructured([
+            'document_type' => 'CC',
+            'second_name' => 'Jose',
+            'sex' => 'M',
+        ]);
+
+    Prism::fake([$fakeResponse]);
+    Storage::fake();
+
+    $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
+        ->set('document_front', UploadedFile::fake()->image('front.jpg'))
+        ->set('document_back', UploadedFile::fake()->image('back.jpg'))
+        ->call('analyzeImage');
+
+    $response->assertSet('show', true)
+        ->assertNotSet('document_type', 'CC')
+        ->assertNotSet('document_number', '123456789')
+        ->assertNotSet('first_name', 'Juan')
+        ->assertNotSet('second_name', 'Jose')
+        ->assertNotSet('sex', 'Masculino');
+});
+
+test('can analyze images', function () {
+    $fakeResponse = StructuredResponseFake::make()
+        ->withStructured([
+            'document_type' => 'CC',
+            'document_number' => '123456789',
+            'first_name' => 'Juan',
+            'second_name' => 'Jose',
+            'birthdate' => '12-12-2012',
+            'sex' => 'M',
+        ]);
+
+    Prism::fake([$fakeResponse]);
+    Storage::fake();
+
+    $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
+        ->set('document_front', UploadedFile::fake()->image('front.jpg'))
+        ->set('document_back', UploadedFile::fake()->image('back.jpg'))
+        ->call('analyzeImage');
+
+    $response->assertSet('show', true)
+        ->assertSet('document_type', 'CC')
+        ->assertSet('document_number', '123456789')
+        ->assertSet('first_name', 'Juan')
+        ->assertSet('second_name', 'Jose')
+        ->assertSet('sex', 'Masculino');
+});
+
+test('return "Femenino"', function () {
+    $fakeResponse = StructuredResponseFake::make()
+        ->withStructured([
+            'document_number' => '123456789',
+            'first_name' => 'Juan',
+            'sex' => 'F',
+        ]);
+
+    Prism::fake([$fakeResponse]);
+    Storage::fake();
+
+    $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
+        ->set('document_front', UploadedFile::fake()->image('front.jpg'))
+        ->set('document_back', UploadedFile::fake()->image('back.jpg'))
+        ->call('analyzeImage');
+
+    $response->assertSet('show', true)
+        ->assertSet('document_number', '123456789')
+        ->assertSet('first_name', 'Juan')
+        ->assertSet('sex', 'Femenino');
+});
+
+test('return empty string', function () {
+    $fakeResponse = StructuredResponseFake::make()
+        ->withStructured([
+            'document_number' => '123456789',
+            'first_name' => 'Juan',
+            'sex' => 'other',
+        ]);
+
+    Prism::fake([$fakeResponse]);
+    Storage::fake();
+
+    $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
+        ->set('document_front', UploadedFile::fake()->image('front.jpg'))
+        ->set('document_back', UploadedFile::fake()->image('back.jpg'))
+        ->call('analyzeImage');
+
+    $response->assertSet('show', true)
+        ->assertSet('document_number', '123456789')
+        ->assertSet('first_name', 'Juan')
+        ->assertSet('sex', '');
 });

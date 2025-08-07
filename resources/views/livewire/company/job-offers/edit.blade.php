@@ -25,17 +25,21 @@
             </flux:select>
 
             <div x-show="$wire.location === 'Presencial'">
-                <flux:select wire:change="updateCities" wire:model="department_id" label="Departamento" class="mb-4">
-                    <flux:select.option>Seleccionar...</flux:select.option>
+                <flux:select wire:model.live="department_id" label="Departamento" required>
+                    <flux:select.option value="">Seleccionar...</flux:select.option>
                     @foreach($departments as $department)
-                        <flux:select.option value="{{ $department->id }}">{{ $department->name }}</flux:select.option>
+                        <flux:select.option value="{{ $department->id }}">
+                            {{ $department->name }}
+                        </flux:select.option>
                     @endforeach
                 </flux:select>
 
-                <flux:select wire:model="city_id" label="Municipio">
-                    <flux:select.option>Seleccionar...</flux:select.option>
-                    @foreach($cities as $city)
-                        <flux:select.option value="{{ $city->id }}">{{ $city->name }}</flux:select.option>
+                <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio" required>
+                    <flux:select.option value="">Seleccionar...</flux:select.option>
+                    @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
+                        <flux:select.option value="{{ $city->id }}">
+                            {{ $city->name }}
+                        </flux:select.option>
                     @endforeach
                 </flux:select>
             </div>
