@@ -34,6 +34,8 @@ final class BasicEducationInfo extends Component
 
     public string $certification_url;
 
+    public bool $show = false;
+
     /** @return array<string, list<string|RequiredIf>> */
     public function rules(): array
     {
@@ -52,6 +54,7 @@ final class BasicEducationInfo extends Component
 
         if ($basicEducationInfo = $this->cv->basicEducationInfo) {
             $this->fill($basicEducationInfo);
+            $this->show = true;
             $this->end_date = $basicEducationInfo->end_date->format('Y-m-d');
             $this->certification_url = $basicEducationInfo->getFirstMediaUrl();
         }
@@ -87,6 +90,14 @@ final class BasicEducationInfo extends Component
             ->toast()
             ->position('top-end')
             ->show();
+    }
+
+    public function check(): void
+    {
+        $this->cv->basic = true;
+        $this->cv->save();
+
+        $this->redirectRoute('cv.higher-education-info', navigate: true);
     }
 
     public function render(): View

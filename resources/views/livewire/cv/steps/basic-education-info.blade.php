@@ -1,7 +1,19 @@
 <div>
-    <form wire:submit="store">
-        @include('layouts.wizard.navigation')
+    @include('layouts.wizard.navigation')
 
+    <div wire:show="!show" class="flex flex-col gap-4 items-center max-w-lg m-auto mt-5">
+        <h3 class="text-lg text-center">¿Cuenta Usted Con Educación Básica?</h3>
+
+        <flux:button variant="primary" color="blue" wire:click="show = true" class="w-full">Sí</flux:button>
+
+        <flux:separator text="o"/>
+
+        <flux:button wire:click="check" class="w-full">
+            No
+        </flux:button>
+    </div>
+
+    <form wire:show="show" wire:cloak wire:submit="store">
         <h4 class="text-lg text-center mb-2">4. Education Básica</h4>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

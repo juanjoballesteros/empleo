@@ -40,6 +40,8 @@ final class LanguageInfo extends Component
     /** @var Collection<int, \App\Models\LanguageInfo> */
     public Collection $languagesInfos;
 
+    public bool $show = false;
+
     public function mount(): void
     {
         $user = request()->user();
@@ -91,6 +93,14 @@ final class LanguageInfo extends Component
 
     public function navigate(): void
     {
+        $this->redirectRoute('cv.pdf');
+    }
+
+    public function check(): void
+    {
+        $this->cv->lang = true;
+        $this->cv->save();
+
         $this->redirectRoute('cv.pdf');
     }
 

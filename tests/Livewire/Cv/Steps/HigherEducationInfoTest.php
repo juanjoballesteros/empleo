@@ -13,27 +13,35 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-test('higher education screen can be rendered', function () {
-    $user = User::factory()
+beforeEach(function () {
+    $this->user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
+});
 
-    $response = $this->actingAs($user)->get('/cv/higher-education-info');
+test('higher education screen can be rendered', function () {
+    $response = $this->actingAs($this->user)->get('/cv/higher-education-info');
 
     $response->assertOk();
+});
+
+test('can check that not have', function () {
+    $response = Livewire::actingAs($this->user)->test(HigherEducationInfo::class)
+        ->call('check');
+
+    $response->assertRedirectToRoute('cv.work-experience-info');
+    $this->assertDatabaseHas('cvs', [
+        'high' => true,
+    ]);
 });
 
 it('can be created', function () {
     Storage::fake();
 
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
     $department = Department::all()->random()->first();
 
-    $response = Livewire::actingAs($user)->test(HigherEducationInfo::class)
+    $response = Livewire::actingAs($this->user)->test(HigherEducationInfo::class)
         ->set('type', 'UN')
         ->set('semester', 7)
         ->set('licensed', 'Si')
@@ -50,12 +58,7 @@ it('can be created', function () {
 });
 
 it('show validation errors', function () {
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
-
-    $response = Livewire::actingAs($user)->test(HigherEducationInfo::class)
+    $response = Livewire::actingAs($this->user)->test(HigherEducationInfo::class)
         ->set('type', '')
         ->set('semester', '')
         ->set('licensed', '')

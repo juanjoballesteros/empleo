@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire\Cv\Steps;
 
-use App\Models\City;
 use App\Models\Cv;
 use App\Models\Department;
 use App\Models\HigherEducation;
@@ -55,8 +54,7 @@ final class HigherEducationInfo extends Component
     /** @var Collection<int, Department> */
     public Collection $departments;
 
-    /** @var Collection<int, City>|list<null> */
-    public Collection|array $cities = [];
+    public bool $show = false;
 
     public function mount(): void
     {
@@ -65,6 +63,10 @@ final class HigherEducationInfo extends Component
 
         assert($user->cv instanceof Cv);
         $this->cv = $user->cv;
+
+        if ($this->cv->higherEducations()->exists()) {
+            $this->show = true;
+        }
     }
 
     public function store(): void
@@ -120,6 +122,14 @@ final class HigherEducationInfo extends Component
             ->toast()
             ->position('top-end')
             ->show();
+    }
+
+    public function check(): void
+    {
+        $this->cv->high = true;
+        $this->cv->save();
+
+        $this->redirectRoute('cv.work-experience-info', navigate: true);
     }
 
     #[On('refresh')]

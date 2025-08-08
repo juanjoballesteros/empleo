@@ -12,26 +12,33 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-test('language info screen can be rendered', function () {
-    $user = User::factory()
+beforeEach(function () {
+    $this->user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
+});
 
-    $response = $this->actingAs($user)->get('/cv/language-info');
+test('language info screen can be rendered', function () {
+    $response = $this->actingAs($this->user)->get('/cv/language-info');
 
     $response->assertOk();
+});
+
+test('can check that not have', function () {
+    $response = Livewire::actingAs($this->user)->test(LanguageInfo::class)
+        ->call('check');
+
+    $response->assertRedirectToRoute('cv.pdf');
+    $this->assertDatabaseHas('cvs', [
+        'lang' => true,
+    ]);
 });
 
 it('can be created', function () {
     Storage::fake();
 
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
-
-    $response = Livewire::actingAs($user)->test(LanguageInfo::class)
+    $response = Livewire::actingAs($this->user)->test(LanguageInfo::class)
         ->set('name', 'Inglés')
         ->set('write', 'Avanzado')
         ->set('speak', 'Intermedio')
@@ -45,12 +52,7 @@ it('can be created', function () {
 });
 
 it('show validation errors', function () {
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
-
-    $response = Livewire::actingAs($user)->test(LanguageInfo::class)
+    $response = Livewire::actingAs($this->user)->test(LanguageInfo::class)
         ->set('name', '')
         ->set('write', '')
         ->set('speak', '')

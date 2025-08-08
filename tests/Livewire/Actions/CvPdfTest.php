@@ -20,7 +20,8 @@ it('response with a pdf', function () {
 
     $user = User::factory()
         ->for(Candidate::factory()
-            ->has(Cv::factory()
+            ->has(Cv::factory(['user_id' => 1])
+                ->completed()
                 ->has(PersonalInfo::factory())
                 ->has(ContactInfo::factory())
                 ->has(ResidenceInfo::factory())

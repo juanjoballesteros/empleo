@@ -63,6 +63,8 @@ final class WorkExperienceInfo extends Component
     /** @var Collection<int, Department> */
     public Collection $departments;
 
+    public bool $show = false;
+
     public function mount(): void
     {
         $this->departments = Department::all();
@@ -72,6 +74,10 @@ final class WorkExperienceInfo extends Component
 
         assert($user->cv instanceof Cv);
         $this->cv = $user->cv;
+
+        if ($this->cv->workExperiences()->exists()) {
+            $this->actual = true;
+        }
     }
 
     public function store(): void
@@ -129,6 +135,14 @@ final class WorkExperienceInfo extends Component
             ->toast()
             ->position('top-end')
             ->show();
+    }
+
+    public function check(): void
+    {
+        $this->cv->work = true;
+        $this->cv->save();
+
+        $this->redirectRoute('cv.language-info', navigate: true);
     }
 
     #[On('refresh')]

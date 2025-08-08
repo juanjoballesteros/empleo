@@ -13,27 +13,36 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-test('work experience screen can be rendered', function () {
-    $user = User::factory()
+beforeEach(function () {
+    $this->user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
 
-    $response = $this->actingAs($user)->get('/cv/work-experience-info');
+});
+
+test('work experience screen can be rendered', function () {
+    $response = $this->actingAs($this->user)->get('/cv/work-experience-info');
 
     $response->assertOk();
+});
+
+test('can check that not have', function () {
+    $response = Livewire::actingAs($this->user)->test(WorkExperienceInfo::class)
+        ->call('check');
+
+    $response->assertRedirectToRoute('cv.language-info');
+    $this->assertDatabaseHas('cvs', [
+        'work' => true,
+    ]);
 });
 
 it('can be created', function () {
     Storage::fake();
 
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
     $department = Department::all()->random()->first();
 
-    $response = Livewire::actingAs($user)->test(WorkExperienceInfo::class)
+    $response = Livewire::actingAs($this->user)->test(WorkExperienceInfo::class)
         ->set('name', 'Empresa Test')
         ->set('email', 'empresa@test.com')
         ->set('phone', '3001234567')
@@ -55,12 +64,7 @@ it('can be created', function () {
 });
 
 it('show validation errors', function () {
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
-
-    $response = Livewire::actingAs($user)->test(WorkExperienceInfo::class)
+    $response = Livewire::actingAs($this->user)->test(WorkExperienceInfo::class)
         ->set('name', '')
         ->set('email', '')
         ->set('phone', '')

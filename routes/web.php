@@ -33,7 +33,7 @@ Route::middleware(['auth', 'type'])->group(function () {
 
     Route::middleware('cv_created')->prefix('cv')->group(function () {
         Route::get('documents', Cv\Documents::class)->name('cv.documents');
-        Route::get('pdf', CvPdf::class)->name('cv.pdf');
+        Route::get('pdf', CvPdf::class)->name('cv.pdf')->middleware('cv');
 
         Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.personal-info');
         Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.contact-info');

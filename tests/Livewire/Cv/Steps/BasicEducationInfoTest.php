@@ -10,26 +10,33 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
-test('basic education screen can be rendered', function () {
-    $user = User::factory()
+beforeEach(function () {
+    $this->user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
         ->create();
+});
 
-    $response = $this->actingAs($user)->get('/cv/basic-education-info');
+test('basic education screen can be rendered', function () {
+    $response = $this->actingAs($this->user)->get('/cv/basic-education-info');
 
     $response->assertOk();
+});
+
+test('can check that not have', function () {
+    $response = Livewire::actingAs($this->user)->test(BasicEducationInfo::class)
+        ->call('check');
+
+    $response->assertRedirectToRoute('cv.higher-education-info');
+    $this->assertDatabaseHas('cvs', [
+        'basic' => true,
+    ]);
 });
 
 it('can be created', function () {
     Storage::fake('public');
 
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
-
-    $response = Livewire::actingAs($user)->test(BasicEducationInfo::class)
+    $response = Livewire::actingAs($this->user)->test(BasicEducationInfo::class)
         ->set('program', 'BACHILLER')
         ->set('level', 11)
         ->set('end_date', '2020-01-01')
@@ -45,12 +52,7 @@ it('can be created', function () {
 });
 
 it('show validation errors', function () {
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory())
-        ->create();
-
-    $response = Livewire::actingAs($user)->test(BasicEducationInfo::class)
+    $response = Livewire::actingAs($this->user)->test(BasicEducationInfo::class)
         ->set('level')
         ->set('end_date')
         ->call('store');
