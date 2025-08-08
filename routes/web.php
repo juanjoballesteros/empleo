@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Actions\CvPdf;
+use App\Http\Controllers\Cv\PdfController;
 use App\Livewire\Candidate;
 use App\Livewire\Company;
 use App\Livewire\Cv;
@@ -33,7 +33,7 @@ Route::middleware(['auth', 'type'])->group(function () {
 
     Route::middleware('cv_created')->prefix('cv')->group(function () {
         Route::get('documents', Cv\Documents::class)->name('cv.documents');
-        Route::get('pdf', CvPdf::class)->name('cv.pdf')->middleware('cv');
+        Route::get('pdf', PdfController::class)->name('cv.pdf')->middleware('cv');
 
         Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.personal-info');
         Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.contact-info');
@@ -45,7 +45,7 @@ Route::middleware(['auth', 'type'])->group(function () {
     });
 
     Route::prefix('company')->group(function () {
-        Route::get('{cv}/pdf', CvPdf::class)->name('company.cv.pdf');
+        Route::get('{cv}/pdf', PdfController::class)->name('company.cv.pdf');
 
         Route::prefix('offers')->group(function () {
             Route::get('/', Company\JobOffers\Index::class)->name('company.offers.index');

@@ -36,7 +36,7 @@ test('index page can be rendered', function () {
     $response->assertStatus(200);
 });
 
-it('can show job offers', function () {
+test('can show job offers', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
     JobOffer::factory(10)->create();
     JobOffer::factory()->create([
@@ -53,7 +53,7 @@ it('can show job offers', function () {
         });
 });
 
-it('show 1 job offer', function () {
+test('show 1 job offer', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
     $jobOffer = JobOffer::factory()->create();
 
@@ -65,7 +65,7 @@ it('show 1 job offer', function () {
         ->assertDispatched('job-offer.change');
 });
 
-it('can search job offers', function () {
+test('can search job offers', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
     JobOffer::factory(10)->create();
     JobOffer::factory()->create([

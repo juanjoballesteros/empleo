@@ -30,19 +30,19 @@ test('to array', function () {
     ]);
 });
 
-it('belongs to a department', function () {
+test('belongs to a department', function () {
     $workExperience = WorkExperience::factory()->create();
 
     expect($workExperience->department)->toBeInstanceOf(Department::class);
 });
 
-it('belongs to a city', function () {
+test('belongs to a city', function () {
     $workExperience = WorkExperience::factory()->create();
 
     expect($workExperience->city)->toBeInstanceOf(City::class);
 });
 
-it('belongs to a cv', function () {
+test('belongs to a cv', function () {
     $workExperience = WorkExperience::factory()->create();
 
     expect($workExperience->cv)->toBeInstanceOf(Cv::class);

@@ -76,7 +76,7 @@ final class WorkExperienceInfo extends Component
         $this->cv = $user->cv;
 
         if ($this->cv->workExperiences()->exists()) {
-            $this->actual = true;
+            $this->show = true;
         }
     }
 

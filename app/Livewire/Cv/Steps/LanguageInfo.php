@@ -49,6 +49,10 @@ final class LanguageInfo extends Component
 
         assert($user->cv instanceof Cv);
         $this->cv = $user->cv;
+
+        if ($this->cv->languageInfos()->exists()) {
+            $this->show = true;
+        }
     }
 
     public function store(): void

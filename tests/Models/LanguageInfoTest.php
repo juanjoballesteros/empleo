@@ -22,7 +22,7 @@ test('to array', function () {
     ]);
 });
 
-it('belongs to a cv', function () {
+test('belongs to a cv', function () {
     $languageInfo = LanguageInfo::factory()->create();
 
     expect($languageInfo->cv)->toBeInstanceOf(Cv::class);

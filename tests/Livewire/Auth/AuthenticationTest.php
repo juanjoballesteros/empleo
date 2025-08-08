@@ -45,7 +45,7 @@ test('users can not authenticate with invalid password', function () {
     $this->assertGuest();
 });
 
-it('users can not authenticate with to many attempts', function () {
+test('users can not authenticate with to many attempts', function () {
     $user = User::factory()->create();
 
     Event::fake();

@@ -20,7 +20,7 @@ test('applications screen can be rendered', function () {
     $response->assertOk();
 });
 
-it('can update job application', function () {
+test('can update job application', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
     $jobOffer = JobOffer::factory()->for($user->userable)->create();
     $candidate = User::factory()->for(Candidate::factory(), 'userable')->create();
@@ -38,7 +38,7 @@ it('can update job application', function () {
     ]);
 });
 
-it('can set notes when reject job application', function () {
+test('can set notes when reject job application', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
     $jobOffer = JobOffer::factory()->for($user->userable)->create();
     $candidate = User::factory()->for(Candidate::factory(), 'userable')->create();

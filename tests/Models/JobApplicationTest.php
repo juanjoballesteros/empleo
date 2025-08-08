@@ -22,19 +22,19 @@ test('to array', function () {
     ]);
 });
 
-it('belong to a job offer', function () {
+test('belong to a job offer', function () {
     $jobApplication = JobApplication::factory()->create();
 
     expect($jobApplication->jobOffer)->toBeInstanceOf(JobOffer::class);
 });
 
-it('belongs to a candidate', function () {
+test('belongs to a candidate', function () {
     $jobApplication = JobApplication::factory()->create();
 
     expect($jobApplication->candidate)->toBeInstanceOf(Candidate::class);
 });
 
-it('belongs to a company', function () {
+test('belongs to a company', function () {
     $jobApplication = JobApplication::factory()->create();
 
     expect($jobApplication->company)->toBeInstanceOf(Company::class);

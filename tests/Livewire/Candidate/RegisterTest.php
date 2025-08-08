@@ -38,7 +38,7 @@ test('user can register as candidate', function () {
     Storage::assertExists('1/card.jpg');
 });
 
-it('analyze image and generate a structured response', function () {
+test('analyze image and generate a structured response', function () {
     $fakeResponse = StructuredResponseFake::make()
         ->withStructured([
             'names' => 'Pedro',
@@ -58,7 +58,7 @@ it('analyze image and generate a structured response', function () {
         ->assertSet('show', true);
 });
 
-it('show error message if card is not recognized', function () {
+test('show error message if card is not recognized', function () {
     $fakeResponse = StructuredResponseFake::make()
         ->withStructured([
             'names' => null,

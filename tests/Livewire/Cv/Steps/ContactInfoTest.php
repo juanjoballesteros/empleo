@@ -19,7 +19,7 @@ test('contact info screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
-it('can be created', function () {
+test('can be created', function () {
     $user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
@@ -36,7 +36,7 @@ it('can be created', function () {
     $this->assertDatabaseCount('contact_infos', 1);
 });
 
-it('show validation errors', function () {
+test('show validation errors', function () {
     $user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
@@ -53,7 +53,7 @@ it('show validation errors', function () {
     ])->assertNoRedirect();
 });
 
-it('assert can be updated', function () {
+test('assert can be updated', function () {
     $user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory()->has(App\Models\ContactInfo::factory()))

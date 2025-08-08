@@ -33,7 +33,7 @@ test('can check that not have', function () {
     ]);
 });
 
-it('can be created', function () {
+test('can be created', function () {
     Storage::fake('public');
 
     $response = Livewire::actingAs($this->user)->test(BasicEducationInfo::class)
@@ -51,7 +51,7 @@ it('can be created', function () {
     Storage::disk('public')->assertExists('1/certification.jpg');
 });
 
-it('show validation errors', function () {
+test('show validation errors', function () {
     $response = Livewire::actingAs($this->user)->test(BasicEducationInfo::class)
         ->set('level')
         ->set('end_date')
@@ -64,7 +64,7 @@ it('show validation errors', function () {
     ])->assertNoRedirect();
 });
 
-it('can be updated', function () {
+test('can be updated', function () {
     Storage::fake('public');
 
     $user = User::factory()

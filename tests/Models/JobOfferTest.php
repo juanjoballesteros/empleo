@@ -27,25 +27,25 @@ test('to array', function () {
     ]);
 });
 
-it('belongs to a company', function () {
+test('belongs to a company', function () {
     $jobOffer = JobOffer::factory()->create();
 
     expect($jobOffer->company)->toBeInstanceOf(Company::class);
 });
 
-it('belongs to a department', function () {
+test('belongs to a department', function () {
     $jobOffer = JobOffer::factory()->presencial()->create();
 
     expect($jobOffer->department)->toBeInstanceOf(Department::class);
 });
 
-it('belongs to a city', function () {
+test('belongs to a city', function () {
     $jobOffer = JobOffer::factory()->presencial()->create();
 
     expect($jobOffer->city)->toBeInstanceOf(City::class);
 });
 
-it('has many job applications', function () {
+test('has many job applications', function () {
     $jobOffer = JobOffer::factory()->has(JobApplication::factory()->count(3))->create();
 
     expect($jobOffer->jobApplications)->toHaveCount(3)->each->toBeInstanceOf(JobApplication::class);

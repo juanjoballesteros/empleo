@@ -36,7 +36,7 @@ test('can check that not have', function () {
     ]);
 });
 
-it('can be created', function () {
+test('can be created', function () {
     Storage::fake();
 
     $department = Department::all()->random()->first();
@@ -57,7 +57,7 @@ it('can be created', function () {
     $this->assertDatabaseCount('higher_education', 1);
 });
 
-it('show validation errors', function () {
+test('show validation errors', function () {
     $response = Livewire::actingAs($this->user)->test(HigherEducationInfo::class)
         ->set('type', '')
         ->set('semester', '')
@@ -79,7 +79,7 @@ it('show validation errors', function () {
     $this->assertDatabaseCount('higher_education', 0);
 });
 
-it('can be deleted', function () {
+test('can be deleted', function () {
     $user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory()->has(HigherEducation::factory(2)))
@@ -107,7 +107,7 @@ test('send to work experience', function () {
     $response->assertRedirect('/cv/work-experience-info');
 });
 
-it('can be updated', function () {
+test('can be updated', function () {
     Storage::fake();
 
     $user = User::factory()

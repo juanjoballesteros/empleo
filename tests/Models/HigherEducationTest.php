@@ -27,19 +27,19 @@ test('to array', function () {
     ]);
 });
 
-it('belongs to a department', function () {
+test('belongs to a department', function () {
     $higherEducation = HigherEducation::factory()->create();
 
     expect($higherEducation->department)->toBeInstanceOf(Department::class);
 });
 
-it('belongs to a city', function () {
+test('belongs to a city', function () {
     $higherEducation = HigherEducation::factory()->create();
 
     expect($higherEducation->city)->toBeInstanceOf(City::class);
 });
 
-it('belongs to a cv', function () {
+test('belongs to a cv', function () {
     $higherEducation = HigherEducation::factory()->create();
 
     expect($higherEducation->cv)->toBeInstanceOf(Cv::class);

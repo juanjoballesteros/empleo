@@ -21,7 +21,7 @@ test('to array', function () {
     ]);
 });
 
-it('belongs to a cv', function () {
+test('belongs to a cv', function () {
     $contactInfo = ContactInfo::factory()->create();
 
     expect($contactInfo->cv)->toBeInstanceOf(Cv::class);

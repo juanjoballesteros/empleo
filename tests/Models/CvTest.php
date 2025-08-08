@@ -29,55 +29,55 @@ test('to array', function () {
     ]);
 });
 
-it('belongs to a user', function () {
+test('belongs to a user', function () {
     $cv = Cv::factory()->create();
 
     expect($cv->user)->toBeInstanceOf(User::class);
 });
 
-it('belongs to a candidate', function () {
+test('belongs to a candidate', function () {
     $cv = Cv::factory()->create();
 
     expect($cv->candidate)->toBeInstanceOf(Candidate::class);
 });
 
-it('has one personal info', function () {
+test('has one personal info', function () {
     $cv = Cv::factory()->has(PersonalInfo::factory())->create();
 
     expect($cv->personalInfo)->toBeInstanceOf(PersonalInfo::class);
 });
 
-it('has one contact info', function () {
+test('has one contact info', function () {
     $cv = Cv::factory()->has(ContactInfo::factory())->create();
 
     expect($cv->contactInfo)->toBeInstanceOf(ContactInfo::class);
 });
 
-it('has one residence info', function () {
+test('has one residence info', function () {
     $cv = Cv::factory()->has(ResidenceInfo::factory())->create();
 
     expect($cv->residenceInfo)->toBeInstanceOf(ResidenceInfo::class);
 });
 
-it('has one basic education info', function () {
+test('has one basic education info', function () {
     $cv = Cv::factory()->has(BasicEducationInfo::factory())->create();
 
     expect($cv->basicEducationInfo)->toBeInstanceOf(BasicEducationInfo::class);
 });
 
-it('has many higher education info', function () {
+test('has many higher education info', function () {
     $cv = Cv::factory()->has(HigherEducation::factory(3))->create();
 
     expect($cv->higherEducations)->toHaveCount(3)->each->toBeInstanceOf(HigherEducation::class);
 });
 
-it('has many work experiences', function () {
+test('has many work experiences', function () {
     $cv = Cv::factory()->has(WorkExperience::factory(3))->create();
 
     expect($cv->workExperiences)->toHaveCount(3)->each->toBeInstanceOf(WorkExperience::class);
 });
 
-it('has many languages info', function () {
+test('has many languages info', function () {
     $cv = Cv::factory()->has(LanguageInfo::factory(3))->create();
 
     expect($cv->languageInfos)->toHaveCount(3)->each->toBeInstanceOf(LanguageInfo::class);

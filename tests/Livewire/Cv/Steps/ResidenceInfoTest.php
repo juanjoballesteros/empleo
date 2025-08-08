@@ -20,7 +20,7 @@ test('residence info screen can be rendered', function () {
     $response->assertOk();
 });
 
-it('can be created', function () {
+test('can be created', function () {
     $user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
@@ -40,7 +40,7 @@ it('can be created', function () {
     $this->assertDatabaseCount('residence_infos', 1);
 });
 
-it('show validation errors', function () {
+test('show validation errors', function () {
     $user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory())
@@ -59,7 +59,7 @@ it('show validation errors', function () {
     ])->assertNoRedirect();
 });
 
-it('can be updated', function () {
+test('can be updated', function () {
     $user = User::factory()
         ->for(Candidate::factory(), 'userable')
         ->has(Cv::factory()->has(App\Models\ResidenceInfo::factory()))

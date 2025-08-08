@@ -40,7 +40,7 @@ test('show screen can be rendered', function () {
         ->assertSeeLivewire(Show::class);
 });
 
-it('change the job offer', function () {
+test('change the job offer', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
     $jobOffer = JobOffer::factory()->create([
         'title' => 'Oferta de trabajo',
@@ -53,7 +53,7 @@ it('change the job offer', function () {
     $response->assertSee('Oferta de trabajo');
 });
 
-it('can apply to a job application', function () {
+test('can apply to a job application', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
     $jobOffer = JobOffer::factory()->create();
 
@@ -71,7 +71,7 @@ it('can apply to a job application', function () {
     ]);
 });
 
-it('cant apply if is already applied', function () {
+test('cant apply if is already applied', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
     $jobOffer = JobOffer::factory()->create();
     $jobApplication = JobApplication::factory()->for($user->userable)->for($jobOffer)->create();

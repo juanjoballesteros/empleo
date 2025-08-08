@@ -23,19 +23,19 @@ test('to array', function () {
     ]);
 });
 
-it('belongs to a company', function () {
+test('belongs to a company', function () {
     $user = User::factory()->for(Company::factory(), 'userable')->create();
 
     expect($user->userable)->toBeInstanceOf(Company::class);
 });
 
-it('belongs to a candidate', function () {
+test('belongs to a candidate', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
 
     expect($user->userable)->toBeInstanceOf(Candidate::class);
 });
 
-it('retrieve initials', function () {
+test('retrieve initials', function () {
     $user = User::factory()->create([
         'name' => 'JUAN JOSE',
     ]);

@@ -15,7 +15,7 @@ use App\Models\WorkExperience;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Spatie\LaravelPdf\PdfBuilder;
 
-it('response with a pdf', function () {
+test('response with a pdf', function () {
     Pdf::fake();
 
     $user = User::factory()

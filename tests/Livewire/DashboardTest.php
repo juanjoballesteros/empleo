@@ -20,7 +20,7 @@ test('authenticated users can visit the dashboard', function () {
     $this->get('/dashboard')->assertStatus(200);
 });
 
-it('can redirect to offers', function () {
+test('can redirect to offers', function () {
     $user = User::factory()->for(Candidate::factory(), 'userable')->create();
 
     $response = Livewire::actingAs($user)

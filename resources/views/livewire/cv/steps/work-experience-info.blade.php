@@ -1,7 +1,7 @@
 <div>
     @include('layouts.wizard.navigation')
 
-    <div wire:show="!show" class="flex flex-col gap-4 items-center max-w-lg m-auto mt-4">
+    <div wire:show="!show" wire:cloak class="flex flex-col gap-4 items-center max-w-lg m-auto mt-4">
         <h3 class="text-lg text-center">¿Cuenta Usted Con Experiencia Laboral?</h3>
 
         <flux:button variant="primary" color="blue" wire:click="show = true" class="w-full">Sí</flux:button>

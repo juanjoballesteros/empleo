@@ -26,7 +26,7 @@ test('personal info screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
-it('show alert', function () {
+test('show alert', function () {
     $this->withSession([
         'error' => 'Error',
     ]);
@@ -36,7 +36,7 @@ it('show alert', function () {
     $response->assertSessionHas('error');
 });
 
-it('can create personal info', function () {
+test('can create personal info', function () {
     Storage::fake('public');
 
     $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
@@ -64,7 +64,7 @@ it('can create personal info', function () {
         ->assertExists('3/profile.jpg');
 });
 
-it('shows validation errors', function () {
+test('shows validation errors', function () {
 
     $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
         ->set('first_name', '')
@@ -81,7 +81,7 @@ it('shows validation errors', function () {
     ]);
 });
 
-it('can update personal info', function () {
+test('can update personal info', function () {
     Storage::fake();
 
     $user = User::factory()

@@ -21,7 +21,7 @@ test('edit screen can be rendered', function () {
     $response->assertOk();
 });
 
-it('fill the data from the job offer', function () {
+test('fill the data from the job offer', function () {
     $response = Livewire::actingAs($this->user)
         ->test(Edit::class, ['jobOffer' => $this->jobOffer]);
 
@@ -33,7 +33,7 @@ it('fill the data from the job offer', function () {
         ->assertSet('location', $this->jobOffer->location);
 });
 
-it('edit the job offer', function () {
+test('edit the job offer', function () {
     $response = Livewire::actingAs($this->user)
         ->test(Edit::class, ['jobOffer' => $this->jobOffer])
         ->set('title', 'Titulo')

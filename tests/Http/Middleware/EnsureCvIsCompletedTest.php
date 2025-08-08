@@ -6,7 +6,7 @@ use App\Models\Candidate;
 use App\Models\Cv;
 use App\Models\User;
 
-it('redirect if cv is not completed', function () {
+test('redirect if cv is not completed', function () {
     $user = User::factory()->for(Candidate::factory()->has(Cv::factory()), 'userable')->create();
 
     $response = $this->actingAs($user)->get('/offers');

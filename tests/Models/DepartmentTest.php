@@ -17,7 +17,7 @@ test('to array', function () {
     ]);
 });
 
-it('has many cities', function () {
+test('has many cities', function () {
     $department = Department::query()->inRandomOrder()->first();
 
     $count = $department->cities()->count();
@@ -25,21 +25,21 @@ it('has many cities', function () {
     expect($department->cities)->toHaveCount($count)->each->toBeInstanceOf(City::class);
 });
 
-it('has many companies', function () {
+test('has many companies', function () {
     $department = Department::query()->inRandomOrder()->first();
     Company::factory()->count(3)->for($department)->create();
 
     expect($department->companies)->toHaveCount(3)->each->toBeInstanceOf(Company::class);
 });
 
-it('has many candidates', function () {
+test('has many candidates', function () {
     $department = Department::query()->inRandomOrder()->first();
     Candidate::factory()->count(3)->for($department)->create();
 
     expect($department->candidates)->toHaveCount(3)->each->toBeInstanceOf(Candidate::class);
 });
 
-it('has many job offers', function () {
+test('has many job offers', function () {
     $department = Department::query()->inRandomOrder()->first();
     JobOffer::factory()->count(3)->for($department)->create();
 

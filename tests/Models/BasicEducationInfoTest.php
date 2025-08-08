@@ -21,7 +21,7 @@ test('to array', function () {
     ]);
 });
 
-it('belongs to a cv', function () {
+test('belongs to a cv', function () {
     $basicEducationInfo = BasicEducationInfo::factory()->create();
 
     expect($basicEducationInfo->cv)->toBeInstanceOf(Cv::class);

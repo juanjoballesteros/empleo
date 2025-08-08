@@ -22,31 +22,31 @@ test('to array', function () {
     ]);
 });
 
-it('has a user', function () {
+test('has a user', function () {
     $candidate = Candidate::factory()->has(User::factory())->create();
 
     expect($candidate->user)->toBeInstanceOf(User::class);
 });
 
-it('has a cv', function () {
+test('has a cv', function () {
     $candidate = Candidate::factory()->has(Cv::factory())->create();
 
     expect($candidate->cv)->toBeInstanceOf(Cv::class);
 });
 
-it('belongs to a department', function () {
+test('belongs to a department', function () {
     $candidate = Candidate::factory()->create();
 
     expect($candidate->department)->toBeInstanceOf(Department::class);
 });
 
-it('belongs to a city', function () {
+test('belongs to a city', function () {
     $candidate = Candidate::factory()->create();
 
     expect($candidate->city)->toBeInstanceOf(City::class);
 });
 
-it('has many job applications', function () {
+test('has many job applications', function () {
     $candidate = Candidate::factory()->has(JobApplication::factory()->count(3))->create();
 
     expect($candidate->jobApplications)->toHaveCount(3)->each->toBeInstanceOf(JobApplication::class);
