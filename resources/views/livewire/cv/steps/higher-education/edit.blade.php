@@ -1,7 +1,7 @@
 <div>
     <flux:modal name="edit" class="md:min-w-4xl">
         <form wire:submit="update" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <h3 class="text-xl text-center md:col-span-2">Editar Experiencia Laboral</h3>
+            <h3 class="text-xl text-center md:col-span-2">Editar</h3>
 
             <flux:input wire:model="program" label="Nombre del programa*" required/>
 

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Livewire\Cv\Steps\HigherEducation\Create;
 use App\Livewire\Cv\Steps\HigherEducation\Edit;
 use App\Livewire\Cv\Steps\HigherEducationInfo;
 use App\Models\Candidate;
@@ -41,7 +42,7 @@ test('can be created', function () {
 
     $department = Department::all()->random()->first();
 
-    $response = Livewire::actingAs($this->user)->test(HigherEducationInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Create::class, ['cv' => $this->user->cv])
         ->set('type', 'UN')
         ->set('semester', 7)
         ->set('licensed', 'Si')
@@ -52,13 +53,14 @@ test('can be created', function () {
         ->set('certification', UploadedFile::fake()->image('certification.jpg'))
         ->call('store');
 
-    $response->assertHasNoErrors();
+    $response->assertHasNoErrors()
+        ->assertDispatched('high.create');
 
     $this->assertDatabaseCount('higher_education', 1);
 });
 
 test('show validation errors', function () {
-    $response = Livewire::actingAs($this->user)->test(HigherEducationInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Create::class)
         ->set('type', '')
         ->set('semester', '')
         ->set('licensed', '')
@@ -139,7 +141,7 @@ test('can be updated', function () {
         ->call('update');
 
     $response->assertHasNoErrors()
-        ->assertDispatched('refresh');
+        ->assertDispatched('high.edit');
 
     Storage::disk('public')->assertExists('2/certification.jpg')
         ->assertMissing('1/certification.jpg');

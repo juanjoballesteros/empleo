@@ -4,23 +4,23 @@ declare(strict_types=1);
 
 namespace App\Livewire\Cv\Steps\HigherEducation;
 
+use App\Models\Cv;
 use App\Models\Department;
-use App\Models\HigherEducation;
 use Flux\Flux;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
-use Livewire\Attributes\On;
+use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-final class Edit extends Component
+final class Create extends Component
 {
     use WithFileUploads;
 
-    public HigherEducation $higherEducation;
+    public Cv $cv;
 
     #[Validate(['required', 'string', 'max:255'])]
     public string $type;
@@ -43,39 +43,17 @@ final class Edit extends Component
     #[Validate(['required', 'numeric'])]
     public string $city_id;
 
-    #[Validate(['nullable', 'image'])]
+    #[Validate(['required', 'image'])]
     public ?TemporaryUploadedFile $certification = null;
-
-    public ?string $certification_url = null;
 
     /** @var Collection<int, Department> */
     public Collection $departments;
 
-    #[On('edit')]
-    public function edit(HigherEducation $higherEducation): void
-    {
-        $this->higherEducation = $higherEducation;
-        $this->fill($higherEducation);
-        $this->date_semester = $higherEducation->date_semester->format('Y-m-d');
-        $this->certification_url = $higherEducation->getFirstMediaUrl();
-        Flux::modal('edit')->show();
-    }
-
-    public function update(): void
+    public function store(): void
     {
         $this->validate();
 
-        if ($this->certification instanceof TemporaryUploadedFile) {
-            if (($certification = $this->higherEducation->getFirstMedia()) instanceof Media) {
-                $certification->delete();
-            }
-
-            $this->higherEducation->addMedia($this->certification)
-                ->preservingOriginal()
-                ->toMediaCollection();
-        }
-
-        $this->higherEducation->update($this->pull([
+        $higherEducation = $this->cv->higherEducations()->create($this->only([
             'type',
             'semester',
             'date_semester',
@@ -85,14 +63,29 @@ final class Edit extends Component
             'city_id',
         ]));
 
-        $this->dispatch('high.edit');
-        Flux::modal('edit')->close();
+        assert($this->certification instanceof UploadedFile);
+        $higherEducation->addMedia($this->certification)
+            ->preservingOriginal()
+            ->toMediaCollection();
+
+        $this->cv->high = true;
+        $this->cv->save();
+
+        $this->dispatch('high.create');
+        $this->reset(['type', 'semester', 'date_semester', 'licensed', 'department_id', 'city_id', 'certification']);
+
+        LivewireAlert::title('Información Añadida')
+            ->success()
+            ->toast()
+            ->position('top-end')
+            ->show();
+        Flux::modal('create')->close();
     }
 
     public function render(): View
     {
         $this->departments = Department::all();
 
-        return view('livewire.cv.steps.higher-education.edit');
+        return view('livewire.cv.steps.higher-education.create');
     }
 }
