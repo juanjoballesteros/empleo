@@ -95,11 +95,6 @@ final class LanguageInfo extends Component
             ->show();
     }
 
-    public function navigate(): void
-    {
-        $this->redirectRoute('cv.pdf');
-    }
-
     public function check(): void
     {
         $this->cv->lang = true;

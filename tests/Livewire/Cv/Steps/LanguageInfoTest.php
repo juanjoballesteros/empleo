@@ -85,19 +85,6 @@ test('can be deleted', function () {
     $this->assertDatabaseCount('language_infos', 1);
 });
 
-test('navigate to next step', function () {
-    $user = User::factory()
-        ->for(Candidate::factory(), 'userable')
-        ->has(Cv::factory()->has(LanguageInfoModel::factory(2)))
-        ->create();
-
-    $response = Livewire::actingAs($user)
-        ->test(LanguageInfo::class)
-        ->call('navigate');
-
-    $response->assertRedirect('/cv/pdf');
-});
-
 test('can be updated', function () {
     Storage::fake();
 

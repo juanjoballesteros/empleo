@@ -257,8 +257,8 @@
         <livewire:cv.steps.language.edit/>
 
         <div class="flex justify-end">
-            <flux:button wire:click="navigate" variant="primary">
-                Ver PDF
+            <flux:button href="{{ route('cv.completed') }}" variant="primary" wire:navigate>
+                ¡Terminar!
             </flux:button>
         </div>
     </div>
