@@ -32,17 +32,21 @@
                 {{ __('Dashboard') }}
             </flux:navbar.item>
 
-            <flux:navbar.item href="{{ route('company.offers.index') }}" wire:navigate>
-                Ofertas De Empleo
-            </flux:navbar.item>
+            @if(auth()->user()->userable instanceof App\Models\Company)
+                <flux:navbar.item href="{{ route('company.offers.index') }}" wire:navigate>
+                    Ofertas De Empleo
+                </flux:navbar.item>
+            @endif
 
-            <flux:navbar.item href="{{ route('cv.documents') }}" wire:navigate>
-                Carpeta Digital
-            </flux:navbar.item>
+            @if(auth()->user()->userable instanceof App\Models\Candidate)
+                <flux:navbar.item href="{{ route('cv.documents') }}" wire:navigate>
+                    Carpeta Digital
+                </flux:navbar.item>
 
-            <flux:navbar.item href="{{ route('offers.index') }}" wire:navigate>
-                Buscar Ofertas De Empleo
-            </flux:navbar.item>
+                <flux:navbar.item href="{{ route('offers.index') }}" wire:navigate>
+                    Buscar Ofertas De Empleo
+                </flux:navbar.item>
+            @endif
         </flux:navbar>
 
         <flux:spacer/>
