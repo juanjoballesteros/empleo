@@ -7,7 +7,6 @@ namespace App\Livewire\Cv\Steps\HigherEducation;
 use App\Models\Department;
 use App\Models\HigherEducation;
 use Flux\Flux;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -23,41 +22,37 @@ final class Edit extends Component
     public HigherEducation $higherEducation;
 
     #[Validate(['required', 'string', 'max:255'])]
-    public string $type;
-
-    #[Validate(['required', 'numeric'])]
-    public string $semester;
-
-    #[Validate(['required', 'date'])]
-    public string $date_semester;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $licensed;
-
-    #[Validate(['required', 'string', 'max:255'])]
     public string $program;
 
-    #[Validate(['required', 'numeric'])]
-    public string $department_id;
+    #[Validate(['required', 'string', 'max:255'])]
+    public string $institution;
 
-    #[Validate(['required', 'numeric'])]
-    public string $city_id;
+    #[Validate(['required', 'string', 'max:255'])]
+    public string $type;
+
+    #[Validate(['required', 'date'])]
+    public string $date_start;
+
+    #[Validate(['required', 'bool'])]
+    public bool $actual = false;
+
+    #[Validate(['nullable', 'date', 'after:date_start'])]
+    public ?string $date_end = null;
 
     #[Validate(['nullable', 'image'])]
     public ?TemporaryUploadedFile $certification = null;
 
     public ?string $certification_url = null;
 
-    /** @var Collection<int, Department> */
-    public Collection $departments;
-
     #[On('edit')]
     public function edit(HigherEducation $higherEducation): void
     {
         $this->higherEducation = $higherEducation;
         $this->fill($higherEducation);
-        $this->date_semester = $higherEducation->date_semester->format('Y-m-d');
+        $this->date_start = $higherEducation->date_start->toDateString();
+        $this->date_end = $higherEducation->date_end?->toDateString();
         $this->certification_url = $higherEducation->getFirstMediaUrl();
+        $this->js('changeActual', $higherEducation->actual);
         Flux::modal('edit')->show();
     }
 
@@ -76,13 +71,12 @@ final class Edit extends Component
         }
 
         $this->higherEducation->update($this->pull([
-            'type',
-            'semester',
-            'date_semester',
-            'licensed',
             'program',
-            'department_id',
-            'city_id',
+            'institution',
+            'type',
+            'date_start',
+            'actual',
+            'date_end',
         ]));
 
         $this->dispatch('high.edit');
@@ -91,8 +85,8 @@ final class Edit extends Component
 
     public function render(): View
     {
-        $this->departments = Department::all();
-
-        return view('livewire.cv.steps.higher-education.edit');
+        return view('livewire.cv.steps.higher-education.edit', [
+            'departments' => Department::all(),
+        ]);
     }
 }

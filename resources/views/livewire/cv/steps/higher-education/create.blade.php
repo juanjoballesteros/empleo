@@ -1,16 +1,10 @@
 <div>
-    <form wire:submit="store"
+    <form wire:submit="store" x-data="{ actual: '' }"
           class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <h3 class="text-xl text-center md:col-span-2">Añadir</h3>
 
         <flux:input wire:model="program" label="Nombre del programa*" required/>
-
-        <flux:select wire:model="semester" label="Último semestre aprobado*" required>
-            <flux:select.option value="">Seleccionar...</flux:select.option>
-            @for($i = 12; $i >= 1; $i--)
-                <flux:select.option value="{{ $i }}">{{ $i }}</flux:select.option>
-            @endfor
-        </flux:select>
+        <flux:input wire:model="institution" label="Institución Educativa*" required/>
 
         <flux:select wire:model="type" label="Modalidad Académica*" required>
             <flux:select.option value="">Seleccionar...</flux:select.option>
@@ -23,34 +17,21 @@
             <flux:select.option value="DOC">Doctorado</flux:select.option>
         </flux:select>
 
-        <flux:select wire:model="licensed" label="Graduado*" required>
-            <flux:select.option value="">Seleccionar...</flux:select.option>
-            <flux:select.option value="Si">Si</flux:select.option>
-            <flux:select.option value="No">No</flux:select.option>
-        </flux:select>
-
-        <flux:input type="date" wire:model="date_semester" label="Fecha último semestre cursado*" required
+        <flux:input type="date" wire:model="date_start" label="Fecha de inicio*" required
                     max="{{ today()->toDateString() }}"/>
 
-        <flux:select wire:model.live="department_id" label="Departamento*" required autofocus>
+        <flux:select wire:model="actual" x-model="actual" label="¿Ya terminaste?*" required>
             <flux:select.option value="">Seleccionar...</flux:select.option>
-            @foreach($departments as $department)
-                <flux:select.option value="{{ $department->id }}">
-                    {{ $department->name }}
-                </flux:select.option>
-            @endforeach
+            <flux:select.option value="1">Si</flux:select.option>
+            <flux:select.option value="0">No</flux:select.option>
         </flux:select>
 
-        <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio*" required>
-            <flux:select.option value="">Seleccionar...</flux:select.option>
-            @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
-                <flux:select.option value="{{ $city->id }}">
-                    {{ $city->name }}
-                </flux:select.option>
-            @endforeach
-        </flux:select>
+        <div x-show="actual == true">
+            <flux:input type="date" wire:model="date_end" label="Fecha finalizado*"
+                        max="{{ today()->toDateString() }}"/>
+        </div>
 
-        <div class="md:col-span-2">
+        <div x-show="actual == true" class="md:col-span-2">
             @if($certification)
                 <div class="flex flex-col gap-4">
                     <div class="h-32 bg-gray-100 w-full rounded-lg">
@@ -100,7 +81,5 @@
         </div>
 
         <flux:button type="submit" variant="primary" class="md:col-span-2">Añadir</flux:button>
-
-        <livewire:camera/>
     </form>
 </div>

@@ -43,13 +43,12 @@ test('can be created', function () {
     $department = Department::all()->random()->first();
 
     $response = Livewire::actingAs($this->user)->test(Create::class, ['cv' => $this->user->cv])
+        ->set('program', 'Programa')
+        ->set('institution', 'Institución')
         ->set('type', 'UN')
-        ->set('semester', 7)
-        ->set('licensed', 'Si')
-        ->set('date_semester', '2020-01-01')
-        ->set('program', 'Ingeniería')
-        ->set('department_id', $department->id)
-        ->set('city_id', $department->cities->random()->first()->id)
+        ->set('date_start', '2020-01-01')
+        ->set('actual', false)
+        ->set('date_end', '2020-02-03')
         ->set('certification', UploadedFile::fake()->image('certification.jpg'))
         ->call('store');
 
@@ -61,21 +60,13 @@ test('can be created', function () {
 
 test('show validation errors', function () {
     $response = Livewire::actingAs($this->user)->test(Create::class)
-        ->set('type', '')
-        ->set('semester', '')
-        ->set('licensed', '')
-        ->set('date_semester', '')
         ->set('program', '')
+        ->set('type', '')
         ->call('store');
 
     $response->assertHasErrors([
-        'type',
-        'semester',
-        'licensed',
-        'date_semester',
         'program',
-        'department_id',
-        'city_id',
+        'type',
     ])->assertNoRedirect();
 
     $this->assertDatabaseCount('higher_education', 0);
@@ -122,21 +113,16 @@ test('can be updated', function () {
 
     $response = Livewire::actingAs($user)->test(Edit::class)
         ->call('edit', $higherEducation)
-        ->assertSet('type', $higherEducation->type)
-        ->assertSet('semester', $higherEducation->semester)
-        ->assertSet('date_semester', $higherEducation->date_semester->format('Y-m-d'))
-        ->assertSet('licensed', $higherEducation->licensed)
         ->assertSet('program', $higherEducation->program)
-        ->assertSet('department_id', $higherEducation->department_id)
-        ->assertSet('city_id', $higherEducation->city_id)
-        ->set('type', 'UN')
-        ->set('semester', 7)
-        ->set('licensed', 'Si')
-        ->set('date_semester', '2020-01-01')
-        ->set('licensed', 'Si')
+        ->assertSet('type', $higherEducation->type)
+        ->assertSet('date_start', $higherEducation->date_start->toDateString())
+        ->assertSet('actual', $higherEducation->actual)
+        ->assertSet('date_end', $higherEducation->date_end->toDateString())
         ->set('program', 'Ingeniería')
-        ->set('department_id', $higherEducation->department_id)
-        ->set('city_id', $higherEducation->city_id)
+        ->set('type', 'UN')
+        ->set('date_start', '2020-01-01')
+        ->set('actual', false)
+        ->set('date_end', '2020-02-03')
         ->set('certification', UploadedFile::fake()->image('certification.jpg'))
         ->call('update');
 

@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Models;
 
-use App\Models\City;
 use App\Models\Cv;
-use App\Models\Department;
 use App\Models\HigherEducation;
 
 test('to array', function () {
@@ -14,29 +12,16 @@ test('to array', function () {
 
     expect(array_keys($higherEducation->toArray()))->toEqual([
         'id',
-        'type',
-        'semester',
-        'date_semester',
-        'licensed',
         'program',
-        'department_id',
-        'city_id',
+        'institution',
+        'type',
+        'date_start',
+        'actual',
+        'date_end',
         'cv_id',
         'created_at',
         'updated_at',
     ]);
-});
-
-test('belongs to a department', function () {
-    $higherEducation = HigherEducation::factory()->create();
-
-    expect($higherEducation->department)->toBeInstanceOf(Department::class);
-});
-
-test('belongs to a city', function () {
-    $higherEducation = HigherEducation::factory()->create();
-
-    expect($higherEducation->city)->toBeInstanceOf(City::class);
 });
 
 test('belongs to a cv', function () {

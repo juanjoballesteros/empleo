@@ -31,14 +31,17 @@
                     }
                 @endphp
 
-                <div class="relative bg-gray-50 rounded-lg p-2 h-28">
+                <div class="relative bg-gray-50 rounded-lg p-2 h-max min-h-24">
                     <h4 class="text-lg">{{ $type }}</h4>
                     <p>{{ $higherEducation->program }}</p>
-                    <p class="text-gray-500">{{ $higherEducation->date_semester->toDateString() }}</p>
+                    <p class="text-gray-500">
+                        {{ $higherEducation->date_start->toDateString() }}
+                        - {{ $higherEducation->date_end?->toDateString() ?? 'Actualmente' }}
+                    </p>
 
                     <div class="absolute top-2 right-2">
                         <flux:dropdown>
-                            <flux:button icon="ellipsis-vertical"></flux:button>
+                            <flux:button variant="ghost" icon="ellipsis-vertical"></flux:button>
 
                             <flux:menu>
                                 <flux:menu.item icon="pencil"
@@ -63,11 +66,15 @@
             </flux:button>
         </div>
 
-        <flux:modal name="create">
+        <flux:modal name="create" class="md:min-w-4xl">
             <livewire:cv.steps.higher-education.create :$cv/>
         </flux:modal>
 
-        <livewire:cv.steps.higher-education.edit/>
+        <flux:modal name="edit" class="md:min-w-4xl">
+            <livewire:cv.steps.higher-education.edit/>
+        </flux:modal>
+
+        <livewire:camera/>
         @include('layouts.wizard.footer')
     </div>
 </div>

@@ -74,7 +74,7 @@ final class HigherEducationInfo extends Component
     public function render(): View
     {
         $this->higherEducations = $this->cv->higherEducations()
-            ->orderByDesc('date_semester')
+            ->orderByDesc('date_start')
             ->get();
 
         return view('livewire.cv.steps.higher-education-info')

@@ -7,8 +7,6 @@ namespace App\Livewire\Cv\Steps\HigherEducation;
 use App\Models\Cv;
 use App\Models\Department;
 use Flux\Flux;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Validate;
@@ -23,56 +21,50 @@ final class Create extends Component
     public Cv $cv;
 
     #[Validate(['required', 'string', 'max:255'])]
-    public string $type;
-
-    #[Validate(['required', 'numeric'])]
-    public string $semester;
-
-    #[Validate(['required', 'date'])]
-    public string $date_semester;
-
-    #[Validate(['required', 'string', 'max:255'])]
-    public string $licensed;
-
-    #[Validate(['required', 'string', 'max:255'])]
     public string $program;
 
-    #[Validate(['required', 'numeric'])]
-    public string $department_id;
+    #[Validate(['required', 'string', 'max:255'])]
+    public string $institution;
 
-    #[Validate(['required', 'numeric'])]
-    public string $city_id;
+    #[Validate(['required', 'string', 'max:255'])]
+    public string $type;
 
-    #[Validate(['required', 'image'])]
+    #[Validate(['required', 'date'])]
+    public string $date_start;
+
+    #[Validate(['required', 'bool'])]
+    public bool $actual = false;
+
+    #[Validate(['nullable', 'date', 'after:date_start'])]
+    public ?string $date_end = null;
+
+    #[Validate(['nullable', 'required_if:actual,true', 'image'])]
     public ?TemporaryUploadedFile $certification = null;
-
-    /** @var Collection<int, Department> */
-    public Collection $departments;
 
     public function store(): void
     {
         $this->validate();
 
-        $higherEducation = $this->cv->higherEducations()->create($this->only([
-            'type',
-            'semester',
-            'date_semester',
-            'licensed',
+        $higherEducation = $this->cv->higherEducations()->create($this->pull([
             'program',
-            'department_id',
-            'city_id',
+            'institution',
+            'type',
+            'date_start',
+            'actual',
+            'date_end',
         ]));
 
-        assert($this->certification instanceof UploadedFile);
-        $higherEducation->addMedia($this->certification)
-            ->preservingOriginal()
-            ->toMediaCollection();
+        if ($this->certification instanceof TemporaryUploadedFile) {
+            $higherEducation->addMedia($this->certification)
+                ->preservingOriginal()
+                ->toMediaCollection();
+        }
 
         $this->cv->high = true;
         $this->cv->save();
 
         $this->dispatch('high.create');
-        $this->reset(['type', 'semester', 'date_semester', 'licensed', 'department_id', 'city_id', 'certification']);
+        $this->reset(['certification']);
 
         LivewireAlert::title('Información Añadida')
             ->success()
@@ -84,8 +76,8 @@ final class Create extends Component
 
     public function render(): View
     {
-        $this->departments = Department::all();
-
-        return view('livewire.cv.steps.higher-education.create');
+        return view('livewire.cv.steps.higher-education.create', [
+            'departments' => Department::all(),
+        ]);
     }
 }

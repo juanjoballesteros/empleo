@@ -14,36 +14,21 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 
 /**
  * @property int $id
- * @property string $type
- * @property string $semester
- * @property Carbon $date_semester
- * @property string $licensed
  * @property string $program
- * @property int $department_id
- * @property int $city_id
+ * @property string $institution
+ * @property string $type
+ * @property Carbon $date_start
+ * @property bool $actual
+ * @property ?Carbon $date_end
  * @property int $cv_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read Department $department
- * @property-read City $city
  * @property-read Cv $cv
  */
 final class HigherEducation extends Model implements HasMedia
 {
     /** @use HasFactory<HigherEducationFactory> */
     use HasFactory, InteractsWithMedia;
-
-    /** @return BelongsTo<Department, $this> */
-    public function department(): BelongsTo
-    {
-        return $this->belongsTo(Department::class);
-    }
-
-    /** @return BelongsTo<City, $this> */
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(City::class);
-    }
 
     /** @return BelongsTo<Cv, $this> */
     public function cv(): BelongsTo
@@ -54,7 +39,9 @@ final class HigherEducation extends Model implements HasMedia
     protected function casts(): array
     {
         return [
-            'date_semester' => 'date',
+            'date_start' => 'date',
+            'actual' => 'boolean',
+            'date_end' => 'date',
         ];
     }
 }
