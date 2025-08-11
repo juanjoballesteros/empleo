@@ -39,6 +39,14 @@
             @endif
 
             @if(auth()->user()->userable instanceof App\Models\Candidate)
+                <flux:navbar.item href="{{ route('cv.pdf') }}" target="_blank">
+                    Ver Mi Hoja De Vida
+                </flux:navbar.item>
+
+                <flux:navbar.item href="{{ route('cv.personal-info') }}" wire:navigate>
+                    Editar Mi Hoja De Vida
+                </flux:navbar.item>
+
                 <flux:navbar.item href="{{ route('cv.documents') }}" wire:navigate>
                     Carpeta Digital
                 </flux:navbar.item>
@@ -122,6 +130,14 @@
             @endif
 
             @if(auth()->user()->userable instanceof App\Models\Candidate)
+                <flux:navlist.item href="{{ route('cv.pdf') }}" target="_blank">
+                    Ver Mi Hoja De Vida
+                </flux:navlist.item>
+
+                <flux:navlist.item href="{{ route('cv.personal-info') }}" wire:navigate>
+                    Editar Mi Hoja De Vida
+                </flux:navlist.item>
+
                 <flux:navlist.item href="{{ route('cv.documents') }}" wire:navigate>
                     Carpeta Digital
                 </flux:navlist.item>

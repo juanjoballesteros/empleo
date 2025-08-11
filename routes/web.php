@@ -32,6 +32,8 @@ Route::middleware(['auth', 'type'])->group(function () {
     });
 
     Route::middleware('cv_created')->prefix('cv')->group(function () {
+        Route::redirect('/', 'cv/personal-info')->name('cv.index');
+
         Route::middleware('cv')->group(function () {
             Route::get('documents', Cv\Documents::class)->name('cv.documents');
             Route::view('completed', 'completed')->name('cv.completed');
