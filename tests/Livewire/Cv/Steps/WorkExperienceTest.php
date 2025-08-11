@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Livewire\Cv\Steps\WorkExperience\Create;
 use App\Livewire\Cv\Steps\WorkExperience\Edit;
-use App\Livewire\Cv\Steps\WorkExperienceInfo;
+use App\Livewire\Cv\Steps\WorkExperience\Index;
 use App\Models\Candidate;
 use App\Models\Cv;
 use App\Models\Department;
@@ -29,7 +29,7 @@ test('work experience screen can be rendered', function () {
 });
 
 test('can check that not have', function () {
-    $response = Livewire::actingAs($this->user)->test(WorkExperienceInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Index::class)
         ->call('check');
 
     $response->assertRedirectToRoute('cv.language-info');
@@ -99,7 +99,7 @@ test('can be deleted', function () {
 
     $this->assertDatabaseCount('work_experiences', 2);
 
-    $response = Livewire::actingAs($user)->test(WorkExperienceInfo::class)
+    $response = Livewire::actingAs($user)->test(Index::class)
         ->call('delete', $user->cv->workExperiences()->first());
 
     $response->assertNoRedirect();
@@ -113,7 +113,7 @@ test('navigate to next step', function () {
         ->create();
 
     $response = Livewire::actingAs($user)
-        ->test(WorkExperienceInfo::class)
+        ->test(Index::class)
         ->call('navigate');
 
     $response->assertRedirect('/cv/language-info');

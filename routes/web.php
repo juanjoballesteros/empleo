@@ -44,9 +44,9 @@ Route::middleware(['auth', 'type'])->group(function () {
         Route::get('contact-info', Cv\Steps\ContactInfo::class)->name('cv.contact-info');
         Route::get('residence-info', Cv\Steps\ResidenceInfo::class)->name('cv.residence-info');
         Route::get('basic-education-info', Cv\Steps\BasicEducationInfo::class)->name('cv.basic-education-info');
-        Route::get('higher-education-info', Cv\Steps\HigherEducationInfo::class)->name('cv.higher-education-info');
-        Route::get('work-experience-info', Cv\Steps\WorkExperienceInfo::class)->name('cv.work-experience-info');
-        Route::get('language-info', Cv\Steps\LanguageInfo::class)->name('cv.language-info');
+        Route::get('higher-education-info', Cv\Steps\HigherEducation\Index::class)->name('cv.higher-education-info');
+        Route::get('work-experience-info', Cv\Steps\WorkExperience\Index::class)->name('cv.work-experience-info');
+        Route::get('language-info', Cv\Steps\Language\Index::class)->name('cv.language-info');
     });
 
     Route::prefix('company')->group(function () {

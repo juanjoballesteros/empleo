@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Livewire\Cv\Steps\Language\Create;
 use App\Livewire\Cv\Steps\Language\Edit;
-use App\Livewire\Cv\Steps\LanguageInfo;
+use App\Livewire\Cv\Steps\Language\Index;
 use App\Models\Candidate;
 use App\Models\Cv;
 use App\Models\LanguageInfo as LanguageInfoModel;
@@ -27,7 +27,7 @@ test('language info screen can be rendered', function () {
 });
 
 test('can check that not have', function () {
-    $response = Livewire::actingAs($this->user)->test(LanguageInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Index::class)
         ->call('check');
 
     $response->assertRedirectToRoute('cv.pdf');
@@ -80,7 +80,7 @@ test('can be deleted', function () {
 
     $this->assertDatabaseCount('language_infos', 2);
 
-    $response = Livewire::actingAs($user)->test(LanguageInfo::class)
+    $response = Livewire::actingAs($user)->test(Index::class)
         ->call('delete', $user->cv->languageInfos()->first());
 
     $response->assertNoRedirect();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\Cv\Steps;
+namespace App\Livewire\Cv\Steps\WorkExperience;
 
 use App\Models\Cv;
 use App\Models\User;
@@ -14,7 +14,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-final class WorkExperienceInfo extends Component
+final class Index extends Component
 {
     use WithFileUploads;
 
@@ -75,7 +75,7 @@ final class WorkExperienceInfo extends Component
     {
         $this->workExperiences = $this->cv->workExperiences()->orderByDesc('date_start')->get();
 
-        return view('livewire.cv.steps.work-experience-info')
+        return view('livewire.cv.steps.work-experience.index')
             ->layout('components.layouts.cv', [
                 'cv' => $this->cv,
             ]);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use App\Livewire\Cv\Steps\HigherEducation\Create;
 use App\Livewire\Cv\Steps\HigherEducation\Edit;
-use App\Livewire\Cv\Steps\HigherEducationInfo;
+use App\Livewire\Cv\Steps\HigherEducation\Index;
 use App\Models\Candidate;
 use App\Models\Cv;
 use App\Models\HigherEducation;
@@ -27,7 +27,7 @@ test('higher education screen can be rendered', function () {
 });
 
 test('can check that not have', function () {
-    $response = Livewire::actingAs($this->user)->test(HigherEducationInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Index::class)
         ->call('check');
 
     $response->assertRedirectToRoute('cv.work-experience-info');
@@ -77,7 +77,7 @@ test('can be deleted', function () {
 
     $this->assertDatabaseCount('higher_education', 2);
 
-    $response = Livewire::actingAs($user)->test(HigherEducationInfo::class)
+    $response = Livewire::actingAs($user)->test(Index::class)
         ->call('delete', $user->cv->higherEducations()->first());
 
     $response->assertNoRedirect();
@@ -91,7 +91,7 @@ test('send to work experience', function () {
         ->create();
 
     $response = Livewire::actingAs($user)
-        ->test(HigherEducationInfo::class)
+        ->test(Index::class)
         ->call('navigate');
 
     $response->assertRedirect('/cv/work-experience-info');

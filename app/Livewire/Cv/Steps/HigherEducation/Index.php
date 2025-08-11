@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\Cv\Steps;
+namespace App\Livewire\Cv\Steps\HigherEducation;
 
 use App\Models\Cv;
 use App\Models\HigherEducation;
@@ -14,7 +14,7 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-final class HigherEducationInfo extends Component
+final class Index extends Component
 {
     use WithFileUploads;
 
@@ -77,7 +77,7 @@ final class HigherEducationInfo extends Component
             ->orderByDesc('date_start')
             ->get();
 
-        return view('livewire.cv.steps.higher-education-info')
+        return view('livewire.cv.steps.higher-education.index')
             ->layout('components.layouts.cv', [
                 'cv' => $this->cv,
             ]);

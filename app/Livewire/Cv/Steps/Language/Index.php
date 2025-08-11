@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\Cv\Steps;
+namespace App\Livewire\Cv\Steps\Language;
 
 use App\Models\Cv;
+use App\Models\LanguageInfo;
 use App\Models\User;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
@@ -13,13 +14,13 @@ use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
-final class LanguageInfo extends Component
+final class Index extends Component
 {
     use WithFileUploads;
 
     public Cv $cv;
 
-    /** @var Collection<int, \App\Models\LanguageInfo> */
+    /** @var Collection<int, LanguageInfo> */
     public Collection $languagesInfos;
 
     public bool $show = false;
@@ -37,7 +38,7 @@ final class LanguageInfo extends Component
         }
     }
 
-    public function delete(\App\Models\LanguageInfo $languageInfo): void
+    public function delete(LanguageInfo $languageInfo): void
     {
         $languageInfo->delete();
 
@@ -62,7 +63,7 @@ final class LanguageInfo extends Component
     {
         $this->languagesInfos = $this->cv->languageInfos ?: collect();
 
-        return view('livewire.cv.steps.language-info')
+        return view('livewire.cv.steps.language.index')
             ->layout('components.layouts.cv', [
                 'cv' => $this->cv,
             ]);
