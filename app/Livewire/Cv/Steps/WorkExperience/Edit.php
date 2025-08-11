@@ -102,7 +102,7 @@ final class Edit extends Component
             'city_id',
         ]));
 
-        $this->dispatch('refresh');
+        $this->dispatch('work.edit');
         Flux::modal('edit')->close();
     }
 

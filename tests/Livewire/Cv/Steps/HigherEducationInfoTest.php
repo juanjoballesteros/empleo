@@ -7,7 +7,6 @@ use App\Livewire\Cv\Steps\HigherEducation\Edit;
 use App\Livewire\Cv\Steps\HigherEducationInfo;
 use App\Models\Candidate;
 use App\Models\Cv;
-use App\Models\Department;
 use App\Models\HigherEducation;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
@@ -39,8 +38,6 @@ test('can check that not have', function () {
 
 test('can be created', function () {
     Storage::fake();
-
-    $department = Department::all()->random()->first();
 
     $response = Livewire::actingAs($this->user)->test(Create::class, ['cv' => $this->user->cv])
         ->set('program', 'Programa')

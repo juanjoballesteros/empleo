@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Livewire\Cv\Steps\WorkExperience\Create;
 use App\Livewire\Cv\Steps\WorkExperience\Edit;
 use App\Livewire\Cv\Steps\WorkExperienceInfo;
 use App\Models\Candidate;
@@ -42,7 +43,7 @@ test('can be created', function () {
 
     $department = Department::all()->random()->first();
 
-    $response = Livewire::actingAs($this->user)->test(WorkExperienceInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Create::class, ['cv' => $this->user->cv])
         ->set('name', 'Empresa Test')
         ->set('email', 'empresa@test.com')
         ->set('phone', '3001234567')
@@ -56,7 +57,8 @@ test('can be created', function () {
         ->set('certification', UploadedFile::fake()->image('certification.jpg'))
         ->call('store');
 
-    $response->assertHasNoErrors();
+    $response->assertHasNoErrors()
+        ->assertDispatched('work.create');
     $this->assertDatabaseHas('work_experiences', [
         'name' => 'Empresa Test',
         'email' => 'empresa@test.com',
@@ -64,7 +66,7 @@ test('can be created', function () {
 });
 
 test('show validation errors', function () {
-    $response = Livewire::actingAs($this->user)->test(WorkExperienceInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Create::class)
         ->set('name', '')
         ->set('email', '')
         ->set('phone', '')
@@ -154,7 +156,7 @@ test('can be updated', function () {
         ->call('update');
 
     $response->assertHasNoErrors()
-        ->assertDispatched('refresh');
+        ->assertDispatched('work.edit');
 
     Storage::disk('public')->assertExists('2/certification.jpg')
         ->assertMissing('1/certification.jpg');
