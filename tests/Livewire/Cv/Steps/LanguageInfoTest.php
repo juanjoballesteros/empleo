@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Livewire\Cv\Steps\Language\Create;
 use App\Livewire\Cv\Steps\Language\Edit;
 use App\Livewire\Cv\Steps\LanguageInfo;
 use App\Models\Candidate;
@@ -38,7 +39,7 @@ test('can check that not have', function () {
 test('can be created', function () {
     Storage::fake();
 
-    $response = Livewire::actingAs($this->user)->test(LanguageInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Create::class, ['cv' => $this->user->cv])
         ->set('name', 'Inglés')
         ->set('write', 'Avanzado')
         ->set('speak', 'Intermedio')
@@ -46,13 +47,14 @@ test('can be created', function () {
         ->set('certificate', UploadedFile::fake()->image('certificate.jpg'))
         ->call('store');
 
-    $response->assertHasNoErrors();
+    $response->assertHasNoErrors()
+        ->assertDispatched('lang.create');
 
     $this->assertDatabaseCount('language_infos', 1);
 });
 
 test('show validation errors', function () {
-    $response = Livewire::actingAs($this->user)->test(LanguageInfo::class)
+    $response = Livewire::actingAs($this->user)->test(Create::class)
         ->set('name', '')
         ->set('write', '')
         ->set('speak', '')
@@ -110,7 +112,7 @@ test('can be updated', function () {
         ->call('update');
 
     $response->assertHasNoErrors()
-        ->assertDispatched('refresh');
+        ->assertDispatched('lang.edit');
 
     Storage::disk('public')->assertExists('2/certificate.jpg')
         ->assertMissing('1/certificate_1.jpg');

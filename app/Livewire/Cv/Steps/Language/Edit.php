@@ -67,7 +67,7 @@ final class Edit extends Component
             'read',
         ]));
 
-        $this->dispatch('refresh');
+        $this->dispatch('lang.edit');
         Flux::modal('edit')->close();
     }
 

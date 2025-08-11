@@ -1,9 +1,8 @@
 <div>
-    <form wire:submit="update" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <h2 class="text-xl text-center md:col-span-2">Editar</h2>
+    <form wire:submit="store" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h3 class="text-xl text-center md:col-span-2">Añadir</h3>
 
-        <flux:select wire:model="name" label="Idioma diferente al español que: hable, lea y escriba*"
-                     required>
+        <flux:select wire:model="name" label="Idioma diferente al español que: hable, lea y escriba*" required>
             <flux:select.option value="">Seleccionar...</flux:select.option>
             <flux:select.option value="Afrikáans">Afrikáans</flux:select.option>
             <flux:select.option value="Albanés">Albanés</flux:select.option>
@@ -135,56 +134,56 @@
             <flux:select.option value="R">Regular</flux:select.option>
         </flux:select>
 
-        <div class="flex flex-col gap-4 md:col-span-2">
-            <div x-data="{ uploading: false, progress: 0 }"
-                 x-on:livewire-upload-start="uploading = true"
-                 x-on:livewire-upload-finish="uploading = false"
-                 x-on:livewire-upload-cancel="uploading = false"
-                 x-on:livewire-upload-error="uploading = false"
-                 x-on:livewire-upload-progress="progress = $event.detail.progress">
-                <div class="flex flex-col md:flex-row gap-2">
-                    <div @click="$dispatch('openCamera', { id: $wire.id, file: 'certificate' })"
-                         class="flex flex-col items-center cursor-pointer w-full max-h-24 border-2 border-gray-200 rounded-lg p-4">
-                        <flux:icon.camera class="size-8 text-gray-500"/>
-
-                        <p class="text-gray-500">Toma Una Foto Del Certificado</p>
+        <div class="md:col-span-2">
+            @if($certificate)
+                <div class="flex flex-col gap-4">
+                    <div class="h-32 bg-gray-100 w-full rounded-lg">
+                        <img src="{{ $certificate->temporaryUrl() }}" alt="Certificación"
+                             class="h-32 object-contain m-auto">
                     </div>
 
-                    <label
-                        class="flex flex-col items-center cursor-pointer w-full max-h-24 border-2 border-gray-200 rounded-lg p-4">
-                        <flux:icon.arrow-up-on-square class="size-8 text-gray-500"/>
-
-                        <p class="text-gray-500">Sube Tu Certificado</p>
-
-                        <input type="file" wire:model="certificate" name="file" class="hidden" accept="image/*">
-
-                        <flux:error name="file"/>
-                    </label>
+                    <flux:button wire:click="$set('certification', null)">
+                        Cambiar Certificado
+                    </flux:button>
                 </div>
+            @else
+                <div x-data="{ uploading: false, progress: 0 }"
+                     x-on:livewire-upload-start="uploading = true"
+                     x-on:livewire-upload-finish="uploading = false"
+                     x-on:livewire-upload-cancel="uploading = false"
+                     x-on:livewire-upload-error="uploading = false"
+                     x-on:livewire-upload-progress="progress = $event.detail.progress">
+                    <div class="flex flex-col md:flex-row gap-2">
+                        <div @click="$dispatch('openCamera', { id: $wire.id, file: 'certificate' })"
+                             class="flex flex-col items-center cursor-pointer w-full max-h-24 border-2 border-gray-200 rounded-lg p-4">
+                            <flux:icon.camera class="size-8 text-gray-500"/>
 
-                <span wire:loading wire:target="certificate" class="text-sm">Cargando...</span>
-                <div x-show="uploading" x-cloak class="w-full bg-gray-200 rounded-full h-2 my-2">
-                    <div x-bind:style="'width: ' + progress"
-                         class="bg-blue-600 h-full rounded-full transition-all duration-300 ease-out"></div>
-                </div>
-            </div>
+                            <p class="text-gray-500">Toma Una Foto Del Certificado</p>
+                        </div>
 
-            @if ($certificate)
-                <div class="h-32 bg-gray-100 w-full rounded-lg">
-                    <img src="{{ $certificate->temporaryUrl() }}" alt="Certificación"
-                         class="h-32 object-contain m-auto">
-                </div>
-            @elseif($certificate_url)
-                <div class="h-32 bg-gray-100 w-full rounded-lg">
-                    <img src="{{ $certificate_url }}" alt="Certificación" class="h-32 object-contain m-auto">
+                        <label
+                            class="flex flex-col items-center cursor-pointer w-full max-h-24 border-2 border-gray-200 rounded-lg p-4">
+                            <flux:icon.arrow-up-on-square class="size-8 text-gray-500"/>
+
+                            <p class="text-gray-500">Sube Tu Certificado</p>
+
+                            <input type="file" wire:model="certificate" name="file" class="hidden" accept="image/*">
+
+                            <flux:error name="file"/>
+                        </label>
+                    </div>
+
+                    <span wire:loading wire:target="certificate" class="text-sm">Cargando...</span>
+                    <div x-show="uploading" x-cloak class="w-full bg-gray-200 rounded-full h-2 my-2">
+                        <div x-bind:style="'width: ' + progress"
+                             class="bg-blue-600 h-full rounded-full transition-all duration-300 ease-out"></div>
+                    </div>
                 </div>
             @endif
         </div>
 
-        <div class="flex gap-4 justify-end md:col-span-2">
-            <flux:button type="button" variant="danger" @click="$flux.modal('edit').close()">Cancelar</flux:button>
+        <flux:button type="submit" variant="primary" class="w-full md:col-span-2">Añadir</flux:button>
 
-            <flux:button type="submit" variant="primary">Aceptar Cambios</flux:button>
-        </div>
+        <livewire:camera/>
     </form>
 </div>
