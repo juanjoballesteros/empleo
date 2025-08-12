@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\Cv\PdfController;
-use App\Livewire\Candidate;
 use App\Livewire\Company;
 use App\Livewire\Cv;
 use App\Livewire\Dashboard;
@@ -14,15 +13,6 @@ use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
-
-Route::middleware('guest')->group(function () {
-    Route::view('select', 'select')->name('select');
-    Route::get('candidate/register', Candidate\Register::class)->name('candidate.register');
-});
-
-Route::middleware('auth')->group(function () {
-    Route::get('company/register', Company\Register::class)->name('company.register');
-});
 
 Route::middleware(['auth', 'type'])->group(function () {
     Route::middleware('cv')->group(function () {

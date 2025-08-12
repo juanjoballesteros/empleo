@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Candidate\Register;
+use App\Livewire\Auth\Candidate;
 use App\Models\City;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -11,7 +11,7 @@ use Prism\Prism\Prism;
 use Prism\Prism\Testing\StructuredResponseFake;
 
 test('register screen can be rendered', function () {
-    $response = $this->get('/candidate/register');
+    $response = $this->get('register/candidate');
 
     $response->assertOk();
 });
@@ -21,7 +21,7 @@ test('user can register as candidate', function () {
 
     $city = City::query()->inRandomOrder()->first();
 
-    $response = Livewire::test(Register::class)
+    $response = Livewire::test(Candidate::class)
         ->set('file', UploadedFile::fake()->image('card.jpg'))
         ->set('name', 'Candidato Ejemplo')
         ->set('identification', '123456789')
@@ -48,7 +48,7 @@ test('analyze image and generate a structured response', function () {
 
     Prism::fake([$fakeResponse]);
 
-    $response = Livewire::test(Register::class)
+    $response = Livewire::test(Candidate::class)
         ->set('file', UploadedFile::fake()->image('card.jpg'))
         ->call('analyzeImage');
 
@@ -68,7 +68,7 @@ test('show error message if card is not recognized', function () {
 
     Prism::fake([$fakeResponse]);
 
-    $response = Livewire::test(Register::class)
+    $response = Livewire::test(Candidate::class)
         ->set('file', UploadedFile::fake()->image('card.jpg'))
         ->call('analyzeImage');
 

@@ -258,7 +258,7 @@
                 </dl>
 
                 <div class="mt-10">
-                    <a href="{{ route('candidate.register') }}"
+                    <a href="{{ route('register.candidate') }}"
                        class="text-base font-medium text-indigo-600 hover:text-indigo-500">
                         Regístrate como candidato <span aria-hidden="true">&rarr;</span>
                     </a>
@@ -308,7 +308,7 @@
                 </dl>
 
                 <div class="mt-10">
-                    <a href="{{ route('register') }}"
+                    <a href="{{ route('register.company') }}"
                        class="text-base font-medium text-indigo-600 hover:text-indigo-500">
                         Regístrate como empresa <span aria-hidden="true">&rarr;</span>
                     </a>

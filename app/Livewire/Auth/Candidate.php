@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Livewire\Candidate;
+namespace App\Livewire\Auth;
 
-use App\Models\Candidate;
+use App\Models\Candidate as CandidateModel;
 use App\Models\City;
 use App\Models\Department;
 use App\Models\User;
@@ -26,7 +26,7 @@ use Prism\Prism\Schema\StringSchema;
 use Prism\Prism\ValueObjects\Media\Image;
 
 #[Layout('components.layouts.auth')]
-final class Register extends Component
+final class Candidate extends Component
 {
     use WithFileUploads;
 
@@ -116,7 +116,7 @@ final class Register extends Component
 
         event(new Registered($user));
 
-        $candidate = Candidate::query()->create($this->only([
+        $candidate = CandidateModel::query()->create($this->only([
             'identification',
             'department_id',
             'city_id',
@@ -135,6 +135,6 @@ final class Register extends Component
 
     public function render(): View
     {
-        return view('livewire.candidate.register');
+        return view('livewire.auth.candidate');
     }
 }

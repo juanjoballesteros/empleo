@@ -9,13 +9,13 @@
         </div>
 
         <div class="flex flex-col gap-2">
-            <flux:button href="{{ route('candidate.register') }}" variant="primary" class="text-center w-full">
+            <flux:button href="{{ route('register.candidate') }}" variant="primary" class="text-center w-full">
                 ¡Quiero Conseguir Empleo!
             </flux:button>
 
             <flux:separator text="o"/>
 
-            <flux:button href="{{ route('register') }}" variant="primary" class="w-full">
+            <flux:button href="{{ route('register.company') }}" variant="primary" class="w-full">
                 ¡Quiero Contratar!
             </flux:button>
         </div>

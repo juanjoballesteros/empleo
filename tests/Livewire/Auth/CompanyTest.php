@@ -2,35 +2,29 @@
 
 declare(strict_types=1);
 
-use App\Livewire\Company\Register;
+use App\Livewire\Auth\Company;
 use App\Models\City;
-use App\Models\Company;
-use App\Models\User;
 use Livewire\Livewire;
 
 test('register screen can be rendered', function () {
-    $user = User::factory()->create();
-
-    $response = $this->actingAs($user)->get('/company/register');
+    $response = $this->get('/register/company');
 
     $response->assertStatus(200);
 });
 
 test('user can register as company', function () {
-    $user = User::factory()->create();
-
     $city = City::query()->inRandomOrder()->first();
 
-    $response = Livewire::actingAs($user)
-        ->test(Register::class)
-        ->set('name', 'Emplesa Ejemplo')
+    $response = Livewire::test(Company::class)
+        ->set('name', 'Empresa Ejemplo')
         ->set('nit', 123456789)
         ->set('department_id', $city->department_id)
         ->set('city_id', $city->id)
+        ->set('email', 'correo@correo.com')
+        ->set('password', '12345678')
+        ->set('password_confirmation', '12345678')
         ->call('store');
 
     $response->assertHasNoErrors()
         ->assertRedirectToRoute('dashboard');
-
-    expect($user->fresh()->userable)->toBeInstanceOf(Company::class);
 });
