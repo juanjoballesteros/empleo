@@ -23,6 +23,5 @@ final class PdfController extends Controller
         $cv = $candidate->cv;
 
         return pdf()->view('pdf', ['cv' => $cv])->name('hv.pdf');
-
     }
 }

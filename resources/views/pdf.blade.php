@@ -7,13 +7,15 @@
 
 <body>
 @php
-    function language($type): string
-    {
-    return match ($type) {
-    'MB' => 'Muy Bien',
-    'B' => 'Bien',
-    'R' => 'Regular'
-    };
+    if (!function_exists('language')) {
+        function language($type): string
+        {
+            return match ($type) {
+                'MB' => 'Muy Bien',
+                'B' => 'Bien',
+                'R' => 'Regular'
+            };
+        }
     }
 @endphp
 
@@ -61,21 +63,21 @@
             <hr class="p-0.5 my-1 bg-gray-500 w-80">
             @foreach ($cv->workExperiences as $workExperience)
                 <p>{{ $workExperience->post }} | {{ $workExperience->name }}</p>
-                <p>{{ $workExperience->date_start->format('d-m-Y') }}
-                    - {{ $workExperience->date_end->format('d-m-Y') }}</p>
+                <p>{{ $workExperience->date_start->toDateString() }}
+                    - {{ $workExperience->date_end?->toDateString() ?? 'Actualmente' }}</p>
             @endforeach
         @endif
 
         @if ($cv->higherEducations->count())
             {{-- Educacion Superior --}}
             <h2 class="text-2xl font-bold mt-10">
-                Educacion Superior
+                Educación Superior
             </h2>
             <hr class="p-0.5 my-1 bg-gray-500 w-80">
             @foreach ($cv->higherEducations as $higherEducation)
                 <p>{{ $higherEducation->program }}</p>
-                <p>{{ $higherEducation->date_semester->format('m-Y') }}
-                </p>
+                <p>{{ $higherEducation->date_start->format('m-Y') }}
+                    - {{ $higherEducation->date_end?->format('m-Y') ?? 'Actualmente' }}</p>
             @endforeach
         @endif
 
