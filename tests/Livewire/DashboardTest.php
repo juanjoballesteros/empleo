@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use App\Livewire\Dashboard;
 use App\Models\Candidate;
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
@@ -15,7 +16,7 @@ test('guests are redirected to the login page', function () {
 });
 
 test('authenticated users can visit the dashboard', function () {
-    $this->actingAs($user = User::factory()->for(Candidate::factory(), 'userable')->create());
+    $this->actingAs(User::factory()->for(Company::factory(), 'userable')->create());
 
     $this->get('/dashboard')->assertStatus(200);
 });

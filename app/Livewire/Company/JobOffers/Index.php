@@ -40,6 +40,8 @@ final class Index extends Component
             ->when($this->search, fn (Builder $q) => $q->whereLike('title', '%'.$this->search.'%'))
             ->get();
 
-        return view('livewire.company.job-offers.index', ['jobOffers' => $jobOffers]);
+        return view('livewire.company.job-offers.index', [
+            'jobOffers' => $jobOffers,
+        ]);
     }
 }
