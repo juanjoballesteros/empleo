@@ -23,8 +23,8 @@ final class Create extends Component
     #[Validate(['required', 'string'])]
     public string $requirements = '';
 
-    #[Validate(['required', 'integer'])]
-    public int|string $salary = '';
+    #[Validate(['required', 'string', 'max:255'])]
+    public string $salary = '';
 
     #[Validate(['required', 'string', 'max:255'])]
     public string $type;
@@ -42,8 +42,8 @@ final class Create extends Component
     {
         $this->validate();
 
-        /** @var User $user */
         $user = request()->user();
+        assert($user instanceof User);
 
         $company = $user->userable;
         assert($company instanceof Company);

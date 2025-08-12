@@ -26,7 +26,10 @@ final class JobOfferFactory extends Factory
             'title' => fake()->jobTitle(),
             'description' => fake()->paragraph(),
             'requirements' => fake()->paragraph(),
-            'salary' => fake()->numberBetween(1500000, 10000000),
+            'salary' => fake()->randomElement([
+                '1.000.000 a 2.000.000',
+                '2.000.000 a 3.000.000',
+            ]),
             'type' => fake()->randomElement(['Indefinido', 'Temporal', 'Por Proyecto']),
             'location' => 'Remoto',
             'company_id' => Company::factory(),

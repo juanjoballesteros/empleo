@@ -23,7 +23,7 @@
                     </div>
 
                     <div class="flex flex-col md:flex-row gap-1 md:gap-4">
-                        <p>$ {{ Number::format($jobOffer->salary) }} COP</p>
+                        <p>{{ $jobOffer->salary }}</p>
 
                         <p>Modalidad: {{ $jobOffer->location }}</p>
 

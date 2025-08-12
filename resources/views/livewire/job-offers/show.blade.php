@@ -4,7 +4,7 @@
             <flux:button wire:click="$parent.$set('open', false)" icon="x-mark"/>
 
             <h2 class="text-2xl font-bold">{{ $jobOffer->title }}</h2>
-            <h3 class="text-xl">$ {{ Number::format($jobOffer->salary) }}</h3>
+            <h3 class="text-xl">{{ $jobOffer->salary }}</h3>
 
 
             <p>Modalidad: {{ $jobOffer->location }}</p>

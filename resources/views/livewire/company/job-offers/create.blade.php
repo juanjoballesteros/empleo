@@ -1,15 +1,21 @@
 <div>
     <h2 class="text-2xl font-bold text-center mb-2">Publicar Oferta De Empleo</h2>
 
-    <form wire:submit="store" class="flex flex-col gap-6" x-data="{ price: formatPrice($wire.salary) }">
+    <form wire:submit="store" class="flex flex-col gap-6">
         <flux:input wire:model="title" label="Titulo de la oferta" autofocus required/>
 
         <flux:textarea wire:model="description" label="Descripción de la oferta" required/>
 
         <flux:textarea wire:model="requirements" label="Requerimientos" required/>
 
-        <flux:input wire:model="salary" label="Salario" required x-model="price"
-                    x-on:keyup="price = formatPrice($event.target.value)"/>
+        <flux:select wire:model="salary" label="Salario" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            <flux:select.option>500.000 a 1.000.000</flux:select.option>
+            <flux:select.option>1.000.000 a 2.000.000</flux:select.option>
+            <flux:select.option>2.000.000 a 3.000.000</flux:select.option>
+            <flux:select.option>3.000.000 a 4.000.000</flux:select.option>
+            <flux:select.option>4.000.000 o mas</flux:select.option>
+        </flux:select>
 
         <flux:select wire:model="type" label="Tipo de oferta" required>
             <flux:select.option value="">Seleccionar...</flux:select.option>
@@ -48,20 +54,4 @@
             Publicar
         </flux:button>
     </form>
-
-    <script>
-        function formatPrice(number) {
-            number = number.replace(/[^0-9]/g, '')
-
-            let price = new Intl.NumberFormat("es-CO", {
-                style: 'currency',
-                currency: 'COP',
-                maximumFractionDigits: 0
-            }).format(
-                number || 0,
-            )
-
-            return price.replace(/[^0-9.,]/g, '')
-        }
-    </script>
 </div>

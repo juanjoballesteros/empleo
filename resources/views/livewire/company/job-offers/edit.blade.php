@@ -9,7 +9,13 @@
 
             <flux:textarea wire:model="requirements" label="Requerimientos" required/>
 
-            <flux:input wire:model="salary" label="Salario" required/>
+            <flux:select wire:model="salary" label="Salario" required>
+                <flux:select.option>500.000 a 1.000.000</flux:select.option>
+                <flux:select.option>1.000.000 a 2.000.000</flux:select.option>
+                <flux:select.option>2.000.000 a 3.000.000</flux:select.option>
+                <flux:select.option>3.000.000 a 4.000.000</flux:select.option>
+                <flux:select.option>4.000.000 o mas</flux:select.option>
+            </flux:select>
 
             <flux:select wire:model="type" label="Tipo de oferta" required>
                 <flux:select.option value="">Seleccionar...</flux:select.option>
@@ -25,7 +31,7 @@
             </flux:select>
 
             <div x-show="$wire.location === 'Presencial'">
-                <flux:select wire:model.live="department_id" label="Departamento" required>
+                <flux:select wire:model.live="department_id" label="Departamento">
                     <flux:select.option value="">Seleccionar...</flux:select.option>
                     @foreach($departments as $department)
                         <flux:select.option value="{{ $department->id }}">
@@ -34,7 +40,7 @@
                     @endforeach
                 </flux:select>
 
-                <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio" required>
+                <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio">
                     <flux:select.option value="">Seleccionar...</flux:select.option>
                     @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
                         <flux:select.option value="{{ $city->id }}">

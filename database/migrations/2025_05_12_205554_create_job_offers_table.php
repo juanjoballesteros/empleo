@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->text('requirements');
-            $table->bigInteger('salary');
+            $table->string('salary');
             $table->string('type');
             $table->string('location');
             $table->foreignId('department_id')->nullable();

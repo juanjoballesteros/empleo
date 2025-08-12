@@ -15,7 +15,7 @@
                         <h3 class="text-xl font-bold">{{ $job->title }}</h3>
 
                         <div class="flex gap-4">
-                            <p>$ {{ Number::format($job->salary) }}</p>
+                            <p>{{ $job->salary }}</p>
 
                             <p><b>Modalidad:</b> {{ $job->location }}</p>
 

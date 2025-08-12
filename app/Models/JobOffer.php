@@ -17,7 +17,7 @@ use Illuminate\Support\Collection;
  * @property string $title
  * @property string $description
  * @property string $requirements
- * @property int $salary
+ * @property string $salary
  * @property string $type
  * @property string $location
  * @property ?int $department_id
