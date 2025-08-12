@@ -43,6 +43,11 @@
                     <p>Habla: {{ $speak }}</p>
                     <p>Lee: {{ $read }}</p>
                     <p>Escribe: {{ $write }}</p>
+                    @if($url = $languageInfo->getFirstMediaUrl())
+                        <flux:button href="{{ $url }}" icon="photo" target="_blank">
+                            Ver certificado
+                        </flux:button>
+                    @endif
 
                     <div class="absolute top-2 right-2">
                         <flux:dropdown>
@@ -79,7 +84,7 @@
             <livewire:cv.steps.language.edit/>
         </flux:modal>
 
-        <div class="flex justify-end">
+        <div class="flex justify-end mt-2">
             <flux:button href="{{ route('cv.completed') }}" variant="primary" wire:navigate>
                 ¡Terminar!
             </flux:button>

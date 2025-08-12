@@ -26,6 +26,12 @@
                         - {{ $workExperience->date_end?->toDateString() ?? 'Actualmente' }}
                     </p>
 
+                    @if($url = $workExperience->getFirstMediaUrl())
+                        <flux:button href="{{ $url }}" icon="photo" target="_blank">
+                            Ver certificado
+                        </flux:button>
+                    @endif
+
                     <div class="absolute top-2 right-2">
                         <flux:dropdown>
                             <flux:button variant="ghost" icon="ellipsis-vertical"></flux:button>
