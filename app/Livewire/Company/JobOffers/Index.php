@@ -38,7 +38,7 @@ final class Index extends Component
 
         $jobOffers = $company->jobOffers()
             ->when($this->search, fn (Builder $q) => $q->whereLike('title', '%'.$this->search.'%'))
-            ->get();
+            ->paginate();
 
         return view('livewire.company.job-offers.index', [
             'jobOffers' => $jobOffers,
