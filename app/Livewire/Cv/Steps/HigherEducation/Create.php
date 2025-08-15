@@ -7,12 +7,18 @@ namespace App\Livewire\Cv\Steps\HigherEducation;
 use App\Models\Cv;
 use App\Models\Department;
 use Flux\Flux;
+use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 use Livewire\WithFileUploads;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Prism;
+use Prism\Prism\Schema\ObjectSchema;
+use Prism\Prism\Schema\StringSchema;
+use Prism\Prism\ValueObjects\Media\Image;
 
 final class Create extends Component
 {
@@ -40,6 +46,54 @@ final class Create extends Component
 
     #[Validate(['nullable', 'required_if:actual,true', 'image'])]
     public ?TemporaryUploadedFile $certification = null;
+
+    public bool $open = false;
+
+    public function analyzeImage(): void
+    {
+        $this->validate([
+            'certification' => ['required', 'image'],
+        ]);
+
+        $schema = new ObjectSchema(
+            'certification_data',
+            'Certification Data Extracted From Image',
+            [
+                new StringSchema('program', 'Program or name of the certification'),
+                new StringSchema('institution', 'Institution or name of the certification'),
+                new StringSchema('date_end', 'Date expedition of the certification in format (00-00-0000, d-m-Y)'),
+            ]
+        );
+
+        $response = Prism::structured()
+            ->using(Provider::Gemini, 'gemini-2.5-flash-lite')
+            ->withSchema($schema)
+            ->withPrompt('Get the data of this certification image', [Image::fromUrl($this->certification?->temporaryUrl())])
+            ->asStructured();
+
+        $data = $response->structured;
+
+        if (! isset($data['program'], $data['institution'], $data['date_end'])) {
+            LivewireAlert::title('Hemos tenido para identificar los datos del certificado, por favor ingrese los datos manualmente')
+                ->error()
+                ->toast()
+                ->position('top-end')
+                ->show();
+
+            $this->open = true;
+
+            return;
+        }
+
+        $this->fill($data);
+        $this->open = true;
+        $this->actual = true;
+        $this->js('changeActual', $this->actual);
+
+        if ($date = Carbon::createFromFormat('d-m-Y', $data['date_end'])) {
+            $this->date_end = $date->toDateString();
+        }
+    }
 
     public function store(): void
     {

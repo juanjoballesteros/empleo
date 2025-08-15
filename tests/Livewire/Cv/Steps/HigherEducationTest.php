@@ -10,8 +10,11 @@ use App\Models\Cv;
 use App\Models\HigherEducation;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
+use Prism\Prism\Prism;
+use Prism\Prism\Testing\StructuredResponseFake;
 
 beforeEach(function () {
     $this->user = User::factory()
@@ -53,6 +56,47 @@ test('can be created', function () {
         ->assertDispatched('high.create');
 
     $this->assertDatabaseCount('higher_education', 1);
+});
+
+test('can analyze certification', function () {
+    Storage::fake();
+
+    $fakeResponse = StructuredResponseFake::make()
+        ->withStructured([
+            'program' => 'Fake Program',
+            'institution' => 'Fake Institution',
+            'date_end' => '12-12-2003',
+        ]);
+    Prism::fake([$fakeResponse]);
+
+    $response = Livewire::actingAs($this->user)->test(Create::class)
+        ->set('certification', UploadedFile::fake()->image('certification.jpg'))
+        ->call('analyzeImage');
+
+    $response->assertHasNoErrors()
+        ->assertSet('open', true)
+        ->assertSet('actual', true)
+        ->assertSet('date_end', Carbon::createFromFormat('d-m-Y', '12-12-2003')->toDateString());
+});
+
+test('show error if can\'t analyze images', function () {
+    Storage::fake();
+
+    $fakeResponse = StructuredResponseFake::make()
+        ->withStructured([
+            'program' => 'Fake Program',
+            'institution' => null,
+            'date_end' => '',
+        ]);
+    Prism::fake([$fakeResponse]);
+
+    $response = Livewire::actingAs($this->user)->test(Create::class)
+        ->set('certification', UploadedFile::fake()->image('certification.jpg'))
+        ->call('analyzeImage');
+
+    $response->assertSet('open', true)
+        ->assertNotSet('actual', true)
+        ->assertNotSet('date_end', '2003/12/12');
 });
 
 test('show validation errors', function () {

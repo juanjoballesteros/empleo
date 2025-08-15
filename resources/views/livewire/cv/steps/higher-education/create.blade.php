@@ -1,37 +1,12 @@
 <div>
-    <form wire:submit="store" x-data="{ actual: '' }"
-          class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <h3 class="text-xl text-center md:col-span-2">Añadir</h3>
+    <div wire:show="!open" wire:cloak class="flex flex-col gap-4 p-4">
+        <h3 class="text-xl text-center">Sube Tu Certificado</h3>
 
-        <flux:input wire:model="program" label="Nombre del programa*" required/>
-        <flux:input wire:model="institution" label="Institución Educativa*" required/>
+        <flux:button wire:show="!open" wire:click="$set('open', true)" class="w-full">
+            No cuento con certificado o no he terminado
+        </flux:button>
 
-        <flux:select wire:model="type" label="Modalidad Académica*" required>
-            <flux:select.option value="">Seleccionar...</flux:select.option>
-            <flux:select.option value="TC">Técnica</flux:select.option>
-            <flux:select.option value="TL">Tecnológica</flux:select.option>
-            <flux:select.option value="TE">Tecnológica Especializada</flux:select.option>
-            <flux:select.option value="UN">Universitaria</flux:select.option>
-            <flux:select.option value="ES">Especialización</flux:select.option>
-            <flux:select.option value="MG">Maestría</flux:select.option>
-            <flux:select.option value="DOC">Doctorado</flux:select.option>
-        </flux:select>
-
-        <flux:input type="date" wire:model="date_start" label="Fecha de inicio*" required
-                    max="{{ today()->toDateString() }}"/>
-
-        <flux:select wire:model="actual" x-model="actual" label="¿Ya terminaste?*" required>
-            <flux:select.option value="">Seleccionar...</flux:select.option>
-            <flux:select.option value="1">Si</flux:select.option>
-            <flux:select.option value="0">No</flux:select.option>
-        </flux:select>
-
-        <div x-show="actual == true">
-            <flux:input type="date" wire:model="date_end" label="Fecha finalizado*"
-                        max="{{ today()->toDateString() }}"/>
-        </div>
-
-        <div x-show="actual == true" class="md:col-span-2">
+        <div>
             @if($certification)
                 <div class="flex flex-col gap-4">
                     <div class="h-32 bg-gray-100 w-full rounded-lg">
@@ -41,6 +16,10 @@
 
                     <flux:button wire:click="$set('certification', null)" class="w-full">
                         Cambiar Certificado
+                    </flux:button>
+
+                    <flux:button wire:click="analyzeImage" variant="primary" color="blue" class="w-full">
+                        Subir
                     </flux:button>
                 </div>
             @else
@@ -79,7 +58,67 @@
                 </div>
             @endif
         </div>
+    </div>
+
+    <form wire:show="open" wire:cloak wire:submit="store"
+          class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h3 class="text-xl text-center md:col-span-2">Añadir</h3>
+
+        <flux:input wire:model="program" label="Nombre del programa*" required/>
+        <flux:input wire:model="institution" label="Institución Educativa*" required/>
+
+        <flux:select wire:model="type" label="Modalidad Académica*" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            <flux:select.option value="TC">Técnica</flux:select.option>
+            <flux:select.option value="TL">Tecnológica</flux:select.option>
+            <flux:select.option value="TE">Tecnológica Especializada</flux:select.option>
+            <flux:select.option value="UN">Universitaria</flux:select.option>
+            <flux:select.option value="ES">Especialización</flux:select.option>
+            <flux:select.option value="MG">Maestría</flux:select.option>
+            <flux:select.option value="DOC">Doctorado</flux:select.option>
+        </flux:select>
+
+        <flux:input type="date" wire:model="date_start" label="Fecha de inicio*" required
+                    max="{{ today()->toDateString() }}"/>
+
+        <flux:select wire:model="actual" x-model="$store.actual" label="¿Ya terminaste?*" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            <flux:select.option value="1">Si</flux:select.option>
+            <flux:select.option value="0">No</flux:select.option>
+        </flux:select>
+
+        @if($certification)
+            <flux:input type="date" wire:model="date_end" label="Fecha finalizado*"
+                        max="{{ today()->toDateString() }}"/>
+
+            <div class="flex flex-col gap-4 md:col-span-2">
+                <div class="h-32 bg-gray-100 w-full rounded-lg">
+                    <img src="{{ $certification->temporaryUrl() }}" alt="Certificación"
+                         class="h-32 object-contain m-auto">
+                </div>
+
+                <flux:button wire:click="$set('certification', null)" class="w-full">
+                    Cambiar Certificado
+                </flux:button>
+            </div>
+        @endif
 
         <flux:button type="submit" variant="primary" class="md:col-span-2">Añadir</flux:button>
     </form>
+
+    @script
+    <script>
+        Alpine.store('actual', false)
+
+        $js('changeActual', (actual) => {
+            switch (actual) {
+                case true:
+                    Alpine.store('actual', 1)
+                    break
+                case false:
+                    Alpine.store('actual', 0)
+            }
+        })
+    </script>
+    @endscript
 </div>
