@@ -1,47 +1,12 @@
 <div>
-    <form wire:submit="store" x-data="{ actual: null }" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <h3 class="text-xl text-center md:col-span-2">Añadir</h3>
+    <div wire:show="!open" wire:cloak class="flex flex-col gap-4 p-4">
+        <h3 class="text-xl text-center">Sube Tu Certificado</h3>
 
-        <flux:input wire:model="name" label="Nombre de la empresa o entidad*" required/>
-        <flux:input wire:model="post" label="Cargo o rol a ejercer*" required/>
+        <flux:button wire:show="!open" wire:click="$set('open', true)" class="w-full">
+            No cuento con certificado o es mi trabajo actualmente
+        </flux:button>
 
-        <flux:input type="date" wire:model="date_start" label="Fecha ingreso*" required
-                    max="{{ today()->toDateString() }}"/>
-
-        <flux:select wire:model="actual" x-model="actual" label="Es trabajo actual*" required>
-            <flux:select.option value="">Seleccionar...</flux:select.option>
-            <flux:select.option value="true">Si</flux:select.option>
-            <flux:select.option value="false">No</flux:select.option>
-        </flux:select>
-
-        <div x-show="actual == 'false'" x-cloak>
-            <flux:input type="date" wire:model="date_end" label="Fecha de retiro*"
-                        max="{{ today()->toDateString() }}"/>
-        </div>
-
-        <flux:input type="email" wire:model="email" label="Correo de la empresa*" required/>
-        <flux:input type="tel" wire:model="phone" label="Teléfono de la empresa*" required/>
-        <flux:input wire:model="address" label="Dirección de la empresa*" required/>
-
-        <flux:select wire:model.live="department_id" label="Departamento*" required>
-            <flux:select.option value="">Seleccionar...</flux:select.option>
-            @foreach($departments as $department)
-                <flux:select.option value="{{ $department->id }}">
-                    {{ $department->name }}
-                </flux:select.option>
-            @endforeach
-        </flux:select>
-
-        <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio*" required>
-            <flux:select.option value="">Seleccionar...</flux:select.option>
-            @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
-                <flux:select.option value="{{ $city->id }}">
-                    {{ $city->name }}
-                </flux:select.option>
-            @endforeach
-        </flux:select>
-
-        <div class="md:col-span-2">
+        <div>
             @if($certification)
                 <div class="flex flex-col gap-4">
                     <div class="h-32 bg-gray-100 w-full rounded-lg">
@@ -49,8 +14,12 @@
                              class="h-32 object-contain m-auto">
                     </div>
 
-                    <flux:button wire:click="$set('certification', null)">
+                    <flux:button wire:click="$set('certification', null)" class="w-full">
                         Cambiar Certificado
+                    </flux:button>
+
+                    <flux:button wire:click="analyzeImage" variant="primary" color="blue" class="w-full">
+                        Subir
                     </flux:button>
                 </div>
             @else
@@ -89,7 +58,81 @@
                 </div>
             @endif
         </div>
+    </div>
+
+    <form wire:show="open" wire:cloak wire:submit="store" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <h3 class="text-xl text-center md:col-span-2">Añadir</h3>
+
+        <flux:input wire:model="name" label="Nombre de la empresa o entidad*" required/>
+        <flux:input wire:model="post" label="Cargo o rol a ejercer*" required/>
+
+        <flux:input type="date" wire:model="date_start" label="Fecha ingreso*" required
+                    max="{{ today()->toDateString() }}"/>
+
+        <flux:select wire:model="actual" x-model="$store.actual" label="Es trabajo actual*" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            <flux:select.option value="true">Si</flux:select.option>
+            <flux:select.option value="false">No</flux:select.option>
+        </flux:select>
+
+        <div x-show="$store.actual == 'false'" x-cloak>
+            <flux:input type="date" wire:model="date_end" label="Fecha de retiro*"
+                        max="{{ today()->toDateString() }}"/>
+        </div>
+
+        <flux:input type="email" wire:model="email" label="Correo de la empresa*" required/>
+        <flux:input type="tel" wire:model="phone" label="Teléfono de la empresa*" required/>
+        <flux:input wire:model="address" label="Dirección de la empresa*" required/>
+
+        <flux:select wire:model.live="department_id" label="Departamento*" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            @foreach($departments as $department)
+                <flux:select.option value="{{ $department->id }}">
+                    {{ $department->name }}
+                </flux:select.option>
+            @endforeach
+        </flux:select>
+
+        <flux:select wire:model.live="city_id" wire:key="{{ $city_id }}" label="Municipio*" required>
+            <flux:select.option value="">Seleccionar...</flux:select.option>
+            @foreach(App\Models\City::where('department_id', $department_id)->get() as $city)
+                <flux:select.option value="{{ $city->id }}">
+                    {{ $city->name }}
+                </flux:select.option>
+            @endforeach
+        </flux:select>
+
+        <div x-show="$store.actual" x-cloak class="md:col-span-2">
+            @if($certification)
+                <div class="flex flex-col gap-4">
+                    <div class="h-32 bg-gray-100 w-full rounded-lg">
+                        <img src="{{ $certification->temporaryUrl() }}" alt="Certificación"
+                             class="h-32 object-contain m-auto">
+                    </div>
+
+                    <flux:button wire:click="$set('certification', null)">
+                        Cambiar Certificado
+                    </flux:button>
+                </div>
+            @endif
+        </div>
 
         <flux:button type="submit" variant="primary" class="w-full md:col-span-2">Añadir</flux:button>
     </form>
+
+    @script
+    <script>
+        Alpine.store('actual', false)
+
+        $js('changeActual', (actual) => {
+            switch (actual) {
+                case true:
+                    Alpine.store('actual', 1)
+                    break
+                case false:
+                    Alpine.store('actual', 0)
+            }
+        })
+    </script>
+    @endscript
 </div>

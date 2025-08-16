@@ -90,7 +90,7 @@ final class Create extends Component
         $this->actual = true;
         $this->js('changeActual', $this->actual);
 
-        if ($date = Carbon::createFromFormat('d-m-Y', $data['date_end'])) {
+        if (($date = Carbon::createFromFormat('d-m-Y', $data['date_end'])) instanceof Carbon) {
             $this->date_end = $date->toDateString();
         }
     }

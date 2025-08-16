@@ -13,6 +13,8 @@ use App\Models\WorkExperience;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
+use Prism\Prism\Prism;
+use Prism\Prism\Testing\StructuredResponseFake;
 
 beforeEach(function () {
     $this->user = User::factory()
@@ -63,6 +65,49 @@ test('can be created', function () {
         'name' => 'Empresa Test',
         'email' => 'empresa@test.com',
     ]);
+});
+
+test('can analyze images', function () {
+    Storage::fake();
+
+    $fakeResponse = StructuredResponseFake::make()
+        ->withStructured([
+            'name' => 'Empresa Test',
+            'post' => 'Cargo Test',
+            'date_end' => '12-12-2012',
+        ]);
+
+    Prism::fake([$fakeResponse]);
+
+    $response = Livewire::actingAs($this->user)->test(Create::class)
+        ->set('certification', UploadedFile::fake()->image('certification.jpg'))
+        ->call('analyzeImage');
+
+    $response->assertHasNoErrors()
+        ->assertSet('open', true)
+        ->assertSet('name', 'Empresa Test')
+        ->assertSet('post', 'Cargo Test')
+        ->assertSet('actual', false);
+});
+
+test('show error if can not analyze image', function () {
+    Storage::fake();
+
+    $fakeResponse = StructuredResponseFake::make()
+        ->withStructured([
+            'name' => null,
+        ]);
+
+    Prism::fake([$fakeResponse]);
+
+    $response = Livewire::actingAs($this->user)->test(Create::class)
+        ->set('certification', UploadedFile::fake()->image('certification.jpg'))
+        ->call('analyzeImage');
+
+    $response->assertSet('open', true)
+        ->assertNotSet('name', 'Empresa Test')
+        ->assertNotSet('post', 'Cargo Test')
+        ->assertNotSet('date_end', '2012-12-12');
 });
 
 test('show validation errors', function () {
