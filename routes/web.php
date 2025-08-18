@@ -13,6 +13,7 @@ use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
+Route::get('cv/import', Cv\Import::class)->name('cv.import');
 
 Route::middleware(['auth', 'type'])->group(function () {
     Route::middleware('cv')->group(function () {
