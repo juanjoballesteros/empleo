@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
         });
 
-        DB::insert("INSERT INTO `departments` (`id`, `name`) VALUES
+        DB::insert("INSERT INTO departments (id, name) VALUES
             (5, 'ANTIOQUIA'),
             (8, 'ATLANTICO'),
             (11, 'BOGOTA D.C.'),

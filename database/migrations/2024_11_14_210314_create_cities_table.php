@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('department_id');
         });
 
-        DB::insert("INSERT INTO `cities` (`id`, `name`, `department_id`) VALUES
+        DB::insert("INSERT INTO cities (id, name, department_id) VALUES
         (5001, 'MEDELLÍN', 5),
         (5002, 'ABEJORRAL', 5),
         (5004, 'ABRIAQUÍ', 5),
