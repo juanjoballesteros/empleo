@@ -69,8 +69,8 @@
         const play = () => {
             navigator.mediaDevices.getUserMedia({
                 video: {
-                    width: 1280,
                     height: 720,
+                    width: 1280,
                     deviceId: camera.value
                 }
             }).then(stream => {
