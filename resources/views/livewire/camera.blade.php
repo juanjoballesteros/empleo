@@ -3,7 +3,7 @@
         <flux:heading size="lg">Tomar Foto</flux:heading>
 
         <div class="p-2">
-            <video id="video" autoplay class="rounded-md m-auto"></video>
+            <video id="video" autoplay class="rounded-md m-auto h-44"></video>
 
             <div class="flex flex-col gap-2">
                 <flux:select id="camera" label="Seleccione una camara">
