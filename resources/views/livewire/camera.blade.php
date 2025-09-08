@@ -3,9 +3,7 @@
         <flux:heading size="lg">Tomar Foto</flux:heading>
 
         <div class="p-2">
-            <div class="h-60">
-                <video id="video" autoplay class="rounded-md m-auto h-52 rotate-90"></video>
-            </div>
+            <video id="video" autoplay class="rounded-md m-auto max-h-72"></video>
 
             <div class="flex flex-col gap-2">
                 <flux:select id="camera" label="Seleccione una camara">
@@ -42,9 +40,18 @@
         }
 
         snapButton.addEventListener('click', () => {
-            canvas.width = video.videoWidth
-            canvas.height = video.videoHeight
-            canvas.getContext('2d').drawImage(video, 0, 0)
+            // Intercambia el ancho y el alto para la rotación de 90 grados
+            canvas.width = video.videoHeight
+            canvas.height = video.videoWidth
+
+            const context = canvas.getContext('2d')
+            context.clearRect(0, 0, canvas.width, canvas.height)
+
+            context.translate(canvas.width / 2, canvas.height / 2)
+
+            context.rotate(Math.PI / 2)
+
+            context.drawImage(video, -video.videoWidth / 2, -video.videoHeight / 2, video.videoWidth, video.videoHeight)
 
             let img = dataURLToFile(canvas.toDataURL('image/png'), $wire.file + '.png')
             video.pause()

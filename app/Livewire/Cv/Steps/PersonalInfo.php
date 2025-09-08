@@ -243,4 +243,9 @@ final class PersonalInfo extends Component
                 'cv' => $this->cv,
             ]);
     }
+
+    public function resetImages(): void
+    {
+        $this->document_urls = ['front' => null, 'back' => null, 'profile' => null];
+    }
 }

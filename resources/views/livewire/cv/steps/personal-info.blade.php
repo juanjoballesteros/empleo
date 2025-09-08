@@ -80,23 +80,18 @@
                     <div class="bg-gray-200 rounded-lg flex justify-center">
                         <img src="{{ $document_urls['front'] }}" alt="Image" class="h-60 object-contain">
                     </div>
-
-                    <flux:button @click="$dispatch('openCamera', { id: $wire.id, file: 'document_front' })"
-                                 variant="primary" color="blue" icon="camera" class="w-full m-auto mt-2">
-                        Tomar Otra Foto
-                    </flux:button>
                 </div>
 
                 <div>
                     <div class="bg-gray-200 rounded-lg flex justify-center">
                         <img src="{{ $document_urls['back'] }}" alt="Image" class="h-60 object-contain">
                     </div>
-
-                    <flux:button @click="$dispatch('openCamera', { id: $wire.id, file: 'document_back' })"
-                                 variant="primary" color="blue" icon="camera" class="w-full m-auto mt-2">
-                        Tomar Otra Foto
-                    </flux:button>
                 </div>
+
+                <flux:button wire:click="resetImages"
+                             variant="primary" color="blue" icon="camera" class="w-full m-auto mt-2 md:col-span-2">
+                    Tomar Otra Foto
+                </flux:button>
             </div>
         @endif
 
