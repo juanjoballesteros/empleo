@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Candidate;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\PdfBuilder;
 
 use function Spatie\LaravelPdf\Support\pdf;
@@ -22,6 +23,10 @@ final class PdfController extends Controller
         assert($candidate instanceof Candidate);
         $cv = $candidate->cv;
 
-        return pdf()->view('pdf', ['cv' => $cv])->name('hv.pdf');
+        return pdf()->view('pdf', ['cv' => $cv])
+            ->withBrowsershot(function (Browsershot $browsershot) {
+                $browsershot->setChromePath('/var/www/.cache/puppeteer/firefox/linux_arm-stable_142.0.1/firefox/firefox');
+            })
+            ->name('hv.pdf');
     }
 }
