@@ -11,8 +11,8 @@ final class WhatsAppController extends Controller
 {
     public function token(Request $request)
     {
-        $hubChallenge = $request->input('hub.challenge');
-        $token = $request->input('hub.verify_token');
+        $hubChallenge = $request->input('hub_challenge');
+        $token = $request->input('hub_verify_token');
 
         $ourToken = 'Hola1234';
 
@@ -21,6 +21,10 @@ final class WhatsAppController extends Controller
 
             return response()->json(['success' => true, 'hub.challenge' => $hubChallenge, 'hub.mode' => 'subscribe']);
         }
+
+        Log::info($hubChallenge);
+        Log::info($token);
+        Log::info($ourToken);
 
         return response()->json(['success' => false], 403);
     }
