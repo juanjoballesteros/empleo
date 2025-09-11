@@ -21,6 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'cv' => EnsureCvIsCompleted::class,
             'cv_created' => EnsureCvIsCreated::class,
         ]);
+
+        $middleware->validateCsrfTokens(except: [
+            'whatsapp',
+            'whatsapp/*',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
