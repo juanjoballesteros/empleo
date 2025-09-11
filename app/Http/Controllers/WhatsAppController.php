@@ -37,7 +37,7 @@ final class WhatsAppController extends Controller
         Log::info('Message', $message);
 
         if (! $message) {
-            Http::withToken('EAAZA3G1oI7iQBPRFgZAy3sZBqlx7OcOo8LKx5DGuNRZBz1wHTTtJHjyqZBhFZBy4ltdx2vFo8g7yZBzT6ZCGDDAuCdQBeJO14ZAMqcYw6tw4spUCMm4tXZBAZAsZAbf1bcHG0GStWuFJII0GzgVInYJGlQd13ZAADEzRyaYJEPztrI3AnCu1zkPMAQYFhZChtr7DnQtqh06LzlcwZCLNOhJOaL2hcUeEjb5yA0PZAVdy0aTNPOZCIwZCQ4uN4ZD')
+            Http::withToken(config('services.whatsapp.api_key'))
                 ->post('https://graph.facebook.com/v22.0/100501593099262/messages', [
                     'messaging_product' => 'whatsapp',
                     'recipient_type' => 'individual',
