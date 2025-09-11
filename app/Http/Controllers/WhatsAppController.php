@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 final class WhatsAppController extends Controller
@@ -31,5 +32,16 @@ final class WhatsAppController extends Controller
     public function webhook(Request $request): void
     {
         Log::info('WhatsApp webhook received', $request->all());
+
+        Http::withToken('EAAZA3G1oI7iQBPRFgZAy3sZBqlx7OcOo8LKx5DGuNRZBz1wHTTtJHjyqZBhFZBy4ltdx2vFo8g7yZBzT6ZCGDDAuCdQBeJO14ZAMqcYw6tw4spUCMm4tXZBAZAsZAbf1bcHG0GStWuFJII0GzgVInYJGlQd13ZAADEzRyaYJEPztrI3AnCu1zkPMAQYFhZChtr7DnQtqh06LzlcwZCLNOhJOaL2hcUeEjb5yA0PZAVdy0aTNPOZCIwZCQ4uN4ZD')
+            ->post('https://graph.facebook.com/v22.0/100501593099262/messages', [
+                'messaging_product' => 'whatsapp',
+                'recipient_type' => 'individual',
+                'to' => '573232375182',
+                'type' => 'text',
+                'text' => [
+                    'body' => 'Mensaje recibido',
+                ],
+            ]);
     }
 }
