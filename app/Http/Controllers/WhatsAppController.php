@@ -36,7 +36,7 @@ final class WhatsAppController extends Controller
         Log::info('WhatsApp webhook received', $request->all());
         Log::info('Message', ['message' => $message]);
 
-        if (! $message) {
+        if ($message) {
             Http::withToken(config('services.whatsapp.api_key'))
                 ->post('https://graph.facebook.com/v22.0/100501593099262/messages', [
                     'messaging_product' => 'whatsapp',
