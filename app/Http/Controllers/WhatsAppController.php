@@ -19,7 +19,7 @@ final class WhatsAppController extends Controller
         if ($token === $ourToken) {
             Log::info('WhatsApp token verified', $request->all());
 
-            return response()->json(['success' => true, 'hub.challenge' => $hubChallenge, 'hub.mode' => 'subscribe']);
+            return response()->json(['success' => true, 'hub_challenge' => $hubChallenge, 'hub.mode' => 'subscribe']);
         }
 
         Log::info('WhatsApp token not verified', $request->all());
