@@ -78,7 +78,7 @@ final class WhatsAppController extends Controller
         ]);
 
         if ($state === 'welcome') {
-            if ($text === 1) {
+            if ($text === '1') {
                 $chat->update([
                     'state' => 'personal-info-front',
                 ]);
