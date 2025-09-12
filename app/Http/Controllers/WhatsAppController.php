@@ -97,9 +97,9 @@ final class WhatsAppController extends Controller
                 return;
             }
 
-            $mediaId = $data['image']['id'];
+            $mediaId = (int) $data['image']['id'];
             $mediaUrl = $this->getMediaUrl($mediaId);
-            Log::debug('mediaurl', ['mediaurl' => $mediaUrl]);
+            Log::debug('mediaurl', ['mediaurl' => $mediaUrl, 'mediaid' => $mediaId]);
 
             $media = $chat->addMedia($mediaUrl)
                 ->preservingOriginal()
