@@ -4,10 +4,17 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Prism\Prism\Enums\Provider;
+use Prism\Prism\Prism;
+use Prism\Prism\Schema\NumberSchema;
+use Prism\Prism\Schema\ObjectSchema;
+use Prism\Prism\Schema\StringSchema;
+use Prism\Prism\ValueObjects\Media\Image;
 
 final class WhatsAppController extends Controller
 {
@@ -31,22 +38,125 @@ final class WhatsAppController extends Controller
 
     public function webhook(Request $request): void
     {
-        $message = $request->input('entry.0.changes.0.value.messages.0');
+        $data = $request->input('entry.0.changes.0.value.messages.0');
 
         Log::info('WhatsApp webhook received', $request->all());
-        Log::info('Message', ['message' => $message]);
+        Log::info('Message', ['message' => $data]);
+        Log::debug('Message', ['message' => $data]);
 
-        if ($message) {
-            Http::withToken(config('services.whatsapp.api_key'))
-                ->post('https://graph.facebook.com/v22.0/100501593099262/messages', [
-                    'messaging_product' => 'whatsapp',
-                    'recipient_type' => 'individual',
-                    'to' => $message['from'],
-                    'type' => 'text',
-                    'text' => [
-                        'body' => 'Mensaje recibido',
-                    ],
-                ]);
+        if (! $data) {
+            return;
         }
+
+        $from = (int) $data['from'];
+        if ($data['type'] === 'text') {
+            $text = $data['text']['body'];
+        }
+
+        if (! Chat::where('phone', $from)->exists()) {
+            $chat = Chat::create([
+                'phone' => $from,
+                'state' => 'welcome',
+            ]);
+
+            $chat->messages()->create([
+                'text' => $text,
+            ]);
+
+            $this->sendMessage('Bienvenido a DigiEconomías, para crear tu hoja de vida digita 1', $from);
+            Log::debug('mensaje enviado digieconomias');
+
+            return;
+        }
+
+        $chat = Chat::where('phone', $from)->firstOrFail();
+        $state = $chat->state;
+        Log::debug('ingresa a el chat');
+
+        $chat->messages()->create([
+            'text' => $text,
+        ]);
+
+        if ($state === 'welcome') {
+            if ($text === 1) {
+                $chat->update([
+                    'state' => 'personal-info-front',
+                ]);
+
+                $this->sendMessage('Toma una foto de la zona frontal de tu puerta', $from);
+                Log::debug('mensaje enviado foto');
+            }
+        }
+
+        if ($state === 'personal-info-front') {
+            if ($data['type'] !== 'image') {
+                Log::debug('mensaje no hay foto');
+                $this->sendMessage('no hemos identificado la foto', $from);
+
+                return;
+            }
+
+            $mediaId = $data['image']['id'];
+            $mediaUrl = $this->getMediaUrl($mediaId);
+            Log::debug('mediaurl', ['mediaurl' => $mediaUrl]);
+
+            $media = $chat->addMedia($mediaUrl)
+                ->preservingOriginal()
+                ->toMediaCollection('front');
+
+            $cardSchema = new ObjectSchema(
+                'document_card_review',
+                'Complete Review Of A Document Card',
+                [
+                    new StringSchema('document_type', 'Document Type: CC, TI, PAS, CE'),
+                    new NumberSchema('document_number', 'Document Number'),
+                    new StringSchema('first_name', 'First Name Of Document (the first word in the name)'),
+                    new StringSchema('second_name', 'Second Name Of Document (the second word in the name)', true),
+                    new StringSchema('first_surname', 'First Surname Of Document (the first word in the last name)'),
+                    new StringSchema('second_surname', 'Second Surname Of Document (the second word in the last name)', true),
+                ]
+            );
+
+            $response = Prism::structured()
+                ->using(Provider::Gemini, 'gemini-2.5-flash-lite-preview-06-17')
+                ->withSchema($cardSchema)
+                ->withPrompt(
+                    'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
+                    [Image::fromStoragePath($media->getPath())])
+                ->asStructured();
+
+            $frontData = $response->structured;
+
+            $chat->update([
+                'state' => 'personal-info-back',
+            ]);
+
+            $this->sendMessage('estos son tus datos'.json_encode($frontData), $from);
+            Log::debug('mensaje enviado con datos');
+        }
+
+        // $this->sendMessage($text, $from);
+    }
+
+    private function sendMessage(string $text, int $phone): void
+    {
+        Http::withToken(config('services.whatsapp.api_key'))
+            ->post('https://graph.facebook.com/v23.0/100501593099262/messages', [
+                'messaging_product' => 'whatsapp',
+                'recipient_type' => 'individual',
+                'to' => $phone,
+                'type' => 'text',
+                'text' => [
+                    'body' => $text,
+                ],
+            ]);
+    }
+
+    private function getMediaUrl(int $mediaId): string
+    {
+        $responseUrl = Http::withToken(config('services.whatsapp.api_key'))
+            ->post('https://graph.facebook.com/v23.0/'.$mediaId);
+
+        return $responseUrl->json()['url'];
     }
 }
