@@ -98,10 +98,10 @@ final class WhatsAppController extends Controller
             }
 
             $mediaId = (int) $data['image']['id'];
-            $mediaUrl = $this->getMediaUrl($mediaId);
-            Log::debug('mediaurl', ['mediaurl' => $mediaUrl, 'mediaid' => $mediaId]);
+            $media = $this->getMediaUrl($mediaId);
+            Log::debug('mediaurl', ['media' => $media, 'mediaid' => $mediaId]);
 
-            $media = $chat->addMedia($mediaUrl)
+            $media = $chat->addMedia($media)
                 ->preservingOriginal()
                 ->toMediaCollection('front');
 
@@ -157,7 +157,11 @@ final class WhatsAppController extends Controller
     {
         $responseUrl = Http::withToken(config('services.whatsapp.api_key'))
             ->get('https://graph.facebook.com/v23.0/'.$mediaId);
+        $mediaUrl = $responseUrl->json()['url'];
 
-        return $responseUrl->json()['url'];
+        $media = Http::withToken(config('services.whatsapp.api_key'))
+            ->get($mediaUrl);
+
+        return $media->body();
     }
 }
