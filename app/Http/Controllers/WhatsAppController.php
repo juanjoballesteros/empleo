@@ -49,6 +49,7 @@ final class WhatsAppController extends Controller
         }
 
         $from = (int) $data['from'];
+        $text = 'no hay mensaje';
         if ($data['type'] === 'text') {
             $text = $data['text']['body'];
         }
