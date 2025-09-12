@@ -156,7 +156,7 @@ final class WhatsAppController extends Controller
     private function getMediaUrl(int $mediaId): string
     {
         $responseUrl = Http::withToken(config('services.whatsapp.api_key'))
-            ->post('https://graph.facebook.com/v23.0/'.$mediaId);
+            ->get('https://graph.facebook.com/v23.0/'.$mediaId);
 
         return $responseUrl->json()['url'];
     }
