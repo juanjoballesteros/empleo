@@ -101,8 +101,8 @@ final class WhatsAppController extends Controller
 
             $mediaId = (int) $data['image']['id'];
             $url = $this->getMediaUrl($mediaId);
-            Log::debug('mediaurl', ['media' => $url, 'mediaid' => $mediaId]);
             $file = Storage::get($url);
+            Log::debug('mediaurl', ['media' => $url, 'mediaid' => $mediaId, 'file' => $file]);
 
             $media = $chat->addMedia($file)
                 ->toMediaCollection('front');
@@ -164,7 +164,7 @@ final class WhatsAppController extends Controller
         $media = Http::withToken(config('services.whatsapp.api_key'))
             ->get($mediaUrl);
 
-        $url = 'whatsapp/'.Str::random();
+        $url = 'whatsapp/'.Str::random().'.png';
 
         Storage::put($url, $media->body());
 
