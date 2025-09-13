@@ -19,6 +19,8 @@ use Prism\Prism\ValueObjects\Media\Image;
 
 final class WhatsAppController extends Controller
 {
+    private int $phone;
+
     public function token(Request $request): string|JsonResponse
     {
         $hubChallenge = $request->input('hub_challenge');
@@ -45,43 +47,32 @@ final class WhatsAppController extends Controller
             return $this->response();
         }
 
-        $from = (int) $data['from'];
+        $this->phone = (int) $data['from'];
         $text = 'no hay mensaje';
         if ($data['type'] === 'text') {
             $text = $data['text']['body'];
         }
 
-        if (! Chat::query()->where('phone', $from)->exists()) {
-            $chat = Chat::query()->create([
-                'phone' => $from,
-                'state' => 'welcome',
-            ]);
-
-            $chat->messages()->create([
-                'text' => $text,
-            ]);
-
-            $this->sendMessage('Bienvenido a DigiEconomías, para crear tu hoja de vida digita 1', $from);
-        }
-
-        $chat = Chat::query()->where('phone', $from)->firstOrFail();
+        $chat = Chat::query()->firstOrCreate(['phone' => $this->phone], [
+            'phone' => $this->phone,
+            'state' => 'personal-info-front',
+        ]);
         $state = $chat->state;
-        Log::debug('ingresa a el chat');
-
         $chat->messages()->create([
             'text' => $text,
         ]);
 
+        $this->sendMessage("Bienvenido a DigiEconomías \n envía una foto frontal de tu documento de identidad");
+
         if ($state === 'personal-info-front') {
             if ($data['type'] !== 'image') {
-                $this->sendMessage('no hemos identificado la foto, por favor vuelva a enviarla', $from);
+                $this->sendMessage('no hemos identificado la foto, por favor vuelva a enviarla');
 
                 return $this->response();
             }
 
             $mediaId = (int) $data['image']['id'];
             $url = $this->getMediaUrl($mediaId);
-
             $media = $chat->addMedia($url)
                 ->toMediaCollection('front');
 
@@ -99,7 +90,7 @@ final class WhatsAppController extends Controller
             );
 
             $response = Prism::structured()
-                ->using(Provider::Gemini, 'gemini-2.5-flash-lite-preview-06-17')
+                ->using(Provider::Gemini, 'gemini-2.5-flash-lite')
                 ->withSchema($cardSchema)
                 ->withPrompt(
                     'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
@@ -112,8 +103,47 @@ final class WhatsAppController extends Controller
                 'state' => 'personal-info-back',
             ]);
 
-            $this->sendMessage('estos son tus datos'.json_encode($frontData), $from);
-            Log::debug('mensaje enviado con datos');
+            $this->sendMessage('estos son tus datos'.json_encode($frontData));
+        }
+
+        if ($state === 'personal-info-back') {
+            if ($data['type'] !== 'image') {
+                $this->sendMessage('no hemos identificado la foto, por favor vuelva a enviarla');
+
+                return $this->response();
+            }
+
+            $mediaId = (int) $data['image']['id'];
+            $url = $this->getMediaUrl($mediaId);
+            $media = $chat->addMedia($url)
+                ->toMediaCollection('front');
+
+            $cardSchema = new ObjectSchema(
+                'document_card_review',
+                'Complete Review Of A Document Card',
+                [
+                    new StringSchema('sex', 'The sex of the document: M, F'),
+                    new StringSchema('birthdate', 'Birthdate in the document in format (00-00-0000, d-m-Y)'),
+                    new StringSchema('department_id', 'Department id taken of the DANE id departments'),
+                    new StringSchema('city_id', 'City id taken of the DANE id city'),
+                ]
+            );
+
+            $response = Prism::structured()
+                ->using(Provider::Gemini, 'gemini-2.5-flash-lite')
+                ->withSchema($cardSchema)
+                ->withPrompt(
+                    'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
+                    [Image::fromLocalPath($media->getPath())])
+                ->asStructured();
+
+            $backData = $response->structured;
+
+            $chat->update([
+                'state' => 'personal-info-back',
+            ]);
+
+            $this->sendMessage('estos son tus datos'.json_encode($backData));
         }
 
         return $this->response();
@@ -124,8 +154,12 @@ final class WhatsAppController extends Controller
         return response()->json(['Mensaje Recibido']);
     }
 
-    private function sendMessage(string $text, int $phone): void
+    private function sendMessage(string $text, ?int $phone = null): void
     {
+        if (is_null($phone)) {
+            $phone = $this->phone;
+        }
+
         Http::withToken(config('services.whatsapp.api_key'))
             ->post('https://graph.facebook.com/v23.0/100501593099262/messages', [
                 'messaging_product' => 'whatsapp',

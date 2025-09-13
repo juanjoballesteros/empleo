@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'home')->name('home');
 Route::get('cv/import', Cv\Import::class)->name('cv.import');
 
-Route::get('whatsapp', [WhatsAppController::class, 'token'])->name('whatsapp.get');
+Route::get('whatsapp', [WhatsAppController::class, 'token'])->name('whatsapp.token');
 Route::post('whatsapp', [WhatsAppController::class, 'webhook'])->name('whatsapp.webhook');
 
 Route::middleware(['auth', 'type'])->group(function () {
