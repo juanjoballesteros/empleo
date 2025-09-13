@@ -32,7 +32,7 @@ final class Chat extends Model implements HasMedia
         return $this->hasMany(Message::class, 'chat_id');
     }
 
-    /** @return BelongsTo<User, $this */
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

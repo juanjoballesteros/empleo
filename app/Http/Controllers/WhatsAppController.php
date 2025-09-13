@@ -9,7 +9,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
@@ -56,8 +55,8 @@ final class WhatsAppController extends Controller
             $text = $data['text']['body'];
         }
 
-        if (! Chat::where('phone', $from)->exists()) {
-            $chat = Chat::create([
+        if (! Chat::query()->where('phone', $from)->exists()) {
+            $chat = Chat::query()->create([
                 'phone' => $from,
                 'state' => 'welcome',
             ]);
@@ -72,7 +71,7 @@ final class WhatsAppController extends Controller
             return;
         }
 
-        $chat = Chat::where('phone', $from)->firstOrFail();
+        $chat = Chat::query()->where('phone', $from)->firstOrFail();
         $state = $chat->state;
         Log::debug('ingresa a el chat');
 
@@ -80,15 +79,12 @@ final class WhatsAppController extends Controller
             'text' => $text,
         ]);
 
-        if ($state === 'welcome') {
-            if ($text === '1') {
-                $chat->update([
-                    'state' => 'personal-info-front',
-                ]);
-
-                $this->sendMessage('Toma una foto de la zona frontal de tu puerta', $from);
-                Log::debug('mensaje enviado foto');
-            }
+        if ($state === 'welcome' && $text === '1') {
+            $chat->update([
+                'state' => 'personal-info-front',
+            ]);
+            $this->sendMessage('Toma una foto de la zona frontal de tu puerta', $from);
+            Log::debug('mensaje enviado foto');
         }
 
         if ($state === 'personal-info-front') {
@@ -101,10 +97,9 @@ final class WhatsAppController extends Controller
 
             $mediaId = (int) $data['image']['id'];
             $url = $this->getMediaUrl($mediaId);
-            $file = Storage::get($url);
-            Log::debug('mediaurl', ['media' => $url, 'mediaid' => $mediaId, 'file' => $file]);
+            Log::debug('mediaurl', ['media' => $url, 'mediaid' => $mediaId]);
 
-            $media = $chat->addMedia($file)
+            $media = $chat->addMedia($url)
                 ->toMediaCollection('front');
 
             $cardSchema = new ObjectSchema(

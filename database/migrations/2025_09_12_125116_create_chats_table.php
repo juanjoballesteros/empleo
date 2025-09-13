@@ -10,7 +10,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('chats', function (Blueprint $table) {
+        Schema::create('chats', function (Blueprint $table): void {
             $table->id();
             $table->string('state');
             $table->bigInteger('phone')->unique();
