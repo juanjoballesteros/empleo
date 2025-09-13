@@ -37,7 +37,7 @@ final class WhatsAppController extends Controller
         return response()->json(['success' => false], 403);
     }
 
-    public function webhook(Request $request): void
+    public function webhook(Request $request): ?JsonResponse
     {
         $data = $request->input('entry.0.changes.0.value.messages.0');
 
@@ -46,7 +46,7 @@ final class WhatsAppController extends Controller
         Log::debug('Message', ['message' => $data]);
 
         if (! $data) {
-            return;
+            return null;
         }
 
         $from = (int) $data['from'];
@@ -68,7 +68,7 @@ final class WhatsAppController extends Controller
             $this->sendMessage('Bienvenido a DigiEconomías, para crear tu hoja de vida digita 1', $from);
             Log::debug('mensaje enviado digieconomias');
 
-            return;
+            return null;
         }
 
         $chat = Chat::query()->where('phone', $from)->firstOrFail();
@@ -92,7 +92,7 @@ final class WhatsAppController extends Controller
                 Log::debug('mensaje no hay foto');
                 $this->sendMessage('no hemos identificado la foto', $from);
 
-                return;
+                return null;
             }
 
             $mediaId = (int) $data['image']['id'];
@@ -133,6 +133,7 @@ final class WhatsAppController extends Controller
             Log::debug('mensaje enviado con datos');
         }
 
+        return response()->json(['Mensaje Recibido']);
         // $this->sendMessage($text, $from);
     }
 
