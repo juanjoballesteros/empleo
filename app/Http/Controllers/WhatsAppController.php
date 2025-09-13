@@ -100,10 +100,11 @@ final class WhatsAppController extends Controller
             }
 
             $mediaId = (int) $data['image']['id'];
-            $media = $this->getMediaUrl($mediaId);
-            Log::debug('mediaurl', ['media' => $media, 'mediaid' => $mediaId]);
+            $url = $this->getMediaUrl($mediaId);
+            Log::debug('mediaurl', ['media' => $url, 'mediaid' => $mediaId]);
+            $file = Storage::get($url);
 
-            $media = $chat->addMedia($media)
+            $media = $chat->addMedia($file)
                 ->toMediaCollection('front');
 
             $cardSchema = new ObjectSchema(
@@ -163,7 +164,9 @@ final class WhatsAppController extends Controller
         $media = Http::withToken(config('services.whatsapp.api_key'))
             ->get($mediaUrl);
 
-        $url = Storage::put('whatsapp/'.Str::random(), $media->body());
+        $url = 'whatsapp/'.Str::random();
+
+        Storage::put($url, $media->body());
 
         return $url;
     }
