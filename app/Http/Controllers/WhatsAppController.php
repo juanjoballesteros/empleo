@@ -41,12 +41,8 @@ final class WhatsAppController extends Controller
     {
         $data = $request->input('entry.0.changes.0.value.messages.0');
 
-        Log::info('WhatsApp webhook received', $request->all());
-        Log::info('Message', ['message' => $data]);
-        Log::debug('Message', ['message' => $data]);
-
         if (! $data) {
-            return null;
+            return $this->response();
         }
 
         $from = (int) $data['from'];
@@ -66,9 +62,6 @@ final class WhatsAppController extends Controller
             ]);
 
             $this->sendMessage('Bienvenido a DigiEconomías, para crear tu hoja de vida digita 1', $from);
-            Log::debug('mensaje enviado digieconomias');
-
-            return null;
         }
 
         $chat = Chat::query()->where('phone', $from)->firstOrFail();
@@ -79,25 +72,15 @@ final class WhatsAppController extends Controller
             'text' => $text,
         ]);
 
-        if ($state === 'welcome' && $text === '1') {
-            $chat->update([
-                'state' => 'personal-info-front',
-            ]);
-            $this->sendMessage('Toma una foto de la zona frontal de tu puerta', $from);
-            Log::debug('mensaje enviado foto');
-        }
-
         if ($state === 'personal-info-front') {
             if ($data['type'] !== 'image') {
-                Log::debug('mensaje no hay foto');
-                $this->sendMessage('no hemos identificado la foto', $from);
+                $this->sendMessage('no hemos identificado la foto, por favor vuelva a enviarla', $from);
 
-                return null;
+                return $this->response();
             }
 
             $mediaId = (int) $data['image']['id'];
             $url = $this->getMediaUrl($mediaId);
-            Log::debug('mediaurl', ['media' => $url, 'mediaid' => $mediaId]);
 
             $media = $chat->addMedia($url)
                 ->toMediaCollection('front');
@@ -133,8 +116,12 @@ final class WhatsAppController extends Controller
             Log::debug('mensaje enviado con datos');
         }
 
+        return $this->response();
+    }
+
+    private function response(): JsonResponse
+    {
         return response()->json(['Mensaje Recibido']);
-        // $this->sendMessage($text, $from);
     }
 
     private function sendMessage(string $text, int $phone): void
