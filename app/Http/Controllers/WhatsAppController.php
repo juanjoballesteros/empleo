@@ -120,7 +120,7 @@ final class WhatsAppController extends Controller
                 ->withSchema($cardSchema)
                 ->withPrompt(
                     'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
-                    [Image::fromStoragePath($media->getPath())])
+                    [Image::fromLocalPath($media->getPath())])
                 ->asStructured();
 
             $frontData = $response->structured;
