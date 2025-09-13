@@ -9,6 +9,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
 use Prism\Prism\Schema\NumberSchema;
@@ -102,7 +104,6 @@ final class WhatsAppController extends Controller
             Log::debug('mediaurl', ['media' => $media, 'mediaid' => $mediaId]);
 
             $media = $chat->addMedia($media)
-                ->preservingOriginal()
                 ->toMediaCollection('front');
 
             $cardSchema = new ObjectSchema(
@@ -162,6 +163,8 @@ final class WhatsAppController extends Controller
         $media = Http::withToken(config('services.whatsapp.api_key'))
             ->get($mediaUrl);
 
-        return $media->body();
+        $url = Storage::put('whatsapp/'.Str::random(), $media->body());
+
+        return $url;
     }
 }
