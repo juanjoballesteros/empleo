@@ -95,8 +95,8 @@ final class WhatsAppController extends Controller
             $mediaId = (int) $data['image']['id'];
             $url = $this->getMediaUrl($mediaId);
 
-            $front = $chat->addMedia($url)->toMediaCollection('front')->getPath();
-            $back = $chat->getFirstMediaPath('back');
+            $front = $chat->getFirstMediaPath('front');
+            $back = $chat->addMedia($url)->toMediaCollection('back')->getPath();
 
             $cardSchema = new ObjectSchema(
                 'document_card_review',
