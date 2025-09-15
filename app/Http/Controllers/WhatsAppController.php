@@ -34,7 +34,7 @@ final class WhatsAppController extends Controller
         return response()->json(['success' => false], 403);
     }
 
-    public function webhook(Request $request): ?JsonResponse
+    public function webhook(Request $request): JsonResponse
     {
         $data = $request->input('entry.0.changes.0.value.messages.0');
 
