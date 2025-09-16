@@ -16,8 +16,9 @@ return new class extends Migration
             $table->boolean('high')->default(false);
             $table->boolean('work')->default(false);
             $table->boolean('lang')->default(false);
-            $table->foreignId('user_id');
-            $table->foreignId('candidate_id');
+            $table->foreignId('user_id')->nullable();
+            $table->foreignId('candidate_id')->nullable();
+            $table->foreignId('chat_id')->nullable();
             $table->timestamps();
         });
     }

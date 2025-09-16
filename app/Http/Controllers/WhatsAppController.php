@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Models\Chat;
+use App\Models\City;
+use App\Models\Department;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Prism\Prism\Enums\Provider;
 use Prism\Prism\Prism;
@@ -97,6 +100,7 @@ final class WhatsAppController extends Controller
 
             $front = $chat->getFirstMediaPath('front');
             $back = $chat->addMedia($url)->toMediaCollection('back')->getPath();
+            Log::debug('Imagenes', ['front' => $front, 'back' => $back]);
 
             $cardSchema = new ObjectSchema(
                 'document_card_review',
@@ -126,12 +130,38 @@ final class WhatsAppController extends Controller
 
             $cardData = $response->structured;
 
-            $chat->update([
-                'state' => 'personal-info-back',
-            ]);
+            // Organizar los datos extraídos
+            $fullName = mb_trim(($cardData['first_name'] ?? '').' '.($cardData['second_name'] ?? '').' '.($cardData['first_surname'] ?? '').' '.($cardData['second_surname'] ?? ''));
 
-            $this->sendMessage('estos son tus datos'.json_encode($cardData));
+            // Buscar nombres de departamento y ciudad
+            $department = isset($cardData['department_id']) && $cardData['department_id'] ? Department::query()->find($cardData['department_id']) : null;
+            $city = isset($cardData['city_id']) && $cardData['city_id'] ? City::query()->find($cardData['city_id']) : null;
+
+            $organizedData = "📄 *Datos extraídos del documento:*\n\n";
+            $organizedData .= 'Tipo de documento: '.($cardData['document_type'] ?? 'N/A')."\n";
+            $organizedData .= 'Número: '.($cardData['document_number'] ?? 'N/A')."\n";
+            $organizedData .= 'Nombre completo: '.$fullName."\n";
+            $organizedData .= 'Sexo: '.($cardData['sex'] ?? 'N/A')."\n";
+            $organizedData .= 'Fecha de nacimiento: '.($cardData['birthdate'] ?? 'N/A')."\n";
+            $organizedData .= 'Departamento: '.($department->name ?? 'N/A')."\n";
+            $organizedData .= 'Ciudad: '.($city->name ?? 'N/A')."\n\n";
+            $organizedData .= 'Digita tu correo electrónico:';
+
+            $this->sendMessage($organizedData);
+            Log::debug('data enviada', ['data' => $organizedData]);
+
+            $chat->update([
+                'state' => 'contact-info-email',
+            ]);
         }
+
+        /*if ($state === 'contact-info-email') {
+            $this->sendMessage('Dirección de residencia:');
+
+            $chat->update([
+                'state' => 'residence-info-address',
+            ]);
+        }*/
 
         return $this->response();
     }

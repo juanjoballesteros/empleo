@@ -25,6 +25,7 @@ use Illuminate\Support\Collection;
  * @property Carbon $updated_at
  * @property-read User $user
  * @property-read Candidate $candidate
+ * @property-read Chat $chat
  * @property-read ?PersonalInfo $personalInfo
  * @property-read ?ContactInfo $contactInfo
  * @property-read ?ResidenceInfo $residenceInfo
@@ -48,6 +49,12 @@ final class Cv extends Model
     public function candidate(): BelongsTo
     {
         return $this->belongsTo(Candidate::class);
+    }
+
+    /** @return BelongsTo<Chat, $this> */
+    public function chat(): BelongsTo
+    {
+        return $this->belongsTo(Chat::class);
     }
 
     public function isCompleted(): bool
