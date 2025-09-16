@@ -130,6 +130,23 @@ final class WhatsAppController extends Controller
 
             $cardData = $response->structured;
 
+            // Verificar si faltan datos esenciales de Prism
+            if (
+                empty($cardData['document_type']) ||
+                empty($cardData['document_number']) ||
+                empty($cardData['first_name']) ||
+                empty($cardData['first_surname']) ||
+                empty($cardData['sex']) ||
+                empty($cardData['birthdate'])
+            ) {
+                $this->sendMessage('No pudimos extraer toda la información necesaria de tu documento. Por favor, intenta de nuevo enviando la foto frontal.');
+                $chat->update([
+                    'state' => 'personal-info-front',
+                ]);
+
+                return $this->response();
+            }
+
             // Organizar los datos extraídos
             $fullName = mb_trim(($cardData['first_name'] ?? '').' '.($cardData['second_name'] ?? '').' '.($cardData['first_surname'] ?? '').' '.($cardData['second_surname'] ?? ''));
 
@@ -150,18 +167,36 @@ final class WhatsAppController extends Controller
             $this->sendMessage($organizedData);
             Log::debug('data enviada', ['data' => $organizedData]);
 
+            $cv = $chat->cv()->createOrFirst();
+
+            $personalInfo = $cv->personalInfo()->updateOrCreate(['document_number' => $cardData['document_number']], $cardData);
+            $personalInfo->addMedia($front)
+                ->preservingOriginal()
+                ->toMediaCollection('front');
+            $personalInfo->addMedia($back)
+                ->preservingOriginal()
+                ->toMediaCollection('front');
+
             $chat->update([
                 'state' => 'contact-info-email',
             ]);
         }
 
-        /*if ($state === 'contact-info-email') {
+        if ($state === 'contact-info-email') {
             $this->sendMessage('Dirección de residencia:');
 
             $chat->update([
                 'state' => 'residence-info-address',
             ]);
-        }*/
+        }
+
+        if ($state === 'residence-info-address') {
+            $this->sendMessage("¿Cuentas con educación básica?\n1.Si\n2.No");
+
+            $chat->update([
+                'state' => 'basic-education-question',
+            ]);
+        }
 
         return $this->response();
     }
