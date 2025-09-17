@@ -14,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->string('level');
             $table->string('program');
-            $table->date('end_date');
+            $table->date('end_date')->nullable();
             $table->foreignId('cv_id');
             $table->timestamps();
         });

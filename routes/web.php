@@ -19,6 +19,8 @@ Route::get('cv/import', Cv\Import::class)->name('cv.import');
 Route::get('whatsapp', [WhatsAppController::class, 'token'])->name('whatsapp.token');
 Route::post('whatsapp', [WhatsAppController::class, 'webhook'])->name('whatsapp.webhook');
 
+Route::get('pdf/{cv?}', PdfController::class)->name('cv.pdf');
+
 Route::middleware(['auth', 'type'])->group(function () {
     Route::middleware('cv')->group(function () {
         Route::get('dashboard', Dashboard::class)->name('dashboard');
@@ -32,7 +34,6 @@ Route::middleware(['auth', 'type'])->group(function () {
         Route::middleware('cv')->group(function () {
             Route::get('documents', Cv\Documents::class)->name('cv.documents');
             Route::view('completed', 'completed')->name('cv.completed');
-            Route::get('pdf', PdfController::class)->name('cv.pdf');
         });
 
         Route::get('personal-info', Cv\Steps\PersonalInfo::class)->name('cv.personal-info');

@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('work_experiences', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
-            $table->date('date_start');
+            $table->date('date_start')->nullable();
             $table->boolean('actual');
             $table->date('date_end')->nullable();
             $table->string('post');

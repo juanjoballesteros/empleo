@@ -21,13 +21,15 @@
 
 <div class="flex h-screen">
     <div class="w-1/3 h-full bg-gray-200 p-4">
-        {{-- Imagen De Perfil --}}
-        <div class="p-2 w-60 h-60 bg-white rounded-full">
-            <div class="w-56 h-56 overflow-hidden rounded-full">
-                <img src="{{ $cv->personalInfo->getFirstMediaUrl('profile') }}"
-                     alt="Perfil" class="w-full h-full object-cover"/>
+        @if($cv->personalInfo->getFirstMediaUrl('profile'))
+            {{-- Imagen De Perfil --}}
+            <div class="p-2 w-60 h-60 bg-white rounded-full">
+                <div class="w-56 h-56 overflow-hidden rounded-full">
+                    <img src="{{ $cv->personalInfo->getFirstMediaUrl('profile') }}"
+                         alt="Perfil" class="w-full h-full object-cover"/>
+                </div>
             </div>
-        </div>
+        @endif
 
         {{-- Sobre Mi --}}
         <div>
@@ -35,7 +37,7 @@
                 Sobre Mi
             </h3>
             <hr class="p-0.5 my-1 bg-gray-500 w-40">
-            <p>{{ $cv->personalInfo->description }}</p>
+            <p>{{ $cv->personalInfo->description ?? '' }}</p>
         </div>
 
         {{-- Informacion De Contacto --}}
