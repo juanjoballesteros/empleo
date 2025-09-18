@@ -59,7 +59,7 @@ final class WhatsAppController extends Controller
         $chat->messages()->create([
             'text' => $text,
         ]);
-        $cv = $chat->cv()->createOrFirst();
+        $cv = $chat->cv()->firstOrCreate();
 
         if ($state === 'welcome') {
             $this->sendMessage("Bienvenido a DigiEconomías \nenvía una foto frontal de tu documento de identidad");
