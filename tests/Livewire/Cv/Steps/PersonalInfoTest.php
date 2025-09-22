@@ -229,11 +229,8 @@ test('return empty string', function () {
 
 test('reset images', function () {
     $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
-        ->set('document_front', UploadedFile::fake()->image('front.jpg'))
-        ->set('document_back', UploadedFile::fake()->image('back.jpg'))
+        ->set('document_urls', ['front' => 'front.jpg', 'back' => 'back.jpg', 'profile' => 'profile.jpg'])
         ->call('resetImages');
 
-    $response->assertSet('document_front', null)
-        ->assertSet('document_back', null)
-        ->assertSet('profile', null);
+    $response->assertSet('document_urls', ['front' => null, 'back' => null, 'profile' => null]);
 });
