@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Auth\SSOController;
 use App\Http\Controllers\Cv\PdfController;
 use App\Http\Controllers\WhatsAppController;
+use App\Livewire\Actions\Logout;
+use App\Livewire\Auth\Candidate;
+use App\Livewire\Auth\Company as CompanyAuth;
 use App\Livewire\Company;
 use App\Livewire\Cv;
 use App\Livewire\Dashboard;
 use App\Livewire\JobOffers;
-use App\Livewire\Settings\Appearance;
-use App\Livewire\Settings\Password;
-use App\Livewire\Settings\Profile;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home')->name('home');
@@ -19,7 +20,24 @@ Route::get('cv/import', Cv\Import::class)->name('cv.import');
 Route::get('whatsapp', [WhatsAppController::class, 'token'])->name('whatsapp.token');
 Route::post('whatsapp', [WhatsAppController::class, 'webhook'])->name('whatsapp.webhook');
 
-Route::get('pdf/{cv?}', PdfController::class)->name('cv.pdf');
+Route::middleware('guest')->group(function () {
+    Route::get('auth/redirect/{type?}', [SSOController::class, 'redirect'])->name('sso.redirect');
+    Route::get('auth/callback', [SSOController::class, 'callback'])->name('sso.callback');
+
+    Route::redirect('login', 'auth/redirect')->name('login');
+    Route::redirect('register', 'auth/redirect/register')->name('register');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::view('select', 'select')->name('select');
+    Route::get('register/company', CompanyAuth::class)->name('register.company');
+    Route::get('register/candidate', Candidate::class)->name('register.candidate');
+});
+
+Route::post('logout', Logout::class)
+    ->name('logout');
+
+Route::get('cv/pdf/{cv?}', PdfController::class)->name('cv.pdf');
 
 Route::middleware(['auth', 'type'])->group(function () {
     Route::middleware('cv')->group(function () {
@@ -55,12 +73,4 @@ Route::middleware(['auth', 'type'])->group(function () {
             Route::get('{jobOffer}/applications', Company\JobOffers\Applications::class)->name('company.offers.applications');
         });
     });
-
-    Route::redirect('settings', 'settings/profile');
-
-    Route::get('settings/profile', Profile::class)->name('settings.profile');
-    Route::get('settings/password', Password::class)->name('settings.password');
-    Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
-
-require __DIR__.'/auth.php';

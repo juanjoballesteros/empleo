@@ -5,6 +5,9 @@ declare(strict_types=1);
 use App\Models\User;
 
 return [
+    'sso' => [
+        'url' => env('SSO_URL'),
+    ],
 
     /*
     |--------------------------------------------------------------------------

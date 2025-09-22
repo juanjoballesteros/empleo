@@ -226,3 +226,14 @@ test('return empty string', function () {
         ->assertSet('first_name', 'Juan')
         ->assertSet('sex', '');
 });
+
+test('reset images', function () {
+    $response = Livewire::actingAs($this->user)->test(PersonalInfo::class)
+        ->set('document_front', UploadedFile::fake()->image('front.jpg'))
+        ->set('document_back', UploadedFile::fake()->image('back.jpg'))
+        ->call('resetImages');
+
+    $response->assertSet('document_front', null)
+        ->assertSet('document_back', null)
+        ->assertSet('profile', null);
+});

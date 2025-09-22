@@ -1,14 +1,12 @@
 <div>
-    <x-auth-header title="Registrate como empresa" description="Completa los campos para registrarte"/>
+    <x-auth-header title="Registrate como empresa" description="Completa los campos para terminar el registro"/>
 
     <form wire:submit="store" class="flex flex-col gap-6 mt-6">
-        <flux:input wire:model="name" label="Nombre o razón social de la empresa" autofocus required/>
-
-        <flux:input wire:model="nit" label="Nit" required/>
+        <flux:input wire:model="nit" label="Nit" required autofocus/>
 
         <flux:select wire:model.live="department_id" label="Departamento" required>
             <flux:select.option value="">Seleccionar...</flux:select.option>
-            @foreach($departments as $department)
+            @foreach(App\Models\Department::all() as $department)
                 <flux:select.option value="{{ $department->id }}">
                     {{ $department->name }}
                 </flux:select.option>
@@ -23,15 +21,6 @@
                 </flux:select.option>
             @endforeach
         </flux:select>
-
-        <flux:input wire:model="email" :label="__('Email address')" type="email" required autocomplete="email"
-                    placeholder="email@example.com"/>
-
-        <flux:input wire:model="password" :label="__('Password')" type="password" required autocomplete="new-password"
-                    :placeholder="__('Password')" viewable/>
-
-        <flux:input wire:model="password_confirmation" :label="__('Confirm password')" type="password" required
-                    autocomplete="new-password" :placeholder="__('Confirm password')" viewable/>
 
         <flux:button type="submit" variant="primary" class="w-full">
             Registrarme

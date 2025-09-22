@@ -35,8 +35,9 @@
             <flux:menu.separator/>
 
             <flux:menu.radio.group>
-                <flux:menu.item :href="route('settings.profile')" icon="cog"
-                                wire:navigate>{{ __('Settings') }}</flux:menu.item>
+                <flux:menu.item :href="config('auth.sso.url')" target="_blank" icon="arrow-top-right-on-square">
+                    Ir A Digieconomias
+                </flux:menu.item>
             </flux:menu.radio.group>
 
             <flux:menu.separator/>

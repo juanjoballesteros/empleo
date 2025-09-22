@@ -21,10 +21,12 @@ use Illuminate\Support\Str;
  * @property string $email
  * @property ?string $email_verified_at
  * @property string $password
+ * @property ?int $userable_id
+ * @property ?string $userable_type
  * @property string $remember_token
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property-read Company|Candidate|null $userable
+ * @property-read Company|Candidate $userable
  * @property-read ?Cv $cv
  */
 final class User extends Authenticatable

@@ -21,8 +21,8 @@ final class EnsureTypeIsRegistered
         /** @var User $user */
         $user = $request->user();
 
-        if ($user->userable === null) {
-            return redirect()->route('select');
+        if (is_null($user->userable_id)) {
+            return to_route('select');
         }
 
         return $next($request);

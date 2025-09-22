@@ -149,7 +149,7 @@ final class WhatsAppController extends Controller
             }
 
             // Organizar los datos extraídos
-            $fullName = mb_trim(($cardData['first_name'] ?? '').' '.($cardData['second_name'] ?? '').' '.($cardData['first_surname'] ?? '').' '.($cardData['second_surname'] ?? ''));
+            $fullName = mb_trim(($cardData['first_name']).' '.($cardData['second_name'] ?? '').' '.($cardData['first_surname']).' '.($cardData['second_surname'] ?? ''));
 
             // Buscar nombres de departamento y ciudad
             $department = isset($cardData['department_id']) && $cardData['department_id'] ? Department::query()->find($cardData['department_id']) : null;
@@ -159,8 +159,8 @@ final class WhatsAppController extends Controller
             $organizedData .= 'Tipo de documento: '.($cardData['document_type'])."\n";
             $organizedData .= 'Número: '.($cardData['document_number'])."\n";
             $organizedData .= 'Nombre completo: '.$fullName."\n";
-            $organizedData .= 'Sexo: '.($cardData['sex'] ?? 'N/A')."\n";
-            $organizedData .= 'Fecha de nacimiento: '.($cardData['birthdate'] ?? 'N/A')."\n";
+            $organizedData .= 'Sexo: '.($cardData['sex'])."\n";
+            $organizedData .= 'Fecha de nacimiento: '.($cardData['birthdate'])."\n";
             $organizedData .= 'Departamento: '.($department->name ?? 'N/A')."\n";
             $organizedData .= 'Ciudad: '.($city->name ?? 'N/A')."\n\n";
             $organizedData .= 'Digita tu correo electrónico:';
@@ -197,8 +197,8 @@ final class WhatsAppController extends Controller
         if ($state === 'residence-info-address') {
             $cv->residenceInfo()->updateOrCreate(['cv_id' => $cv->id], [
                 'address' => $text,
-                'department_id' => $cv->personalInfo->department_id,
-                'city_id' => $cv->personalInfo->city_id,
+                'department_id' => $cv->personalInfo?->department_id,
+                'city_id' => $cv->personalInfo?->city_id,
             ]);
 
             $this->sendMessage("¿Cuentas con educación básica?\n1. Si\n2. No");
@@ -208,24 +208,18 @@ final class WhatsAppController extends Controller
             ]);
         }
 
-        if ($state === 'basic-education-question') {
-            if ($text === '1') {
-                $this->sendMessage('Ultimo grado aprobado:');
-
-                $chat->update([
-                    'state' => 'basic-education-last-grade',
-                ]);
-            }
+        if ($state === 'basic-education-question' && $text === '1') {
+            $this->sendMessage('Ultimo grado aprobado:');
+            $chat->update([
+                'state' => 'basic-education-last-grade',
+            ]);
         }
 
-        if ($state === 'basic-education-last-grade') {
-            if ($text === '11') {
-                $this->sendMessage('Enviá tu certificado');
-
-                $chat->update([
-                    'state' => 'basic-education-certificate',
-                ]);
-            }
+        if ($state === 'basic-education-last-grade' && $text === '11') {
+            $this->sendMessage('Enviá tu certificado');
+            $chat->update([
+                'state' => 'basic-education-certificate',
+            ]);
         }
 
         if ($state === 'basic-education-certificate') {
@@ -246,14 +240,11 @@ final class WhatsAppController extends Controller
             ]);
         }
 
-        if ($state === 'work-experience-question') {
-            if ($text === '1') {
-                $this->sendMessage('Envia tu certificado');
-
-                $chat->update([
-                    'state' => 'work-experience-certificate',
-                ]);
-            }
+        if ($state === 'work-experience-question' && $text === '1') {
+            $this->sendMessage('Enviá tu certificado');
+            $chat->update([
+                'state' => 'work-experience-certificate',
+            ]);
         }
 
         if ($state === 'work-experience-certificate') {
@@ -333,7 +324,7 @@ final class WhatsAppController extends Controller
             $message .= "Teléfono de la Empresa: {$companyPhone}\n";
             $message .= "Dirección de la Empresa: {$companyAddress}\n";
             $message .= "Departamento: {$departmentName}\n";
-            $message .= "Ciudad: {$cityName}\n\n";
+            $message .= "Ciudad: $cityName\n\n";
 
             $this->sendMessage($message);
             Log::debug('Datos de certificado laboral extraídos', ['data' => $extractedData]);

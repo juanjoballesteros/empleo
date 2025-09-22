@@ -36,6 +36,6 @@ test('response with a pdf', function () {
 
     $response->assertOk();
     Pdf::assertRespondedWithPdf(function (PdfBuilder $pdf) {
-        return $pdf->downloadName === 'hv.pdf';
+        return $pdf->downloadName === 'Mi Hoja De Vida.pdf';
     });
 });

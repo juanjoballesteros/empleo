@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Cv;
 use App\Http\Controllers\Controller;
 use App\Models\Candidate;
 use App\Models\Cv;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Spatie\LaravelPdf\PdfBuilder;
 
@@ -18,6 +19,7 @@ final class PdfController extends Controller
     {
         if (is_null($cv)) {
             $user = $request->user();
+            assert($user instanceof User);
             $candidate = $user->userable;
             assert($candidate instanceof Candidate);
             $cv = $candidate->cv;
