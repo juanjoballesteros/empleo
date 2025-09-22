@@ -43,21 +43,10 @@
             const context = canvas.getContext('2d')
             context.clearRect(0, 0, canvas.width, canvas.height)
 
-            if ($wire.file === 'document_front' || $wire.file === 'document_back') {
-                canvas.width = video.videoHeight
-                canvas.height = video.videoWidth
+            canvas.width = video.videoWidth
+            canvas.height = video.videoHeight
 
-                context.translate(canvas.width / 2, canvas.height / 2)
-
-                context.rotate(Math.PI / 2)
-
-                context.drawImage(video, -video.videoWidth / 2, -video.videoHeight / 2, video.videoWidth, video.videoHeight)
-            } else {
-                canvas.width = video.videoWidth
-                canvas.height = video.videoHeight
-
-                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
-            }
+            context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
 
             let img = dataURLToFile(canvas.toDataURL('image/png'), $wire.file + '.png')
             video.pause()
@@ -68,6 +57,7 @@
             })
             Flux.modal('camera').close()
         })
+
 
         const getCameraSelection = async () => {
             const devices = await navigator.mediaDevices.enumerateDevices()
