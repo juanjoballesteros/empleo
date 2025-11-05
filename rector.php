@@ -3,7 +3,9 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\Php83\Rector\ClassMethod\AddOverrideAttributeToOverriddenMethodsRector;
 use Rector\Privatization\Rector\ClassMethod\PrivatizeFinalClassMethodRector;
+use Rector\Privatization\Rector\Property\PrivatizeFinalClassPropertyRector;
 use RectorLaravel\Rector\StaticCall\EloquentMagicMethodToQueryBuilderRector;
 use RectorLaravel\Set\LaravelLevelSetList;
 
@@ -21,15 +23,15 @@ return RectorConfig::configure()
         typeDeclarations: true,
         privatization: true,
         earlyReturn: true,
-        strictBooleans: true,
-        rectorPreset: true,
     )
     ->withSkip([
+        AddOverrideAttributeToOverriddenMethodsRector::class,
         PrivatizeFinalClassMethodRector::class,
+        PrivatizeFinalClassPropertyRector::class,
     ])
     ->withSets([
         LaravelLevelSetList::UP_TO_LARAVEL_110,
-    ])->withRules([
-        EloquentMagicMethodToQueryBuilderRector::class]
-    )
+    ])->withConfiguredRule(EloquentMagicMethodToQueryBuilderRector::class, [
+        'exclude_methods' => ['create'],
+    ])
     ->withPhpSets();

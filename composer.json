@@ -9,36 +9,36 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "ext-pdo": "*",
-        "jantinnerezo/livewire-alert": "^4.0.6",
+        "jantinnerezo/livewire-alert": "^4.0.7",
         "laravel-lang/common": "^6.7.1",
-        "laravel/framework": "^12.30.1",
-        "laravel/telescope": "^5.11.4",
+        "laravel/framework": "^12.37.0",
+        "laravel/telescope": "^5.15.0",
         "laravel/tinker": "^2.10.1",
-        "league/flysystem-aws-s3-v3": "^3.29",
-        "livewire/flux": "^2.4.0",
+        "league/flysystem-aws-s3-v3": "^3.30.1",
+        "livewire/flux": "^2.6.1",
         "maatwebsite/excel": "^3.1.67",
         "prism-php/prism": "^0.80.0",
         "spatie/laravel-google-fonts": "^1.4.4",
-        "spatie/laravel-medialibrary": "^11.15",
+        "spatie/laravel-medialibrary": "^11.17.3",
         "spatie/laravel-pdf": "^1.8"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16.0",
-        "driftingly/rector-laravel": "^2.0.7",
+        "driftingly/rector-laravel": "^2.1.3",
         "fakerphp/faker": "^1.24.1",
-        "larastan/larastan": "^3.7.2",
+        "larastan/larastan": "^3.8.0",
         "laravel/pail": "^1.2.3",
         "laravel/pint": "^1.25.1",
-        "laravel/sail": "^1.45.0",
+        "laravel/sail": "^1.47.0",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.8.2",
-        "pestphp/pest": "^3.8.4",
-        "pestphp/pest-plugin-laravel": "^3.2",
-        "phpstan/phpstan": "^2.1.28",
-        "rector/rector": "^2.1.7",
-        "smknstd/fakerphp-picsum-images": "^1.0.2"
+        "pestphp/pest": "^4.1.3",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpstan/phpstan": "^2.1.31",
+        "rector/rector": "^2.2.7",
+        "smknstd/fakerphp-picsum-images": "^1.0.3"
     },
     "autoload": {
         "psr-4": {
@@ -59,8 +59,7 @@
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",
-            "@php artisan lang:update",
-            "@lint"
+            "@php artisan lang:update"
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""
@@ -72,7 +71,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"npm run dev\" --names='server,queue,vite'"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
         ],
         "lint": "pint --ansi",
         "refactor": "rector --ansi",
