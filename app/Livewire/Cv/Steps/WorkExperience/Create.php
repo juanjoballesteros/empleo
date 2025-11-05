@@ -88,7 +88,7 @@ final class Create extends Component
         $response = Prism::structured()
             ->using(Provider::Gemini, 'gemini-2.5-flash-lite')
             ->withSchema($schema)
-            ->withPrompt('Get all the data of the laboral certification', [Image::fromUrl($this->certification?->temporaryUrl())])
+            ->withPrompt('Extract the data of the laboral certification', [Image::fromLocalPath($this->certification?->getRealPath())])
             ->asStructured();
 
         $data = $response->structured;
@@ -141,6 +141,7 @@ final class Create extends Component
         $this->cv->save();
 
         $this->reset(['certification']);
+        $this->open = false;
 
         $this->dispatch('work.create');
         Flux::modal('create')->close();

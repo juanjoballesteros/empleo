@@ -145,7 +145,7 @@ final class PersonalInfo extends Component
             ->withSchema($cardSchema)
             ->withPrompt(
                 'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
-                [Image::fromUrl($this->document_front?->temporaryUrl()), Image::fromUrl($this->document_back?->temporaryUrl())])
+                [Image::fromLocalPath($this->document_front?->getRealPath()), Image::fromLocalPath($this->document_back?->getRealPath())])
             ->asStructured();
 
         $data = $response->structured;
