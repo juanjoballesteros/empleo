@@ -144,8 +144,10 @@ final class PersonalInfo extends Component
             ->using(Provider::Gemini, 'gemini-2.5-flash')
             ->withSchema($cardSchema)
             ->withPrompt(
-                'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
-                [Image::fromLocalPath($this->document_front?->getRealPath()), Image::fromLocalPath($this->document_back?->getRealPath())])
+                'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad', [
+                    Image::fromLocalPath($this->document_front?->getRealPath() ?? ''),
+                    Image::fromLocalPath($this->document_back?->getRealPath() ?? ''),
+                ])
             ->asStructured();
 
         $data = $response->structured;

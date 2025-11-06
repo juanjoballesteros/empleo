@@ -88,7 +88,7 @@ final class Create extends Component
         $response = Prism::structured()
             ->using(Provider::Gemini, 'gemini-2.5-flash-lite')
             ->withSchema($schema)
-            ->withPrompt('Extract the data of the laboral certification', [Image::fromLocalPath($this->certification?->getRealPath())])
+            ->withPrompt('Extract the data of the laboral certification', [Image::fromLocalPath($this->certification?->getRealPath() ?? '')])
             ->asStructured();
 
         $data = $response->structured;
