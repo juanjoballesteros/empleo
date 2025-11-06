@@ -16,11 +16,11 @@
         <flux:spacer/>
 
         <flux:navbar class="-mb-px max-lg:hidden">
-            <flux:navbar.item href="{{ route('login') }}" wire:navigate>
+            <flux:navbar.item href="{{ route('login') }}">
                 {{ __('Log In') }}
             </flux:navbar.item>
 
-            <flux:navbar.item href="{{ route('select') }}" wire:navigate>
+            <flux:navbar.item href="{{ route('select') }}">
                 {{ __('Register') }}
             </flux:navbar.item>
         </flux:navbar>

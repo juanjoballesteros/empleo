@@ -141,7 +141,7 @@ final class PersonalInfo extends Component
         );
 
         $response = Prism::structured()
-            ->using(Provider::Gemini, 'gemini-2.5-flash-lite-preview-06-17')
+            ->using(Provider::Gemini, 'gemini-2.5-flash')
             ->withSchema($cardSchema)
             ->withPrompt(
                 'Analyze this image that can be: cedula de ciudadanía, cedula de extranjería, pasaporte, tarjeta de identidad',
@@ -162,8 +162,8 @@ final class PersonalInfo extends Component
             return;
         }
 
-        if (isset($data['birthdate']) && $birthdate = Carbon::createFromFormat('d-m-Y', $data['birthdate'])) {
-            $this->birthdate = $birthdate->toDateString();
+        if (isset($data['birthdate'])) {
+            $data['birthdate'] = Carbon::parse($data['birthdate'])->toDateString();
         }
 
         if (isset($data['sex'])) {
