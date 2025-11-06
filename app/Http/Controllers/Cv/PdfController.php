@@ -8,14 +8,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Candidate;
 use App\Models\Cv;
 use App\Models\User;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Spatie\LaravelPdf\PdfBuilder;
-
-use function Spatie\LaravelPdf\Support\pdf;
+use Illuminate\Http\Response;
 
 final class PdfController extends Controller
 {
-    public function __invoke(Request $request, ?Cv $cv = null): PdfBuilder
+    public function __invoke(Request $request, ?Cv $cv = null): Response
     {
         if (is_null($cv)) {
             $user = $request->user();
@@ -25,6 +24,6 @@ final class PdfController extends Controller
             $cv = $candidate->cv;
         }
 
-        return pdf()->view('pdf', ['cv' => $cv])->name('Mi Hoja De Vida.pdf');
+        return Pdf::loadView('pdf', ['cv' => $cv])->setOption('defaultFont', 'Courier')->stream();
     }
 }
