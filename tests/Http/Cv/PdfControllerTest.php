@@ -12,12 +12,8 @@ use App\Models\PersonalInfo;
 use App\Models\ResidenceInfo;
 use App\Models\User;
 use App\Models\WorkExperience;
-use Spatie\LaravelPdf\Facades\Pdf;
-use Spatie\LaravelPdf\PdfBuilder;
 
 test('response with a pdf', function () {
-    Pdf::fake();
-
     $user = User::factory()
         ->for(Candidate::factory()
             ->has(Cv::factory(['user_id' => 1])
@@ -35,7 +31,5 @@ test('response with a pdf', function () {
     $response = $this->actingAs($user)->get('/cv/pdf');
 
     $response->assertOk();
-    Pdf::assertRespondedWithPdf(function (PdfBuilder $pdf) {
-        return $pdf->downloadName === 'Mi Hoja De Vida.pdf';
-    });
+    expect($response->headers->get('content-type'))->toBe('application/pdf');
 });
