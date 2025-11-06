@@ -1,9 +1,13 @@
 <div>
-    <flux:modal name="camera" @close="stopCamera">
+    <flux:modal name="camera" @close="stopCamera" class="w-max max-w-lg">
         <flux:heading size="lg">Tomar Foto</flux:heading>
 
         <div class="p-2">
-            <video id="video" autoplay class="rounded-md m-auto h-64"></video>
+            <div wire:ignore class="relative w-96 h-56">
+                <video id="video" autoplay class="rounded-md m-auto h-full w-full object-cover"></video>
+                <div id="card-hover"
+                     class="hidden absolute top-[10%] left-[10%] w-[80%] h-[80%] border-4 border-white rounded-xl"></div>
+            </div>
 
             <div class="flex flex-col gap-2">
                 <flux:select id="camera" label="Seleccione una camara">
@@ -39,6 +43,24 @@
             play()
         }
 
+        const cardHover = document.getElementById('card-hover')
+
+        const play = () => {
+            navigator.mediaDevices.getUserMedia({
+                video: {
+                    height: 720,
+                    width: 1280,
+                    deviceId: camera.value
+                }
+            }).then(stream => {
+                video.srcObject = stream
+
+                if ($wire.file.includes('document')) {
+                    cardHover.classList.remove('hidden')
+                }
+            })
+        }
+
         snapButton.addEventListener('click', () => {
             const context = canvas.getContext('2d')
             context.clearRect(0, 0, canvas.width, canvas.height)
@@ -70,18 +92,6 @@
             })
             camera.innerHTML = options.join()
         };
-
-        const play = () => {
-            navigator.mediaDevices.getUserMedia({
-                video: {
-                    height: 720,
-                    width: 1280,
-                    deviceId: camera.value
-                }
-            }).then(stream => {
-                video.srcObject = stream
-            })
-        }
 
         const stopCamera = () => {
             if (video.srcObject) {
