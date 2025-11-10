@@ -65,7 +65,7 @@ test('can analyze certification', function () {
         ->withStructured([
             'program' => 'Fake Program',
             'institution' => 'Fake Institution',
-            'date_end' => '12-12-2003',
+            'date_end' => '23-11-2003',
         ]);
     Prism::fake([$fakeResponse]);
 
@@ -76,7 +76,7 @@ test('can analyze certification', function () {
     $response->assertHasNoErrors()
         ->assertSet('open', true)
         ->assertSet('actual', true)
-        ->assertSet('date_end', Carbon::createFromFormat('d-m-Y', '12-12-2003')->toDateString());
+        ->assertSet('date_end', Carbon::parse('23-11-2003')->toDateString());
 });
 
 test('show error if can\'t analyze images', function () {

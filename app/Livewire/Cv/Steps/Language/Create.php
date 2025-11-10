@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Livewire\Cv\Steps\Language;
 
 use App\Models\Cv;
-use Flux;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\View\View;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -35,6 +35,15 @@ final class Create extends Component
     #[Validate(['required', 'image'])]
     public ?TemporaryUploadedFile $certificate = null;
 
+    public function mount(): void
+    {
+        $user = request()->user();
+        assert($user instanceof User);
+
+        assert($user->cv instanceof Cv);
+        $this->cv = $user->cv;
+    }
+
     public function store(): void
     {
         $this->validate();
@@ -57,7 +66,7 @@ final class Create extends Component
         $this->reset(['name', 'write', 'speak', 'read', 'certificate']);
 
         $this->dispatch('lang.create');
-        Flux::modal('create')->close();
+        $this->redirectRoute('cv.language-info', navigate: true);
         LivewireAlert::title('Información añadida')
             ->success()
             ->toast()
@@ -67,6 +76,9 @@ final class Create extends Component
 
     public function render(): View
     {
-        return view('livewire.cv.steps.language.create');
+        return view('livewire.cv.steps.language.create')
+            ->layout('components.layouts.cv', [
+                'cv' => $this->cv,
+            ]);
     }
 }

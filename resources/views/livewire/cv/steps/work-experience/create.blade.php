@@ -1,4 +1,8 @@
-<div>
+<div class="relative">
+    <flux:button href="{{ route('cv.work-experience-info') }}" variant="ghost" icon="arrow-left" wire:navigate>
+        Volver
+    </flux:button>
+
     <div wire:show="!open" wire:cloak class="flex flex-col gap-4 p-4">
         <h3 class="text-xl text-center">Sube Tu Certificado</h3>
 
@@ -119,6 +123,8 @@
 
         <flux:button type="submit" variant="primary" class="w-full md:col-span-2">Añadir</flux:button>
     </form>
+
+    <livewire:camera/>
 
     @script
     <script>

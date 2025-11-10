@@ -1,4 +1,4 @@
-<div>
+<div class="relative">
     @include('layouts.wizard.navigation')
 
     <h4 class="text-lg text-center mb-2">1. Información Personal</h4>
@@ -30,7 +30,7 @@
                 @else
                     <div class="flex flex-col gap-4">
                         <div class="bg-gray-200 rounded-lg flex justify-center">
-                            <img src="{{ $document_front->temporaryUrl() }}" alt="Image" class="h-60 object-contain">
+                            <img src="{{ $document_front->temporaryUrl() }}" alt="Image" class="h-44 object-contain">
                         </div>
 
                         <flux:button @click="$dispatch('openCamera', { id: $wire.id, file: 'document_front' })"
@@ -58,7 +58,7 @@
                 @else
                     <div class="flex flex-col gap-4">
                         <div class="bg-gray-200 rounded-lg flex justify-center">
-                            <img src="{{ $document_back->temporaryUrl() }}" alt="Image" class="h-60 object-contain">
+                            <img src="{{ $document_back->temporaryUrl() }}" alt="Image" class="h-44 object-contain">
                         </div>
 
                         <flux:button @click="$dispatch('openCamera', { id: $wire.id, file: 'document_back' })"

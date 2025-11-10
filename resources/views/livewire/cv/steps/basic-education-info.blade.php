@@ -1,4 +1,4 @@
-<div>
+<div class="relative">
     @include('layouts.wizard.navigation')
 
     <div wire:show="!show" wire:cloak class="flex flex-col gap-4 items-center max-w-lg m-auto mt-5">
@@ -90,7 +90,8 @@
             </div>
         </div>
 
-        <livewire:camera/>
         @include('layouts.wizard.footer')
     </form>
+
+    <livewire:camera/>
 </div>

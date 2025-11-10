@@ -1,5 +1,9 @@
-<div>
-    <div wire:show="!open" wire:cloak class="flex flex-col gap-4 p-4">
+<div class="relative">
+    <flux:button href="{{ route('cv.higher-education-info') }}" variant="ghost" icon="arrow-left">
+        Volver
+    </flux:button>
+
+    <div wire:show="!open" class="flex flex-col gap-4 p-4">
         <h3 class="text-xl text-center">Sube Tu Certificado</h3>
 
         <flux:button wire:show="!open" wire:click="$set('open', true)" class="w-full">
@@ -105,6 +109,8 @@
 
         <flux:button type="submit" variant="primary" class="md:col-span-2">Añadir</flux:button>
     </form>
+
+    <livewire:camera/>
 
     @script
     <script>

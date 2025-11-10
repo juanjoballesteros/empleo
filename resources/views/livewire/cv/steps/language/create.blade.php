@@ -1,4 +1,8 @@
-<div>
+<div class="relative">
+    <flux:button href="{{ route('cv.language-info') }}" variant="ghost" icon="arrow-left">
+        Volver
+    </flux:button>
+
     <form wire:submit="store" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <h3 class="text-xl text-center md:col-span-2">Añadir</h3>
 
@@ -142,7 +146,7 @@
                              class="h-32 object-contain m-auto">
                     </div>
 
-                    <flux:button wire:click="$set('certification', null)">
+                    <flux:button wire:click="$set('certificate', null)">
                         Cambiar Certificado
                     </flux:button>
                 </div>
@@ -183,7 +187,7 @@
         </div>
 
         <flux:button type="submit" variant="primary" class="w-full md:col-span-2">Añadir</flux:button>
-
-        <livewire:camera/>
     </form>
+
+    <livewire:camera/>
 </div>

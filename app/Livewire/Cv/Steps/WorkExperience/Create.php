@@ -6,7 +6,7 @@ namespace App\Livewire\Cv\Steps\WorkExperience;
 
 use App\Models\Cv;
 use App\Models\Department;
-use Flux\Flux;
+use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
@@ -63,6 +63,15 @@ final class Create extends Component
 
     public bool $open = false;
 
+    public function mount(): void
+    {
+        $user = request()->user();
+        assert($user instanceof User);
+
+        assert($user->cv instanceof Cv);
+        $this->cv = $user->cv;
+    }
+
     public function analyzeImage(): void
     {
         $this->validate([
@@ -73,22 +82,25 @@ final class Create extends Component
             'certification_data',
             'The data extracted from the certification image',
             [
-                new StringSchema('name', 'the name of the company that dispatch the certification'),
-                new StringSchema('date_end', 'la fecha cuando el colaborador termino de trabajar en la empresa en formato: dd-mm-yyyy'),
-                new StringSchema('post', 'el puesto o cargo que tenia el colaborador'),
-                new StringSchema('email', 'el correo electrónico de la empresa'),
-                new StringSchema('email', 'el numero telefónico de la empresa'),
-                new NumberSchema('phone', 'el numero telefónico de la empresa'),
-                new StringSchema('address', 'la dirección física de la empresa'),
-                new StringSchema('department_id', 'el departamento donde se expide el certificado con el código de el DANE'),
-                new StringSchema('city_id', 'el departamento donde se expide el certificado con el código de el DANE'),
-            ]
+                new StringSchema('name', 'the name of the company that dispatch the certification', true),
+                new StringSchema('date_end', 'la fecha cuando el colaborador termino de trabajar en la empresa en formato: dd-mm-yyyy', true),
+                new StringSchema('post', 'el puesto o cargo que tenia el colaborador', true),
+                new StringSchema('email', 'el correo electrónico de la empresa', true),
+                new NumberSchema('phone', 'el numero telefónico de la empresa', true),
+                new StringSchema('address', 'la dirección física de la empresa', true),
+                new StringSchema('department_id', 'el departamento donde se expide el certificado con el código de el DANE', true),
+                new StringSchema('city_id', 'el departamento donde se expide el certificado con el código de el DANE', true),
+            ],
+            nullable: true
         );
 
         $response = Prism::structured()
             ->using(Provider::Gemini, 'gemini-2.5-flash-lite')
+            ->withSystemPrompt('Eres un analista de recursos humanos donde tu funcion principal es extraer la informacion de un certificado')
             ->withSchema($schema)
-            ->withPrompt('Extract the data of the laboral certification', [Image::fromLocalPath($this->certification?->getRealPath() ?? '')])
+            ->withPrompt('Extrae la información de este certificado laboral, si no hay información por favor no te la inventes', [
+                Image::fromLocalPath($this->certification?->getRealPath() ?? ''),
+            ])
             ->asStructured();
 
         $data = $response->structured;
@@ -105,8 +117,8 @@ final class Create extends Component
             return;
         }
 
-        if (isset($data['date_end']) && $date = Carbon::createFromFormat('d-m-Y', $data['date_end'])) {
-            $this->date_end = $date->toDateString();
+        if (isset($data['date_end'])) {
+            $data['date_end'] = Carbon::parse($data['date_end'])->toDateString();
         }
 
         $this->fill($data);
@@ -144,7 +156,7 @@ final class Create extends Component
         $this->open = false;
 
         $this->dispatch('work.create');
-        Flux::modal('create')->close();
+        $this->redirectRoute('cv.work-experience-info', navigate: true);
         LivewireAlert::title('Información añadida')
             ->success()
             ->toast()
@@ -156,6 +168,8 @@ final class Create extends Component
     {
         return view('livewire.cv.steps.work-experience.create', [
             'departments' => Department::all(),
+        ])->layout('components.layouts.cv', [
+            'cv' => $this->cv,
         ]);
     }
 }

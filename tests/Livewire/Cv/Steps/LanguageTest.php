@@ -30,7 +30,7 @@ test('can check that not have', function () {
     $response = Livewire::actingAs($this->user)->test(Index::class)
         ->call('check');
 
-    $response->assertRedirectToRoute('cv.pdf');
+    $response->assertRedirectToRoute('cv.completed');
     $this->assertDatabaseHas('cvs', [
         'lang' => true,
     ]);

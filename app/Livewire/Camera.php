@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Livewire;
 
-use Flux\Flux;
 use Illuminate\View\View;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -24,7 +23,6 @@ final class Camera extends Component
         $this->idComponent = $id;
         $this->file = $file;
         $this->js('startCamera');
-        Flux::modal('camera')->show();
     }
 
     public function stopCamera(): void

@@ -6,7 +6,7 @@ namespace App\Livewire\Cv\Steps\HigherEducation;
 
 use App\Models\Cv;
 use App\Models\Department;
-use Flux\Flux;
+use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\View\View;
 use Jantinnerezo\LivewireAlert\Facades\LivewireAlert;
@@ -49,6 +49,15 @@ final class Create extends Component
 
     public bool $open = false;
 
+    public function mount(): void
+    {
+        $user = request()->user();
+        assert($user instanceof User);
+
+        assert($user->cv instanceof Cv);
+        $this->cv = $user->cv;
+    }
+
     public function analyzeImage(): void
     {
         $this->validate([
@@ -59,10 +68,11 @@ final class Create extends Component
             'certification_data',
             'Certification Data Extracted From Image',
             [
-                new StringSchema('program', 'Program or name of the certification'),
-                new StringSchema('institution', 'Institution or name of the certification'),
-                new StringSchema('date_end', 'Date expedition of the certification in format (00-00-0000, d-m-Y)'),
-            ]
+                new StringSchema('program', 'Program or name of the certification', true),
+                new StringSchema('institution', 'Institution or name of the certification', true),
+                new StringSchema('date_end', 'Date expedition of the certification in format (00-00-0000, d-m-Y)', true),
+            ],
+            nullable: true,
         );
 
         $response = Prism::structured()
@@ -73,7 +83,7 @@ final class Create extends Component
 
         $data = $response->structured;
 
-        if (! isset($data['program'], $data['institution'], $data['date_end'])) {
+        if (! isset($data['program'], $data['institution'])) {
             LivewireAlert::title('Hemos tenido para identificar los datos del certificado, por favor ingrese los datos manualmente')
                 ->error()
                 ->toast()
@@ -85,14 +95,14 @@ final class Create extends Component
             return;
         }
 
+        if (isset($data['date_end'])) {
+            $data['date_end'] = Carbon::parse($data['date_end'])->toDateString();
+        }
+
         $this->fill($data);
         $this->open = true;
         $this->actual = true;
         $this->js('changeActual', $this->actual);
-
-        if (($date = Carbon::createFromFormat('d-m-Y', $data['date_end'])) instanceof Carbon) {
-            $this->date_end = $date->toDateString();
-        }
     }
 
     public function store(): void
@@ -125,13 +135,16 @@ final class Create extends Component
             ->toast()
             ->position('top-end')
             ->show();
-        Flux::modal('create')->close();
+
+        $this->redirectRoute('cv.higher-education-info');
     }
 
     public function render(): View
     {
         return view('livewire.cv.steps.higher-education.create', [
             'departments' => Department::all(),
+        ])->layout('components.layouts.cv', [
+            'cv' => $this->cv,
         ]);
     }
 }

@@ -54,7 +54,7 @@ final class Index extends Component
         $this->cv->lang = true;
         $this->cv->save();
 
-        $this->redirectRoute('cv.pdf');
+        $this->redirectRoute('cv.completed');
     }
 
     #[On('lang.create')]

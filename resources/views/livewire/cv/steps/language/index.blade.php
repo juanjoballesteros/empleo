@@ -71,14 +71,11 @@
                 <flux:callout variant="warning" icon="exclamation-circle" heading="No ha agregado información"/>
             @endforelse
 
-            <flux:button @click="$flux.modal('create').show()" variant="primary" color="blue" class="w-full">
+            <flux:button href="{{ route('cv.language-info.create') }}" variant="primary" color="blue" class="w-full"
+                         wire:navigate>
                 Añadir
             </flux:button>
         </div>
-
-        <flux:modal name="create" class="md:min-w-3xl">
-            <livewire:cv.steps.language.create :$cv/>
-        </flux:modal>
 
         <flux:modal name="edit" class="md:min-w-3xl">
             <livewire:cv.steps.language.edit/>
