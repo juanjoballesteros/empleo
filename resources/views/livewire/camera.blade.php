@@ -59,7 +59,11 @@
         const scanned = document.getElementById('scanned')
         let scannedCanvas = null
 
-        $js('startCamera', () => {
+        $js('startCamera', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({video: true})
+
+            stream.getTracks().forEach(track => track.stop())
+
             cameraContainer.classList.remove('hidden')
 
             getCameraSelection().then(() => {
