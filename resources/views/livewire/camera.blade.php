@@ -6,7 +6,7 @@
             <div x-show="$store.step == 1" class="mx-auto md:max-w-lg flex flex-col gap-2">
                 <div wire:ignore class="relative">
                     <video id="video" autoplay
-                           class="rounded-md m-auto sm:max-h-96 aspect-video object-cover"></video>
+                           class="rounded-md m-auto max-h-2/3 sm:max-h-96 aspect-video object-cover"></video>
 
                     <div id="card-hover"
                          class="hidden absolute top-[5%] left-[10%] w-[80%] h-[90%] border-4 border-white rounded-xl"></div>
@@ -57,6 +57,7 @@
         const snapButton = document.getElementById('snap')
         const camera = document.getElementById('camera')
         const scanned = document.getElementById('scanned')
+        const body = document.querySelector('body')
         let scannedCanvas = null
 
         $js('startCamera', async () => {
@@ -65,6 +66,7 @@
             stream.getTracks().forEach(track => track.stop())
 
             cameraContainer.classList.remove('hidden')
+            body.classList.add('overflow-hidden')
 
             getCameraSelection().then(() => {
                 play()
@@ -210,6 +212,8 @@
             context.clearRect(0, 0, canvas.width, canvas.height);
             canvas.width = 0;
             canvas.height = 0;
+
+            body.classList.remove('overflow-hidden')
         }
 
         function dataURLToFile(dataURL, fileName) {
