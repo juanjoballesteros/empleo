@@ -103,7 +103,7 @@
 
     @if($show)
         <form wire:submit="store" class="flex flex-col gap-4 mt-4">
-            <flux:input wire:model="first_name" label="Primer nombre*" required autofocus/>
+            <flux:input wire:model="first_name" label="Primer nombre*" required/>
             <flux:input wire:model="second_name" label="Segundo nombre"/>
 
             <flux:input wire:model="first_surname" label="Primer apellido*" required/>
@@ -125,7 +125,7 @@
                 <flux:select.option value="Masculino">Masculino</flux:select.option>
             </flux:select>
 
-            <flux:input type="date" wire:model="birthdate" label="Fecha De Nacimiento" required autofocus/>
+            <flux:input type="date" wire:model="birthdate" label="Fecha De Nacimiento" required/>
 
             <flux:select wire:model.live="department_id" label="Departamento" required>
                 <flux:select.option value="">Seleccionar...</flux:select.option>

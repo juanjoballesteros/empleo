@@ -12,7 +12,7 @@
                          class="hidden absolute top-[5%] left-[10%] w-[80%] h-[90%] border-4 border-white rounded-xl"></div>
 
                     <div id="document-hover"
-                         class="hidden absolute top-[5%] left-[26%] aspect-[1/1.414]  h-[90%] border-4 border-white rounded-xl"></div>
+                         class="hidden absolute top-[5%] left-[26%] aspect-[1/1.414] h-[90%] border-4 border-white rounded-xl"></div>
                 </div>
 
                 <flux:select id="camera" label="Seleccione una camara"></flux:select>
@@ -97,53 +97,78 @@
             const context = canvas.getContext('2d')
             context.clearRect(0, 0, canvas.width, canvas.height)
 
-            // Dimensiones del elemento video visible
-            const displayWidth = video.clientWidth
-            const displayHeight = video.clientHeight
+            canvas.width = video.videoWidth
+            canvas.height = video.videoHeight
 
-            // Dimensiones reales del stream de video
-            const videoWidth = video.videoWidth
-            const videoHeight = video.videoHeight
-
-            // Calcular el ratio de aspecto
-            const videoRatio = videoWidth / videoHeight
-            const displayRatio = displayWidth / displayHeight
-
-            let sourceX = 0
-            let sourceY = 0
-            let sourceWidth = videoWidth
-            let sourceHeight = videoHeight
-
-            // Calcular el área de recorte (simulando object-cover)
-            if (videoRatio > displayRatio) {
-                // El video es más ancho, se recorta a los lados
-                sourceWidth = videoHeight * displayRatio
-                sourceX = (videoWidth - sourceWidth) / 2
-            } else {
-                // El video es más alto, se recorta arriba y abajo
-                sourceHeight = videoWidth / displayRatio
-                sourceY = (videoHeight - sourceHeight) / 2
-            }
-
-            // Establecer el tamaño del canvas al tamaño visible
-            canvas.width = displayWidth
-            canvas.height = displayHeight
-
-            // Dibujar solo la parte visible del video
-            context.drawImage(
-                video,
-                sourceX, sourceY, sourceWidth, sourceHeight,  // área de origen (recorte)
-                0, 0, displayWidth, displayHeight              // área de destino (canvas)
-            )
+            context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
 
             const scanner = new jscanify()
-            scannedCanvas = scanner.extractPaper(canvas, displayWidth, displayHeight)
+            const fullImage = new Image()
+            fullImage.src = canvas.toDataURL('image/jpeg')
 
-            scanned.src = scannedCanvas.toDataURL('image/jpeg')
-            Alpine.store('step', 2)
+            fullImage.onload = () => {
+                const smallCanvas = document.createElement('canvas');
+                const smallCtx = smallCanvas.getContext('2d');
+                const scale = 0.2;
 
-            video.pause()
-            video.srcObject.getTracks().forEach(track => track.stop())
+                smallCanvas.width = fullImage.width * scale;
+                smallCanvas.height = fullImage.height * scale;
+                smallCtx.drawImage(fullImage, 0, 0, smallCanvas.width, smallCanvas.height);
+
+                const contour = scanner.findPaperContour(cv.imread(smallCanvas));
+                const cornerPoints = scanner.getCornerPoints(contour);
+
+                const scaledCorners = {
+                    topLeftCorner: {
+                        x: cornerPoints.topLeftCorner.x / scale,
+                        y: cornerPoints.topLeftCorner.y / scale
+                    },
+                    topRightCorner: {
+                        x: cornerPoints.topRightCorner.x / scale,
+                        y: cornerPoints.topRightCorner.y / scale
+                    },
+                    bottomLeftCorner: {
+                        x: cornerPoints.bottomLeftCorner.x / scale,
+                        y: cornerPoints.bottomLeftCorner.y / scale
+                    },
+                    bottomRightCorner: {
+                        x: cornerPoints.bottomRightCorner.x / scale,
+                        y: cornerPoints.bottomRightCorner.y / scale
+                    }
+                };
+
+                // Calcular las dimensiones manteniendo la calidad original
+                const videoAspectRatio = video.clientWidth / video.clientHeight;
+                let outputWidth;
+                let outputHeight;
+
+                // Ajustar las dimensiones para que coincidan con el aspect ratio visual
+                const videoStreamAspectRatio = video.videoWidth / video.videoHeight;
+
+                if (videoAspectRatio > videoStreamAspectRatio) {
+                    // El video es más ancho visualmente (cortado verticalmente)
+                    outputHeight = Math.round(video.videoWidth / videoAspectRatio);
+                    outputWidth = video.videoWidth;
+                } else {
+                    // El video es más alto visualmente (cortado horizontalmente)
+                    outputWidth = Math.round(video.videoHeight * videoAspectRatio);
+                    outputHeight = video.videoHeight;
+                }
+
+                scannedCanvas = scanner.extractPaper(
+                    fullImage,
+                    outputWidth,
+                    outputHeight,
+                    scaledCorners
+                );
+
+                scanned.src = scannedCanvas.toDataURL('image/jpeg')
+
+                Alpine.store('step', 2)
+
+                video.pause()
+                video.srcObject.getTracks().forEach(track => track.stop())
+            }
         })
 
         $js('uploadFile', () => {
