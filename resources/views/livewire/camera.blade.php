@@ -1,5 +1,5 @@
 <div wire:ignore.self id="camera-container" class="hidden">
-    <div class="absolute top-0 left-0 w-full h-full bg-white">
+    <div class="fixed top-0 left-0 w-full h-full bg-white mt-5">
         <h2 class="text-2xl text-center font-bold">Toma una foto</h2>
 
         <div x-data class="p-2 mx-auto">
@@ -91,6 +91,8 @@
                     cardHover.classList.remove('hidden')
 
                     return;
+                } else if ($wire.file === 'profile') {
+                    return;
                 }
 
                 video.classList.remove('aspect-video')
@@ -168,7 +170,11 @@
                     scaledCorners
                 );
 
-                scanned.src = scannedCanvas.toDataURL('image/jpeg')
+                if ($wire.file === 'profile') {
+                    scanned.src = canvas.toDataURL('image/jpeg')
+                } else {
+                    scanned.src = scannedCanvas.toDataURL('image/jpeg')
+                }
 
                 Alpine.store('step', 2)
 
@@ -178,13 +184,14 @@
         })
 
         $js('uploadFile', () => {
-            const img = dataURLToFile(scannedCanvas.toDataURL('image/jpeg'), $wire.file + '.jpeg')
+            const img = dataURLToFile(scanned.src, $wire.file + '.jpeg')
 
             Livewire.find($wire.idComponent).upload($wire.file, img, () => {
                 $wire.dispatch('photoTaken')
             })
             cameraContainer.classList.add('hidden')
             Alpine.store('step', 1)
+            stopCamera()
         })
 
         const getCameraSelection = async () => {
