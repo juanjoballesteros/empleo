@@ -14,13 +14,14 @@ use App\Livewire\Dashboard;
 use App\Livewire\JobOffers;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home')->name('home');
 Route::get('cv/import', Cv\Import::class)->name('cv.import');
 
 Route::get('whatsapp', [WhatsAppController::class, 'token'])->name('whatsapp.token');
 Route::post('whatsapp', [WhatsAppController::class, 'webhook'])->name('whatsapp.webhook');
 
 Route::middleware('guest')->group(function () {
+    Route::view('/', 'home')->name('home');
+
     Route::get('auth/redirect/{type?}', [SSOController::class, 'redirect'])->name('sso.redirect');
     Route::get('auth/callback', [SSOController::class, 'callback'])->name('sso.callback');
 
