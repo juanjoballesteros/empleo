@@ -485,9 +485,9 @@
         @if($cv->personalInfo->getFirstMediaPath('profile'))
             {{-- Imagen De Perfil --}}
             <div class="p-2 bg-white rounded-full">
-                <div class="overflow-hidden rounded-full">
+                <div class="overflow-hidden rounded-full" style="width: 14rem; height: 14rem;">
                     <img src="{{ $cv->personalInfo->getFirstMediaPath('profile') }}"
-                         alt="Perfil" class="w-56 h-56 object-cover"/>
+                         alt="Perfil" style="object-fit: cover; width: 100%; height: 100%;"/>
                 </div>
             </div>
         @endif
