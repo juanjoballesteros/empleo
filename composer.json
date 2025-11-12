@@ -14,7 +14,7 @@
         "barryvdh/laravel-dompdf": "^3.1.1",
         "jantinnerezo/livewire-alert": "^4.0.7",
         "laravel-lang/common": "^6.7.1",
-        "laravel/framework": "^12.37.0",
+        "laravel/framework": "^12.38.0",
         "laravel/telescope": "^5.15.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.30.1",
@@ -22,7 +22,7 @@
         "maatwebsite/excel": "^3.1.67",
         "prism-php/prism": "^0.80.0",
         "spatie/laravel-google-fonts": "^1.4.4",
-        "spatie/laravel-medialibrary": "^11.17.3"
+        "spatie/laravel-medialibrary": "^11.17.4"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.16.0",
@@ -31,13 +31,13 @@
         "larastan/larastan": "^3.8.0",
         "laravel/pail": "^1.2.3",
         "laravel/pint": "^1.25.1",
-        "laravel/sail": "^1.47.0",
+        "laravel/sail": "^1.48.0",
         "mockery/mockery": "^1.6.12",
         "nunomaduro/collision": "^8.8.2",
         "pestphp/pest": "^4.1.3",
         "pestphp/pest-plugin-laravel": "^4.0",
-        "phpstan/phpstan": "^2.1.31",
-        "rector/rector": "^2.2.7",
+        "phpstan/phpstan": "^2.1.32",
+        "rector/rector": "^2.2.8",
         "smknstd/fakerphp-picsum-images": "^1.0.3"
     },
     "autoload": {
